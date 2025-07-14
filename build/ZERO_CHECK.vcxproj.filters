@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\CODE_SOMETHING\CS202-project\MarioSuperGame\build\CMakeFiles\64178cd22e6f1c05461f73fcf119c24b\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{5AE143B4-8EC6-3981-8A69-C3FAFE847CDC}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

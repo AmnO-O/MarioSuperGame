@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\CODE_SOMETHING\CS202-project\MarioSuperGame\src\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\CODE_SOMETHING\CS202-project\MarioSuperGame\src\ResourceManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\CODE_SOMETHING\CS202-project\MarioSuperGame\src\State.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\CODE_SOMETHING\CS202-project\MarioSuperGame\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\CODE_SOMETHING\CS202-project\MarioSuperGame\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{E2C15599-3300-3168-9E9C-9D8400AA42A7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

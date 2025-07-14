@@ -1,0 +1,44 @@
+{
+    // version bắt buộc luôn là 4
+    "version": 4,
+    "configurations": [
+        {
+            // Tên cấu hình, phải khớp với nền tảng bạn đang dùng
+            "name": "Win32",
+
+            // Chỉ dẫn cho IntelliSense tìm header
+            "includePath": [
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/src",
+                // nếu cần dùng thêm raylib
+                "C:/raylib/include",
+                "${workspaceFolder}/**"
+            ],
+
+            // Định nghĩa macro nếu có
+            "defines": [
+                // VD: "_DEBUG"
+            ],
+
+            // Đường dẫn tới compiler, để IntelliSense tự load system headers
+            "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.**/bin/Hostx64/x64/cl.exe",
+
+            // Chế độ IntelliSense (với MSVC trên Win64)
+            "intelliSenseMode": "msvc-x64",
+
+            // Chuẩn C/C++ bạn đang dùng
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+
+            // Dành cho chức năng “Go to Definition”
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/include",
+                    "${workspaceFolder}/src",
+                    "C:/raylib/include"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        }
+    ]
+}

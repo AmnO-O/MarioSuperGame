@@ -1,0 +1,3 @@
+C:/CODE_SOMETHING/CS202-project/MarioSuperGame/build/CMakeFiles/MarioGame.dir
+C:/CODE_SOMETHING/CS202-project/MarioSuperGame/build/CMakeFiles/ALL_BUILD.dir
+C:/CODE_SOMETHING/CS202-project/MarioSuperGame/build/CMakeFiles/ZERO_CHECK.dir

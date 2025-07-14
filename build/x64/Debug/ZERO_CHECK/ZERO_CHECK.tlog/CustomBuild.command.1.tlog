@@ -1,0 +1,10 @@
+^C:\CODE_SOMETHING\CS202-PROJECT\MARIOSUPERGAME\BUILD\CMAKEFILES\64178CD22E6F1C05461F73FCF119C24B\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/CODE_SOMETHING/CS202-project/MarioSuperGame -BC:/CODE_SOMETHING/CS202-project/MarioSuperGame/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/CODE_SOMETHING/CS202-project/MarioSuperGame/build/MarioGame.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

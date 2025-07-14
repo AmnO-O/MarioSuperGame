@@ -6,10 +6,12 @@ Game::Game() {
     InitWindow(1440, 810, "Mario Game");
     SetTargetFPS(60);
     isRunning = true;
+    ResourceManager::loadAllTextures("assets/images");  
 }
 
 Game::~Game() {
     CloseWindow();
+    ResourceManager::unloadAll(); 
 }
 
 void Game::run() {
@@ -29,12 +31,14 @@ void Game::processInput() {
 }
 
 void Game::update(float deltaTime) {
+    
 }
 
 void Game::render() {
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
+    DrawTexture(ResourceManager::getTexture("test"), 0, 0, WHITE); 
     DrawText("Hello Mario", 350, 280, 20, DARKGRAY);
 
     EndDrawing();
