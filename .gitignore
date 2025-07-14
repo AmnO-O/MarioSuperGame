@@ -1,0 +1,36 @@
+# Thư mục build & CMake
+build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Visual Studio Code
+.vscode/
+
+# Windows/Linux/Mac OS tạm
+.DS_Store
+Thumbs.db
+
+# File biên dịch sinh ra
+*.exe
+*.out
+*.o
+*.obj
+*.a
+*.lib
+*.dll
+*.so
+
+# Log, cache, backup
+*.log
+*.cache
+*.bak
+
+# Temp từ editor
+*~
+*.swp
+*.tmp
+
+# Người dùng (IDE/editor riêng)
+*.user
