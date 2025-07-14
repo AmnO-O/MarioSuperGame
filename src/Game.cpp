@@ -2,6 +2,12 @@
 #include "ResourceManager.h"
 #include "raylib.h"
 
+// Singleton instance
+Game& Game::getInstance() {
+    static Game instance;
+    return instance;
+}
+
 Game::Game() {
     InitWindow(1440, 810, "Mario Game");
     SetTargetFPS(60);

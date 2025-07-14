@@ -3,11 +3,19 @@
 
 class Game {
 public:
-    Game();
-    ~Game();
+    static Game& getInstance();
+
     void run();
 
+    Game(const Game&) = delete;
+    Game& operator=(const Game&) = delete;
+    Game(Game&&) = delete;
+    Game& operator=(Game&&) = delete;
+
 private:
+    Game();
+    ~Game();
+
     void processInput();
     void update(float deltaTime);
     void render();
