@@ -7,12 +7,22 @@
 
 class ResourceManager {
 public:
-    static Texture2D& loadTexture(const std::string& name, const std::string& filename);
-    static Texture2D& getTexture(const std::string& name);
-    static void unloadAll();
+    static ResourceManager& getInstance();
+
+    Texture2D& loadTexture(const std::string& name, const std::string& filename);
+    Texture2D& getTexture(const std::string& name);
+    void unloadAll();
+
+    ResourceManager(const ResourceManager&) = delete;
+    ResourceManager& operator=(const ResourceManager&) = delete;
+    ResourceManager(ResourceManager&&) = delete;
+    ResourceManager& operator=(ResourceManager&&) = delete;
 
 private:
-    static std::unordered_map<std::string, Texture2D> textures;
+    ResourceManager() = default;
+    ~ResourceManager() = default;
+
+    std::unordered_map<std::string, Texture2D> textures;
 };
 
 #endif
