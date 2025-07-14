@@ -1,6 +1,10 @@
 #include "ResourceManager.h"
 
-std::unordered_map<std::string, Texture2D> ResourceManager::textures;
+// Singleton instance
+ResourceManager& ResourceManager::getInstance() {
+    static ResourceManager instance;
+    return instance;
+}
 
 Texture2D& ResourceManager::loadTexture(const std::string& name, const std::string& filename) {
     if (textures.find(name) == textures.end()) {
