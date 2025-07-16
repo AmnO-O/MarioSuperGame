@@ -1,6 +1,8 @@
 #include "Game.h"
 #include "ResourceManager.h"
 #include "raylib.h"
+#include "MainMenu.h"
+#include "Button.h"
 
 // Singleton instance
 Game& Game::getInstance() {
@@ -9,12 +11,15 @@ Game& Game::getInstance() {
 }
 
 Game::Game() {
-    InitWindow(1440, 810, "Mario Game");
+    InitWindow(1024, 960, "Mario Game");
     SetTargetFPS(60);
     isRunning = true;
+
+    mainMenu = std::make_unique<MainMenu>();
 }
 
 Game::~Game() {
+    mainMenu->unload();
     CloseWindow();
 }
 
@@ -35,13 +40,14 @@ void Game::processInput() {
 }
 
 void Game::update(float deltaTime) {
+    mainMenu->update(deltaTime);
 }
 
 void Game::render() {
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
-    DrawText("Hello Mario", 350, 280, 20, DARKGRAY);
+    mainMenu->render();
 
     EndDrawing();
 }

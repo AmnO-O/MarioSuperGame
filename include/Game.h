@@ -1,6 +1,9 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <memory>
+#include "MainMenu.h"
+
 class Game {
 public:
     static Game& getInstance();
@@ -21,6 +24,7 @@ private:
     void render();
 
     bool isRunning;
+    std::unique_ptr<MainMenu> mainMenu;
 };
 
 #endif
