@@ -4,7 +4,7 @@
 
 Character::Character(CharacterType t, Vector2 pos):
     type(t), position(pos), velocity({0, 0}), 
-    Sstate(ShapeState::SMALL), Mstate(MoveState::STAND), facingRight(true){
+    Sstate(new SmallState()), Mstate(new StandState()), facingRight(true){
     
     if(type == CharacterType::MARIO){
         stats = std::make_unique<MarioStats>(); 
@@ -22,14 +22,37 @@ void Character::readRectAnimation(const std::string filename) {
 	if (!fin.is_open()) 
 		throw ResourceException("Can't load " + filename); 
 
+    
+
 	fin.close(); 
 }
+
+
 
 
 void Character::updateHixbox(){
     hitbox = {position.x, position.y, 16, 16}; 
 }
 
+void Character::transformToTransformed() {
+    if(Sstate && Sstate->getShapeState() != "TRANSFORMED"){
+        delete Sstate; 
+        Sstate = nullptr; 
+    }
+
+    if(Sstate == nullptr) 
+        Sstate = new TransformedState(); 
+}
+
+void Character::transformToFire() {
+    if(Sstate && Sstate->getShapeState() != "FIRE"){
+        delete Sstate; 
+        Sstate = nullptr; 
+    }
+
+    if(Sstate == nullptr) 
+        Sstate = new FireState();
+}
 
 void Character::update(float deltaTime){
     
@@ -38,3 +61,4 @@ void Character::update(float deltaTime){
 void Character::render(){
 
 }
+
