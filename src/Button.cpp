@@ -21,3 +21,36 @@ void NormalButton::render()
 
     DrawText(text.c_str(), frame.x, frame.y, 50, currentColor);
 }
+
+ImageButton::ImageButton(const std::string& imagePath, Rectangle frame, std::function<void()> onClick)
+    : imagePath(imagePath), frame(frame), onClick(onClick)
+{
+    image = LoadTexture(imagePath.c_str());
+}
+
+ImageButton::~ImageButton()
+{
+    UnloadTexture(image);
+}
+
+void ImageButton::update(float deltaTime)
+{
+    Vector2 pos = GetMousePosition();
+
+    if (CheckCollisionPointRec(pos, frame))
+    {
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+            onClick();
+    }
+}
+
+void ImageButton::render()
+{
+    Vector2 pos = GetMousePosition();
+
+    // Determine if the button is hovered
+    bool isHovered = CheckCollisionPointRec(pos, frame);
+
+    // Draw the button image
+    DrawTexture(image, frame.x, frame.y, WHITE);
+}

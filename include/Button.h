@@ -31,7 +31,20 @@ class ImageButton
 {
     public:
 
+        ImageButton() = default; 
+        ImageButton(const std::string& imagePath, Rectangle frame, std::function<void()> onClick);
+        ~ImageButton();
 
+        void update(float deltaTime);
+        void render();
+
+
+    private:
+
+        std::string imagePath; 
+        Texture2D image; 
+        Rectangle frame;
+        std::function<void()> onClick;
 };
 
 #endif BUTTON_H

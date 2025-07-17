@@ -11,16 +11,24 @@ Game& Game::getInstance() {
 }
 
 Game::Game() {
-    InitWindow(1024, 960, "Mario Game");
+    InitWindow(1600, 900, "Mario Game");
     SetTargetFPS(60);
     isRunning = true;
 
-    mainMenu = std::make_unique<MainMenu>();
+    currentState = std::make_unique<MainMenu>([this](std::unique_ptr<MenuState> newState) {
+        switchState(std::move(newState));
+    });
 }
 
 Game::~Game() {
-    mainMenu->unload();
+    currentState->unload();
     CloseWindow();
+}
+
+void Game::switchState(std::unique_ptr<MenuState> newState)
+{
+    currentState->unload();
+    currentState = std::move(newState);
 }
 
 void Game::run() {
@@ -40,14 +48,13 @@ void Game::processInput() {
 }
 
 void Game::update(float deltaTime) {
-    mainMenu->update(deltaTime);
+    currentState->update(deltaTime);
 }
 
 void Game::render() {
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
-    mainMenu->render();
-
+    currentState->render();
     EndDrawing();
 }

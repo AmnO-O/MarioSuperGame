@@ -1,11 +1,15 @@
 #include "MainMenu.h"
+#include "SubMenu.h"
 
-MainMenu::MainMenu()
-: one_player_button("MARIO GAME", {347, 596, 330, 60}, WHITE, RED, []() { /* Open one-player submenu */ }),
-      two_player_button("LUIGI GAME", {347, 670, 330, 60}, WHITE, RED, []() { /* Open two-player submenu */ }),
-      settings_button() // Placeholder for ImageButton initialization
+MainMenu::MainMenu(std::function<void(std::unique_ptr<MenuState>)> switchStateCallback)
+: mario_button("MARIO GAME", {615, 450, 330, 60}, WHITE, RED, [switchStateCallback]() { 
+    switchStateCallback(std::make_unique<SubMenu>(switchStateCallback, "MARIO SELECTED"));  
+    }),
+      luigi_button("LUIGI GAME", {615, 533, 330, 60}, WHITE, RED, [switchStateCallback]() { 
+    switchStateCallback(std::make_unique<SubMenu>(switchStateCallback, "LUIGI SELECTED"));
+    })
 {
-    background = LoadTexture("D:/MarioSuperGame/assets/background.png"); 
+    background = LoadTexture("D:/MarioSuperGame/assets/images/main_menu_background.png"); 
 }
 
 void MainMenu::unload() 
@@ -15,14 +19,14 @@ void MainMenu::unload()
 
 void MainMenu::update(float deltaTime) 
 {
-    one_player_button.update(deltaTime);
-    two_player_button.update(deltaTime);
+    mario_button.update(deltaTime);
+    luigi_button.update(deltaTime);
 }
 
 void MainMenu::render() 
 {
     DrawTexture(background, 0, 0, WHITE);
 
-    one_player_button.render(); 
-    two_player_button.render(); 
+    mario_button.render(); 
+    luigi_button.render(); 
 }

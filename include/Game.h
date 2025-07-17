@@ -8,6 +8,7 @@ class Game {
 public:
     static Game& getInstance();
 
+    void switchState(std::unique_ptr<MenuState> newState);
     void run();
 
     Game(const Game&) = delete;
@@ -24,7 +25,7 @@ private:
     void render();
 
     bool isRunning;
-    std::unique_ptr<MainMenu> mainMenu;
+    std::unique_ptr<MenuState> currentState;
 };
 
 #endif

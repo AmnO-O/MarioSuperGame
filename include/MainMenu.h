@@ -3,34 +3,26 @@
 
 #include <raylib.h>
 #include "Button.h"
-#include "State.h"
+#include "MenuState.h"
 #include <memory>
 #include <string>
+#include <functional>
 
-class MainMenu
+class MainMenu : public MenuState
 {
     private:
 
-        NormalButton one_player_button;
-        NormalButton two_player_button;
-        ImageButton settings_button;
+        NormalButton mario_button;
+        NormalButton luigi_button;
         Texture2D background;
 
     public:
 
-        MainMenu();
+        MainMenu(std::function<void(std::unique_ptr<MenuState>)> switchStateCallback);
 
-        void unload();
-        void update(float deltaTime);
-        void render();   
+        void unload() override;
+        void update(float deltaTime) override;
+        void render() override;   
 };
-
-class SoundManager
-{
-    public:
-
-
-};
-
 
 #endif 
