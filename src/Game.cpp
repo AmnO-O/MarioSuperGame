@@ -14,10 +14,15 @@ Game::Game() {
     SetTargetFPS(60);
     isRunning = true;
 
+    soundManager.loadMenuSound();
+    soundManager.playMenuSound();
+
     stateManager.pushState(std::make_unique<MainMenu>(stateManager));
 }
 
 Game::~Game() {
+    soundManager.stopMenuSound();
+    
     while (stateManager.getCurrentState()) {
         stateManager.popState();
     }
@@ -41,6 +46,7 @@ void Game::processInput() {
 }
 
 void Game::update(float deltaTime) {
+    soundManager.updateMenuSound();
     stateManager.update(deltaTime);
 }
 

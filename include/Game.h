@@ -3,6 +3,7 @@
 
 #include <memory>
 #include "StateManager.h"
+#include "SoundManager.h"
 
 class Game {
 public:
@@ -25,6 +26,7 @@ private:
 
     bool isRunning;
     StateManager stateManager;
+    SoundManager soundManager;
 };
 
 #endif
