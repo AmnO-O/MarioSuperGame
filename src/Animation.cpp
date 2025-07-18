@@ -3,7 +3,7 @@
 #include <cassert>
 #include "Exceptions.h"
 
-Vector2 SpriteAnimated::getCurrentShape() const{
+Vector2 AnimationManager::getCurrentShape() const{
     assert(currentIndex < frames.size()); 
     
     if (currentIndex < 0 || currentIndex >= frames.size()) 
@@ -13,11 +13,30 @@ Vector2 SpriteAnimated::getCurrentShape() const{
     return Vector2({ frames[currentIndex].width, frames[currentIndex].height }); 
 }
 
-
-void SpriteAnimated::update(float deltaTime){
-
+void AnimationManager::addRect(const Rectangle& rect){
+    frames.push_back(rect);
 }
 
-void SpriteAnimated::render(){
+void AnimationManager::update(float deltaTime){
+    currentTime += deltaTime; 
 
+    if(currentTime >= timeSwitch){
+        currentTime -= timeSwitch; 
+        currentIndex ++; 
+    }
+
+    if(currentIndex >= frames.size()) currentIndex = 0; 
+}
+
+void AnimationManager::render(Vector2 position, bool flip){
+    if(currentIndex < 0 || currentIndex >= frames.size()){
+        throw GameException("Current index out of bounds in SpriteAnimated::render"); 
+    }
+
+	Rectangle frameRec = frames[currentIndex];
+
+	if ((flipX ^ flip)) 
+		frameRec.width *= -1;
+
+	DrawTextureRec(sheet, frameRec, position, WHITE);
 }

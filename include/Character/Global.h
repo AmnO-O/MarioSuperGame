@@ -5,6 +5,15 @@
 #include <utility>
 #include <string>
 #include <map>
+#include <unordered_map>
+#include <filesystem>
+
+class Images {
+public: 
+	static std::unordered_map <std::string, Texture2D> textures;
+	static void loadAllTextures(const std::string& folderPath);
+	static void unloadAllTextures(); 
+};
 
 enum class ShapeState{
     SMALL, BIG, FIRE, TRANSFORMED
@@ -55,3 +64,4 @@ public:
 	};
 	~LuigiStats() {}; 
 };
+

@@ -47,5 +47,11 @@ public:
 class StandState: public IMoveState{
 public:
 	void update(float deltaTime) override; 
-	std::string getMoveState() const override {return "STAND";}
+	std::string getMoveState() const override {return "STANDING";}
 };
+
+class RunState:public IMoveState{
+public: 
+	void update(float deltaTime) override; 
+	std::string getMoveState() const override {return "RUNNING";}
+}; 
