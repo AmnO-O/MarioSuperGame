@@ -2,7 +2,6 @@
 #include "ResourceManager.h"
 #include "raylib.h"
 #include "MainMenu.h"
-#include "Button.h"
 
 // Singleton instance
 Game& Game::getInstance() {
@@ -15,20 +14,14 @@ Game::Game() {
     SetTargetFPS(60);
     isRunning = true;
 
-    currentState = std::make_unique<MainMenu>([this](std::unique_ptr<MenuState> newState) {
-        switchState(std::move(newState));
-    });
+    stateManager.pushState(std::make_unique<MainMenu>(stateManager));
 }
 
 Game::~Game() {
-    currentState->unload();
+    while (stateManager.getCurrentState()) {
+        stateManager.popState();
+    }
     CloseWindow();
-}
-
-void Game::switchState(std::unique_ptr<MenuState> newState)
-{
-    currentState->unload();
-    currentState = std::move(newState);
 }
 
 void Game::run() {
@@ -48,13 +41,13 @@ void Game::processInput() {
 }
 
 void Game::update(float deltaTime) {
-    currentState->update(deltaTime);
+    stateManager.update(deltaTime);
 }
 
 void Game::render() {
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
-    currentState->render();
+    stateManager.render();
     EndDrawing();
 }

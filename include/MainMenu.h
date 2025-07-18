@@ -4,9 +4,9 @@
 #include <raylib.h>
 #include "Button.h"
 #include "MenuState.h"
+#include "StateManager.h"
 #include <memory>
 #include <string>
-#include <functional>
 
 class MainMenu : public MenuState
 {
@@ -15,10 +15,11 @@ class MainMenu : public MenuState
         NormalButton mario_button;
         NormalButton luigi_button;
         Texture2D background;
+        StateManager& stateManager;
 
     public:
 
-        MainMenu(std::function<void(std::unique_ptr<MenuState>)> switchStateCallback);
+        MainMenu(StateManager& stateManager);
 
         void unload() override;
         void update(float deltaTime) override;

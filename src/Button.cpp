@@ -47,10 +47,5 @@ void ImageButton::update(float deltaTime)
 void ImageButton::render()
 {
     Vector2 pos = GetMousePosition();
-
-    // Determine if the button is hovered
-    bool isHovered = CheckCollisionPointRec(pos, frame);
-
-    // Draw the button image
     DrawTexture(image, frame.x, frame.y, WHITE);
 }

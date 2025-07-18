@@ -1,12 +1,13 @@
 #include "MainMenu.h"
 #include "SubMenu.h"
 
-MainMenu::MainMenu(std::function<void(std::unique_ptr<MenuState>)> switchStateCallback)
-: mario_button("MARIO GAME", {615, 450, 330, 60}, WHITE, RED, [switchStateCallback]() { 
-    switchStateCallback(std::make_unique<SubMenu>(switchStateCallback, "MARIO SELECTED"));  
+MainMenu::MainMenu(StateManager& stateManager)
+  : stateManager(stateManager),    
+    mario_button("MARIO GAME", {615, 450, 330, 60}, WHITE, RED, [&]() { 
+        stateManager.pushState(std::make_unique<SubMenu>(stateManager, "MARIO SELECTED"));  
     }),
-      luigi_button("LUIGI GAME", {615, 533, 330, 60}, WHITE, RED, [switchStateCallback]() { 
-    switchStateCallback(std::make_unique<SubMenu>(switchStateCallback, "LUIGI SELECTED"));
+    luigi_button("LUIGI GAME", {615, 533, 330, 60}, WHITE, RED, [&]() { 
+        stateManager.pushState(std::make_unique<SubMenu>(stateManager, "LUIGI SELECTED"));
     })
 {
     background = LoadTexture("D:/MarioSuperGame/assets/images/main_menu_background.png"); 

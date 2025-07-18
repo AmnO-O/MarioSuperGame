@@ -2,13 +2,12 @@
 #define GAME_H
 
 #include <memory>
-#include "MainMenu.h"
+#include "StateManager.h"
 
 class Game {
 public:
     static Game& getInstance();
 
-    void switchState(std::unique_ptr<MenuState> newState);
     void run();
 
     Game(const Game&) = delete;
@@ -25,7 +24,7 @@ private:
     void render();
 
     bool isRunning;
-    std::unique_ptr<MenuState> currentState;
+    StateManager stateManager;
 };
 
 #endif
