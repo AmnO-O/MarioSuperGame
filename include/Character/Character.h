@@ -7,9 +7,8 @@
 #include "CharacterState.h"
 #include "PlayerMovement.h"
 
-
 class Character{
-protected: 
+private: 
     PlayerMovement* movement; 
     IShapeState *Sstate; 
     IMoveState *Mstate; 
@@ -28,10 +27,7 @@ public:
     Character(CharacterType type, Vector2 pos); 
     Vector2 getPosition() const {return movement->getPosition(); }
     Rectangle getHitbox() const {return hitbox; }
-    
-    void transformToTransformed();
-    void transformToFire();
-
+    void setGroundLevel(float groundLevel) {movement->setGroundLevel(groundLevel);}
     void update(float deltaTime); 
     void render(); 
     

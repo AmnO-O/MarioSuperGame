@@ -1,6 +1,7 @@
 #pragma once
 #include "Global.h"
-#include "Character/Character.h"
+
+class Character;
 
 class PowerUp{
 protected: 
@@ -18,7 +19,7 @@ public:
         hitbox = {position.x, position.y, 16, 16}; 
     }
 
-    void update(float deltaTime, Character *player); 
+    void update(float deltaTime, Character *&player); 
     bool isActive() const { return active; }
     void adaptCollision(const Rectangle& rect);
 

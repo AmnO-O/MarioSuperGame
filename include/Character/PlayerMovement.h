@@ -3,6 +3,10 @@
 #include <memory>
 #include <string>
 #include "Global.h"
+#include "PowerUp.h"
+
+class IMoveState; 
+class IShapeState; 
 
 class PlayerMovement{
 private:
@@ -11,7 +15,7 @@ private:
     bool facingRight; 
 	std::unique_ptr<CharacterStats> stats;
     
-    float groundLevel; 
+    float groundLevel = 400.0f; 
 	float currentTime; 
 
 public: 
@@ -38,7 +42,8 @@ public:
         return *this;
     } 
 
-    void update(float deltaTime); 
+    void update(float deltaTime, IShapeState *&Sstate, IMoveState  *&Mstate);
+    void setGroundLevel(float groundLevel) {this->groundLevel = groundLevel;}
     Vector2 getPosition() const {return position;}
     bool isFacingRight() const {return facingRight; }
 

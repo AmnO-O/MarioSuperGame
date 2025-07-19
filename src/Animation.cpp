@@ -35,7 +35,9 @@ void AnimationManager::render(Vector2 position, bool flip){
 
 	Rectangle frameRec = frames[currentIndex];
 
-	if ((flipX ^ flip)) 
+    flip ^= flipX; 
+
+	if (flip) 
 		frameRec.width *= -1;
 
 	DrawTextureRec(sheet, frameRec, position, WHITE);

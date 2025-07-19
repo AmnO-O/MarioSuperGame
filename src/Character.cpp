@@ -12,8 +12,8 @@ Character::Character(CharacterType t, Vector2 pos):
 
 		if(mario.id == 0)
 			throw GameException("Can't load image of mario.png");
-
 		readRectAnimation("assets/animation/mario.txt");
+
 	}else if(type == CharacterType::LUIGI){
 		movement = new PlayerMovement(pos, {0, 0}, std::make_unique<LuigiStats>()); 
 		readRectAnimation("assets/animation/luigi.txt");
@@ -95,31 +95,11 @@ void Character::updateHitbox(){
     hitbox = {current.x, current.y, 16, 16}; 
 }
 
-void Character::transformToTransformed() {
-    if(Sstate && Sstate->getShapeState() != "TRANSFORMED"){
-        delete Sstate; 
-        Sstate = nullptr; 
-    }
-
-    if(Sstate == nullptr) 
-        Sstate = new TransformedState(); 
-}
-
-void Character::transformToFire() {
-    if(Sstate && Sstate->getShapeState() != "FIRE"){
-        delete Sstate; 
-        Sstate = nullptr; 
-    }
-
-    if(Sstate == nullptr) 
-        Sstate = new FireState();	
-}
-
 void Character::update(float deltaTime){
 	if(movement == nullptr)
 		throw GameException("Movement is null in Character::update"); 
 
-	movement -> update(deltaTime); 
+	movement -> update(deltaTime, Sstate, Mstate); 
 
 	std::string animationKey = getShape_Action(); 
 
@@ -137,7 +117,7 @@ void Character::update(float deltaTime){
 
 void Character::render(){
 	if(activeAnimation) 
-		activeAnimation->render(movement->getPosition(), !movement->isFacingRight());
+		activeAnimation->render(movement->getPosition(), movement->isFacingRight() == false);
 }
 
 Character::~Character() {
