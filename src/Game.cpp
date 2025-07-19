@@ -13,7 +13,7 @@ Game::Game() {
     SetTargetFPS(60);
     isRunning = true;
 	Images::loadAllTextures("assets/images/");
-    character = new Character(CharacterType::MARIO, {  40, 192 });
+    character = new Character(CharacterType::MARIO, {  100, 100 });
     myCam = new MyCamera2D(1600.0f, 900.0f); 
 }
 
@@ -42,6 +42,7 @@ void Game::processInput() {
 void Game::update(float deltaTime) {
     character->update(deltaTime); 
     myCam -> update(character->getPosition()); 
+    myCam->setZoom(5); 
 }
 
 void Game::render() {

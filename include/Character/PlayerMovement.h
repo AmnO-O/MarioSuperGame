@@ -15,7 +15,7 @@ private:
     bool facingRight; 
 	std::unique_ptr<CharacterStats> stats;
     
-    float groundLevel = 200.0f; 
+    float groundLevel = 100.0f; 
 	float currentTime; 
 
 public: 
