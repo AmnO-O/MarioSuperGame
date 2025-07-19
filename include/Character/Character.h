@@ -1,64 +1,35 @@
 #pragma once 
+#include <fstream>
 #include "raylib.h"
 #include "Animation.h"
+#include "Global.h"
+#include "Exceptions.h"
 #include "CharacterState.h"
-#include <memory>
-#include <string>
-
-class CharacterStats {
-public: 
-	float runSpeed; 
-	float jumpInitialVelocity; 
-	float jumpHoldAcceleration; 
-	float maxJumpTime; 
-public: 
-	CharacterStats(float speed, float jumpIV, float jumpHold, float maxJT)
-		:runSpeed(speed), jumpInitialVelocity(jumpIV), jumpHoldAcceleration(jumpHold), maxJumpTime(maxJT) {};
-	virtual ~CharacterStats() = default; 
-};
-
-class MarioStats : public CharacterStats {
-public: 
-	MarioStats() : CharacterStats(300.0f, -10000.0f, -1300.0f, 0.25f) {
-		runSpeed = 300.0f, jumpInitialVelocity = -10000.0f, jumpHoldAcceleration = -1300.0f, maxJumpTime = 0.25f; ;
-	};
-
-	~MarioStats() {}; 
-};
-
-class LuigiStats : public CharacterStats {
-public: 
-	LuigiStats() : CharacterStats(180.0, -480.0, -900.0, 0.4) {
-		runSpeed = 180.0f;          
-		jumpInitialVelocity = -480.0f;  
-		jumpHoldAcceleration = -900.0f;
-		maxJumpTime = 0.4f;
-	};
-	~LuigiStats() {}; 
-};
-
+#include "PlayerMovement.h"
 
 class Character{
-protected: 
-    Vector2 position; 
-    Vector2 velocity; 
-    Rectangle hitbox; 
-
-    ShapeState Sstate; 
-    MoveState Mstate; 
+private: 
+    PlayerMovement* movement; 
+    IShapeState *Sstate; 
+    IMoveState *Mstate; 
 
     CharacterType type; 
-	std::unique_ptr<CharacterStats> stats;
+	std::map<std::string, std::unique_ptr<AnimationManager>> animations; 
+	AnimationManager *activeAnimation;
 
-    bool facingRight; 
-    void updateHixbox(); 
+    Rectangle hitbox; 
+
+    void updateHitbox(); 
     void readRectAnimation(const std::string filePath); 
-    
+    std::string getShape_Action() const; 
 public: 
-	Character(CharacterType type, Vector2 pos); 
-    Vector2 getPosition() const {return position; }
+	
+    Character(CharacterType type, Vector2 pos); 
+    Vector2 getPosition() const {return movement->getPosition(); }
     Rectangle getHitbox() const {return hitbox; }
-
+    void setGroundLevel(float groundLevel) {movement->setGroundLevel(groundLevel);}
     void update(float deltaTime); 
     void render(); 
+    
+    ~Character(); 
 }; 
