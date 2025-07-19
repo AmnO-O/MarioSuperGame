@@ -13,12 +13,14 @@ Game::Game() {
     SetTargetFPS(60);
     isRunning = true;
 	Images::loadAllTextures("assets/images/");
-    character = new Character(CharacterType::MARIO, { 100, 100 });
+    character = new Character(CharacterType::MARIO, {  40, 192 });
+    myCam = new MyCamera2D(1600.0f, 900.0f); 
 }
 
 Game::~Game() {
     CloseWindow();
     delete character; 
+    delete myCam; 
 }
 
 void Game::run() {
@@ -39,15 +41,24 @@ void Game::processInput() {
 
 void Game::update(float deltaTime) {
     character->update(deltaTime); 
+    myCam -> update(character->getPosition()); 
 }
 
 void Game::render() {
+    Camera2D camera = myCam ->getCamera(); 
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
+    /// camera draw here
+
+        BeginMode2D(camera); 
+            if(character)
+                character->render(); 
+        EndMode2D(); 
+
+
     DrawText("Hello Mario", 350, 280, 20, DARKGRAY);
-    if(character)
-        character->render(); 
+
 
     EndDrawing();
 }

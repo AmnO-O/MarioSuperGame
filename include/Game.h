@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "Character/Character.h"
+#include "Character/MyCamera2D.h"
 
 class Game {
 public:
@@ -13,6 +14,7 @@ public:
     Game(Game&&) = delete;
     Game& operator=(Game&&) = delete;
     Character *character; 
+    MyCamera2D *myCam; 
 private:
     Game();
     ~Game();
@@ -20,7 +22,6 @@ private:
     void processInput();
     void update(float deltaTime);
     void render();
-
     bool isRunning;
 };
 
