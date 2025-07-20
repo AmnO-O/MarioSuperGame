@@ -28,6 +28,16 @@ std::string Character::getShape_Action() const{
 	return Sstate->getShapeState() + "_" + Mstate->getMoveState(); 
 }
 
+void Character::updateShape(){
+	std::string animationKey = getShape_Action(); 
+
+	if(activeAnimation != animations[animationKey].get())
+		activeAnimation = animations[animationKey].get(); 
+
+	if(activeAnimation == nullptr)
+		throw GameException("Active animation is null in Character::updateShape");
+}
+
 void Character::readRectAnimation(const std::string filename) {
 	std::ifstream fin(filename); 
 
@@ -105,12 +115,17 @@ void Character::readRectAnimation(const std::string filename) {
 }
 
 void Character::updateHitbox(){
-	if(movement == nullptr)
-		throw GameException("Movement is null in Character::updateHitbox"); 
+	updateShape(); 
+	
+	if(movement == nullptr || activeAnimation == nullptr)
+		throw GameException("Movement pr activeAnimation is null in Character::updateHitbox"); 
 
-	Vector2 current = movement -> getPosition();
+	auto [w, h] = activeAnimation->getCurrentShape(); 
 
-    hitbox = {current.x, current.y, 16, 16}; 
+	Vector2 current = movement -> getPosition(); 
+	groundLevel = h + current.x; 
+
+    hitbox = {current.x, current.y, w, h}; 
 }
 
 void Character::powerUp(PowerUpType t){
@@ -145,23 +160,38 @@ void Character::powerUp(PowerUpType t){
 	}
 }
 
+void Character::shootFireball(){
+	if (IsKeyPressed(KEY_F) && Sstate->canShootFire()) {
+		Vector2 startPos = movement->getPosition(); 
+		startPos.x += 20; 
+		startPos.y += 8;
+
+        fireballs.emplace_back(new Fireball(startPos, movement->isFacingRight()));
+		fireballs.back() ->setGroundLevel(groundLevel); 
+    }
+}
+
+void Character::cleanFireballs(){
+    fireballs.erase(
+        std::remove_if(fireballs.begin(), fireballs.end(), [](const auto &fb) { return !fb->isActive(); }),
+        fireballs.end()
+    );
+}
+
 void Character::update(float deltaTime){
 	if(movement == nullptr)
 		throw GameException("Movement is null in Character::update"); 
 
 	movement -> update(deltaTime, Sstate, Mstate); 
+	
+	shootFireball(); 
+	// cleanFireballs();
 
-	std::string animationKey = getShape_Action(); 
-
-	if(activeAnimation != animations[animationKey].get())
-		activeAnimation = animations[animationKey].get(); 
-
-	if(activeAnimation == nullptr)
-		throw GameException("Active animation is null in Character::update");
+	for (auto& fb : fireballs) 
+		fb->update(deltaTime);
 
 	if(activeAnimation)
 		activeAnimation->update(deltaTime); 
-
 
 	updateHitbox(); 
 }
@@ -169,12 +199,21 @@ void Character::update(float deltaTime){
 void Character::render(){
 	if(activeAnimation) 
 		activeAnimation->render(movement->getPosition(), movement->isFacingRight() == false);
+	
+	for (auto& fireball : fireballs) 
+		fireball->render(); 
 }
 
 Character::~Character() {
 	delete Sstate; 
 	delete Mstate; 
 	delete movement; 
+
+	for(auto &fireball : fireballs){
+		delete fireball; 
+		fireball = nullptr; 
+	}
+
 	Images::unloadAllTextures();
 }
 
