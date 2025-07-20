@@ -13,7 +13,7 @@ MainMenu::MainMenu(StateManager& stateManager)
     background = LoadTexture("D:/MarioSuperGame/assets/images/main_menu_background.png"); 
 }
 
-void MainMenu::unload() 
+MainMenu::~MainMenu() 
 {
     UnloadTexture(background);
 }

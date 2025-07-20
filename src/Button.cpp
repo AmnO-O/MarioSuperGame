@@ -1,7 +1,15 @@
 #include "Button.h"
 
 NormalButton::NormalButton(const std::string& text, Rectangle rect, Color normalColor, Color hoverColor, std::function<void()> onClick)
-    : text(text), frame(rect), normalColor(normalColor), hoverColor(hoverColor), onClick(onClick) {}
+    : text(text), frame(rect), normalColor(normalColor), hoverColor(hoverColor), onClick(onClick)
+{
+    font = LoadFont(fontPath.c_str());
+}
+
+NormalButton::~NormalButton()
+{
+    UnloadFont(font);
+}
 
 void NormalButton::update(float deltaTime)
 {
@@ -19,7 +27,7 @@ void NormalButton::render()
     Vector2 pos = GetMousePosition();
     Color currentColor = CheckCollisionPointRec(pos, frame) ? hoverColor : normalColor;
 
-    DrawText(text.c_str(), frame.x, frame.y, 50, currentColor);
+    DrawTextEx(font, text.c_str(), {frame.x, frame.y}, 50, 2, currentColor);
 }
 
 ImageButton::ImageButton(const std::string& imagePath, Rectangle frame, std::function<void()> onClick)

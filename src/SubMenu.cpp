@@ -11,9 +11,12 @@ SubMenu::SubMenu(StateManager& stateManager, const std::string& title)
     title(title) 
 {
     sub_background = LoadTexture("D:/MarioSuperGame/assets/images/sub_menu_background.png");
+    titleFont = LoadFont("D:/MarioSuperGame/assets/fonts/SuperMarioBros.ttf");
 }
 
-void SubMenu::unload() {
+SubMenu::~SubMenu()
+{
+    UnloadFont(titleFont);
     UnloadTexture(sub_background);
 }
 
@@ -30,5 +33,5 @@ void SubMenu::render() {
     load_game_button.render();
     return_button.render();
 
-    DrawText(title.c_str(), 577, 79, 50, BLACK);
+    DrawTextEx(titleFont, title.c_str(), {577, 79}, 50, 2, BLACK);
 }

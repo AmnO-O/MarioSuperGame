@@ -16,13 +16,15 @@ class SubMenu : public MenuState
         NormalButton load_game_button;
         ImageButton return_button;
         Texture2D sub_background;
-        std::string title;  
+        std::string title; 
+        Font titleFont; 
         StateManager& stateManager;
 
     public:
 
         SubMenu(StateManager& stateManager, const std::string& title);
-        void unload() override;
+        ~SubMenu();
+
         void update(float deltaTime) override;
         void render() override;   
 };

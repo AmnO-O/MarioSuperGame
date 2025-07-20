@@ -15,7 +15,6 @@ Game::Game() {
     isRunning = true;
 
     soundManager.loadMenuSound();
-    soundManager.playMenuSound();
 
     stateManager.pushState(std::make_unique<MainMenu>(stateManager));
 }
@@ -30,6 +29,8 @@ Game::~Game() {
 }
 
 void Game::run() {
+    soundManager.playMenuSound();
+    
     while (!WindowShouldClose() && isRunning) {
         float deltaTime = GetFrameTime();
 

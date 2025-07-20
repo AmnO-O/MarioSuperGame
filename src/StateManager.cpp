@@ -8,10 +8,7 @@ void StateManager::pushState(std::unique_ptr<MenuState> newState)
 void StateManager::popState()
 {
     if (!stateStack.empty())
-    {
-        stateStack.top()->unload();
         stateStack.pop();
-    }
 }
 
 MenuState* StateManager::getCurrentState()
