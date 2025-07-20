@@ -1,6 +1,8 @@
 	#include "Character/PlayerMovement.h"
 	#include "Character/CharacterState.h"
 	#include <iostream>
+	#include "Exceptions.h"
+	#include <cassert>
 
 void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *&Mstate){
 	currentTime += deltaTime; 
@@ -11,7 +13,7 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 	bool isClickedSpace = IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W); 
 	bool pressingSpace = IsKeyDown(KEY_SPACE) || IsKeyDown(KEY_UP) || IsKeyDown(KEY_W);
 
-	bool pressingCrounch = IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN); 
+	bool pressingCrounch = IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN) || IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_DOWN); 
 	
 
 	float forceX = 0;
@@ -37,13 +39,21 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 		forceY += stats->jumpInitialVelocity; 
 		currentTime = 0; 
 
-		delete Mstate; 
-		Mstate = new JumpState(); 
+		if((pressingCrounch == false || Sstate->canBreakBrick() == false)){
+			delete Mstate; 
+			Mstate = new JumpState(); 
+		}else{
+			Mstate->changeIsJump(); 
+		}
 	}
-	else if(pressingSpace && Mstate->isJumping() && currentTime <= stats->maxJumpTime){
+	else if(pressingSpace && (Mstate->isJumping() || (pressingCrounch && Sstate->canBreakBrick() == true)) && currentTime <= stats->maxJumpTime){
 		forceY += stats->jumpHoldAcceleration; 
 	}else if(Mstate -> isJumping() == false){
-		forceY -= 980; 
+		forceY -= 980;
+	}
+
+	if(Mstate->getMoveState() == "CROUCHING"){
+		forceX = 0; 
 	}
 	
 	velocity.x += forceX * deltaTime;
@@ -52,20 +62,25 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 	velocity.x = std::min(velocity.x, 150.0f);
 	velocity.x = std::max(velocity.x, -150.0f);
 
-
 	position.x += velocity.x * deltaTime;
 	position.y += velocity.y * deltaTime;
 
 	if (position.x < 0.0f)
 		position.x = 0.0f;
 
-	Vector2 force = {forceX, forceY}; 
 
-	MoveContext currentContext = {position, velocity, force, facingRight, groundLevel,currentTime, Sstate->canBreakBrick()}; 
+	Vector2 force = {forceX, forceY}; 
+	MoveContext currentContext = {position, velocity, force, facingRight, groundLevel,currentTime, pressingCrounch, Sstate->canBreakBrick()}; 
+
+	assert(Mstate != nullptr); 
+	assert(Sstate != nullptr); 
+
+
 	IMoveState *nextState = Mstate->update(&currentContext); 
 
 	if(nextState != Mstate){
 		delete Mstate; 
 		Mstate = nextState; 
 	}
+
 }

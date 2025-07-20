@@ -27,6 +27,7 @@ public:
     Character(CharacterType type, Vector2 pos); 
     Vector2 getPosition() const {return movement->getPosition(); }
     Rectangle getHitbox() const {return hitbox; }
+    void powerUp(PowerUpType type); 
     void setGroundLevel(float groundLevel) {movement->setGroundLevel(groundLevel);}
     void update(float deltaTime); 
     void render(); 

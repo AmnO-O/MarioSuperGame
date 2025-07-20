@@ -1,6 +1,11 @@
 #include "Character/CharacterState.h"
 
 IMoveState *StandState::update(MoveContext *player){
+    if(player->isCrouch && player->isBig){
+
+        return new CrouchState(); 
+    }
+
     if(player->velocity.x != 0) {
         player->currentTime = 0; 
         player->facingRight = (player->velocity.x > 0); 
@@ -65,9 +70,27 @@ IMoveState *JumpState::update(MoveContext *player){
 }
 
 IMoveState *CrouchState::update(MoveContext *player){
-    if(player -> isBig == 0) return this; 
+    if(player -> isBig == 0) 
+        return new StandState();
 
+    if(player->isCrouch == 0){
+        if(player->velocity.y != 0)
+            return new JumpState(); 
 
+        if(player->velocity.x != 0)
+            return new RunState(); 
+        
+        return new StandState(); 
+    }
+
+    if(player->position.y >= player->groundLevel){
+        player->velocity.y = 0; 
+        player->position.y = player->groundLevel; 
+        this->changeIsJump();
+        player->force = {0, 0}; 
+    }
+
+    return this; 
 }
 
 

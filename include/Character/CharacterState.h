@@ -42,23 +42,26 @@ struct MoveContext {
 	bool &facingRight;
 	float &groundLevel;  
     float &currentTime;
+	bool 	  &isCrouch; 
     bool      isBig;
 };
 
 
 class IMoveState{
+	bool isJump = false; 
 public: 
 	IMoveState() = default; 
 	virtual void update(float deltaTime) = 0; 
 	virtual IMoveState *update(MoveContext *Data) = 0;
 	virtual std::string getMoveState() const = 0;
-	virtual bool isJumping() const {return false; }
+	void changeIsJump() {isJump ^= 1;}
+	virtual bool isJumping() const {return isJump; }
+	virtual bool isSliding() const {return false; }
 	virtual ~IMoveState() = default;  
 };
 
 class StandState: public IMoveState{
 public:
-
 	void update(float deltaTime) override; 
 	IMoveState *update(MoveContext *Data) override;
 	std::string getMoveState() const override {return "STANDING";}
@@ -89,6 +92,14 @@ class JumpState:public IMoveState{
 public: 
 	void update(float deltaTime) override; 
 	IMoveState *update(MoveContext *Data) override;
-	virtual bool isJumping() const {return true;}
+	bool isJumping() const override {return true;}
 	std::string getMoveState() const override {return "JUMPING";}
+}; 
+
+class SlideState:public IMoveState{
+public: 
+	void update(float deltaTime) override; 
+	IMoveState *update(MoveContext *Data) override;
+	bool isSliding() const override {return true;}
+	std::string getMoveState() const override {return "SLIDING";}
 }; 
