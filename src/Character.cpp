@@ -2,23 +2,68 @@
 #include <iostream>
 #include <cassert>
 
+void Character::setup(){
+	Sstate = new FireState(); 
+	Mstate = new StandState(); 
+	activeAnimation = nullptr; 
+}
+
 Character::Character(CharacterType t, Vector2 pos):
-    type(t), 
-    Sstate(new FireState()), Mstate(new StandState()), activeAnimation(nullptr){
-    
+    type(t){
+	setup(); 
+
     if(type == CharacterType::MARIO){
+		readRectAnimation("assets/animation/mario.txt");
+		updateShape(); 
+		groundLevel = pos.y + activeAnimation->getCurrentShape().y; 
+
 		movement = new PlayerMovement(pos, {0, 0}, std::make_unique<MarioStats>()); 
+		movement->setGroundLevel(groundLevel); 
+		movement->setShape(activeAnimation->getCurrentShape()); 
 
 		Texture& mario = Images::textures["mario.png"];
 
 		if(mario.id == 0)
 			throw GameException("Can't load image of mario.png");
-		readRectAnimation("assets/animation/mario.txt");
-
 	}else if(type == CharacterType::LUIGI){
-		movement = new PlayerMovement(pos, {0, 0}, std::make_unique<LuigiStats>()); 
 		readRectAnimation("assets/animation/luigi.txt");
+		updateShape(); 
+		groundLevel = pos.y + activeAnimation->getCurrentShape().y; 
+
+		movement = new PlayerMovement(pos, {0, 0}, std::make_unique<LuigiStats>()); 
+		movement->setGroundLevel(groundLevel); 
+		movement->setShape(activeAnimation->getCurrentShape()); 
     }
+
+	updateHitbox(); 
+}
+
+Character::Character(CharacterType t,  float cordX, float groundLevel):
+    type(t){
+
+	setup(); 
+
+    if(type == CharacterType::MARIO){
+		readRectAnimation("assets/animation/mario.txt");
+		updateShape(); 
+		Vector2 pos = {cordX, groundLevel - activeAnimation->getCurrentShape().y };
+
+		movement = new PlayerMovement(pos, {0, 0}, std::make_unique<MarioStats>()); 
+		movement->setGroundLevel(groundLevel); 
+		Texture& mario = Images::textures["mario.png"];
+
+		if(mario.id == 0)
+			throw GameException("Can't load image of mario.png");
+	}else if(type == CharacterType::LUIGI){
+		readRectAnimation("assets/animation/luigi.txt");
+		updateShape(); 
+		Vector2 pos = {cordX, groundLevel - activeAnimation->getCurrentShape().y };
+
+		movement = new PlayerMovement(pos, {0, 0}, std::make_unique<LuigiStats>()); 
+		movement->setGroundLevel(groundLevel); 
+    }
+
+	updateHitbox(); 
 }
 
 std::string Character::getShape_Action() const{
@@ -31,11 +76,23 @@ std::string Character::getShape_Action() const{
 void Character::updateShape(){
 	std::string animationKey = getShape_Action(); 
 
-	if(activeAnimation != animations[animationKey].get())
+	if(activeAnimation != animations[animationKey].get()){
 		activeAnimation = animations[animationKey].get(); 
+	}
 
 	if(activeAnimation == nullptr)
 		throw GameException("Active animation is null in Character::updateShape");
+}
+
+void Character::updateHitbox(){	
+	if(movement == nullptr || activeAnimation == nullptr)
+		throw GameException("Movement ptr activeAnimation is null in Character::updateHitbox"); 
+
+	auto [w, h] = activeAnimation->getCurrentShape(); 	
+	movement->setShape(Vector2{w, h}); 
+
+	Vector2 current = movement -> getPosition(); 
+	hitbox = {current.x, current.y, w, h}; 
 }
 
 void Character::readRectAnimation(const std::string filename) {
@@ -108,24 +165,7 @@ void Character::readRectAnimation(const std::string filename) {
 		}
 
 	}
-
-	updateHitbox(); 
-
 	fin.close(); 
-}
-
-void Character::updateHitbox(){
-	updateShape(); 
-	
-	if(movement == nullptr || activeAnimation == nullptr)
-		throw GameException("Movement pr activeAnimation is null in Character::updateHitbox"); 
-
-	auto [w, h] = activeAnimation->getCurrentShape(); 
-
-	Vector2 current = movement -> getPosition(); 
-	groundLevel = h + current.x; 
-
-    hitbox = {current.x, current.y, w, h}; 
 }
 
 void Character::powerUp(PowerUpType t){
@@ -163,10 +203,13 @@ void Character::powerUp(PowerUpType t){
 void Character::shootFireball(){
 	if (IsKeyPressed(KEY_F) && Sstate->canShootFire()) {
 		Vector2 startPos = movement->getPosition(); 
-		startPos.x += 20; 
-		startPos.y += 8;
+
+		startPos.x += 15; 
+		startPos.y += 5;
 
         fireballs.emplace_back(new Fireball(startPos, movement->isFacingRight()));
+		auto [w, h] = activeAnimation->getCurrentShape(); 
+		
 		fireballs.back() ->setGroundLevel(groundLevel); 
     }
 }
@@ -178,14 +221,21 @@ void Character::cleanFireballs(){
     );
 }
 
+void Character::adaptCollision(const Rectangle &rect){
+	movement->adaptCollision(rect, Mstate); 
+	updateShape(); 
+	updateHitbox(); 
+}
+
 void Character::update(float deltaTime){
+	// std::cout << "Character:" << groundLevel << '\n'; 
 	if(movement == nullptr)
 		throw GameException("Movement is null in Character::update"); 
 
 	movement -> update(deltaTime, Sstate, Mstate); 
 	
 	shootFireball(); 
-	// cleanFireballs();
+	cleanFireballs();
 
 	for (auto& fb : fireballs) 
 		fb->update(deltaTime);
@@ -193,6 +243,7 @@ void Character::update(float deltaTime){
 	if(activeAnimation)
 		activeAnimation->update(deltaTime); 
 
+	updateShape(); 
 	updateHitbox(); 
 }
 

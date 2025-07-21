@@ -63,8 +63,14 @@ void Fireball::update(float deltaTime){
     }
 
     if (fabs(velocity.x) < 250.0f) active = false;
+
+    updateHitbox(); 
 }
 
+
+void Fireball::updateHitbox(){
+    
+}
 
 
 void Fireball::render(){

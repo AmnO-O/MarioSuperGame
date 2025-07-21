@@ -28,11 +28,15 @@ private:
     void shootFireball();
     void cleanFireballs(); 
     void updateShape(); 
+    void setup(); 
 public: 
-	
     Character(CharacterType type, Vector2 pos); 
+    Character(CharacterType type, float cordX, float groundLevel); 
+
     Vector2 getPosition() const {return movement->getPosition(); }
     Rectangle getHitbox() const {return hitbox; }
+
+    void adaptCollision(const Rectangle& rect);
     void powerUp(PowerUpType type); 
     void setGroundLevel(float groundLevel) {this->groundLevel = groundLevel; movement->setGroundLevel(groundLevel);}
     void update(float deltaTime); 

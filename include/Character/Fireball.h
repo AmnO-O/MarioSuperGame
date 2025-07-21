@@ -27,6 +27,7 @@ public:
     Vector2 getPosition() const {return position;}
     void setGroundLevel(float groundLevel)  {this->groundLevel = groundLevel;}; 
     bool isActive() const {return (active || activeAnimation->isOnePeriodPassed() == false);}
+    void updateHitbox(); 
     void explode(); 
     void update(float deltaTime); 
     void render(); 

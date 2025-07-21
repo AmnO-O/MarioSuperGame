@@ -1,11 +1,38 @@
-	#include "Character/PlayerMovement.h"
-	#include "Character/CharacterState.h"
-	#include <iostream>
-	#include "Exceptions.h"
-	#include <cassert>
+#include "Character/PlayerMovement.h"
+#include "Character/CharacterState.h"
+#include <iostream>
+#include "Exceptions.h"
+#include <cassert>
+
+void PlayerMovement::adaptCollision(const Rectangle& rect, IMoveState *&Mstate) {
+	float penLeft = (position.x + shape.x) - rect.x; 
+	float penRight = (rect.x + rect.width) - position.x;
+	float penX = penLeft < penRight ? -penLeft : penRight; 
+
+	float penTop = (position.y + shape.y) - rect.y;
+	float penBot = (rect.y + rect.height) - position.y;
+	float penY = penTop < penBot ? -penTop : penBot;
+
+	if (std::fabs(penX) < std::fabs(penY)) {
+		position.x += penX;
+		velocity.x = 0; 
+	}
+	else {
+		position.y += penY; 
+		velocity.y = 0; 
+		if (penY < 0) {
+			if(Mstate ->getMoveState() != "STANDING"){
+				delete Mstate; 
+				Mstate = new StandState(); 
+			}
+		}
+	}
+}
 
 void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *&Mstate){
 	currentTime += deltaTime; 
+	// std::cout << "Movement:" << groundLevel << '\n'; 
+
 
 	bool pressingLeft = IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT);
 	bool pressingRight = IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT) ;
@@ -15,7 +42,6 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 
 	bool pressingCrounch = IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN) || IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_DOWN); 
 	
-
 	float forceX = 0;
 	float forceY = 980;
 
@@ -46,7 +72,7 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 			Mstate->changeIsJump(); 
 		}
 	}
-	else if(pressingSpace && (Mstate->isJumping() || (pressingCrounch && Sstate->canBreakBrick() == true)) && currentTime <= stats->maxJumpTime){
+	else if(pressingSpace && Mstate->isJumping() && currentTime <= stats->maxJumpTime){
 		forceY += stats->jumpHoldAcceleration; 
 	}else if(Mstate -> isJumping() == false){
 		forceY -= 980;
@@ -54,7 +80,13 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 
 	if(Mstate->getMoveState() == "CROUCHING"){
 		forceX = 0; 
+		if(Mstate->isJumping() == false && velocity.y == 0){
+			position.y = groundLevel - shape.y; 
+		}
 	}
+
+	// std::cout << pressingSpace << ' ' << isClickedSpace << ' ' << Mstate->isJumping() << '\n';  
+
 	
 	velocity.x += forceX * deltaTime;
 	velocity.y += forceY * deltaTime;
@@ -70,7 +102,7 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 
 
 	Vector2 force = {forceX, forceY}; 
-	MoveContext currentContext = {position, velocity, force, facingRight, groundLevel,currentTime, pressingCrounch, Sstate->canBreakBrick()}; 
+	MoveContext currentContext = {position, velocity, force, shape, facingRight, groundLevel, currentTime, pressingCrounch, Sstate->canBreakBrick()}; 
 
 	assert(Mstate != nullptr); 
 	assert(Sstate != nullptr); 

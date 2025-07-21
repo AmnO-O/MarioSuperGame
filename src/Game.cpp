@@ -42,7 +42,6 @@ void Game::processInput() {
 void Game::update(float deltaTime) {
     character->update(deltaTime); 
     myCam -> update(character->getPosition()); 
-    myCam->setZoom(5); 
 }
 
 void Game::render() {

@@ -39,6 +39,7 @@ struct MoveContext {
     Vector2& position;
     Vector2& velocity;
     Vector2& force;
+	Vector2& shape; 
 	bool &facingRight;
 	float &groundLevel;  
     float &currentTime;
