@@ -39,6 +39,7 @@ public:
     void adaptCollision(const Rectangle& rect);
     void powerUp(PowerUpType type); 
     void setGroundLevel(float groundLevel) {this->groundLevel = groundLevel; movement->setGroundLevel(groundLevel);}
+    void setPosition(Vector2 pos);
     void update(float deltaTime); 
     void render(); 
     

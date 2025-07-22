@@ -24,42 +24,40 @@ void MyCamera2D::setZoom(float zoomLevel_) {
 	zoomLevel = zoomLevel_;
 }
 
-void MyCamera2D::update(Vector2 playerPos){
+void MyCamera2D::update(Character* player){
 	float screenW = (float)GetScreenWidth();
 	float screenH = (float)GetScreenHeight();
 
-	float mapW = 3584.0f;
-	float mapH = 240.0f;
-	float playerW = 16.0f;
+	Rectangle playerHitBox = player->getHitbox();
 
-	if (playerPos.x < 0.0f)                     
-		playerPos.x = 0.0f;
+	if (playerHitBox.x < 0.0f)                     
+		playerHitBox.x = 0.0f;
 
-	if (playerPos.x > mapW - playerW)           
-		playerPos.x = mapW - playerW;
+	if (playerHitBox.x > mapSize.x - playerHitBox.width)           
+		playerHitBox.x = mapSize.x - playerHitBox.width;
 
-	camera.target = { playerPos.x, playerPos.y - 100.0f };
+	camera.target = { playerHitBox.x, playerHitBox.y - 100.0f };
 
 
-	float scaleX = screenW / mapW;
-	float scaleY = screenH / mapH;
+	float scaleX = screenW / mapSize.x;
+	float scaleY = screenH / mapSize.y;
 	camera.zoom = std::max(scaleX, scaleY);
 
 	float halfW = screenW * 0.5f / camera.zoom;
 	float halfH = screenH * 0.5f / camera.zoom;
 
-	if (mapW > 2 * halfW) {
+	if (mapSize.x > 2 * halfW) {
 		if (camera.target.x < halfW)        camera.target.x = halfW;
-		if (camera.target.x > mapW - halfW) camera.target.x = mapW - halfW;
+		if (camera.target.x > mapSize.x - halfW) camera.target.x = mapSize.x - halfW;
 	}
 	else 
-		camera.target.x = mapW / 2;  
+		camera.target.x = mapSize.x / 2;  
 
-	if (mapH > 2 * halfH) {
+	if (mapSize.y > 2 * halfH) {
 		if (camera.target.y < halfH)        camera.target.y = halfH;
-		if (camera.target.y > mapH - halfH) camera.target.y = mapH - halfH;
+		if (camera.target.y > mapSize.y - halfH) camera.target.y = mapSize.y - halfH;
 	}
 	else {
-		camera.target.y = mapH / 2;
+		camera.target.y = mapSize.y / 2;
 	}
 }

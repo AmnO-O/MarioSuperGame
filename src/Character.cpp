@@ -3,7 +3,7 @@
 #include <cassert>
 
 void Character::setup(){
-	Sstate = new FireState(); 
+	Sstate = new SmallState(); 
 	Mstate = new StandState(); 
 	activeAnimation = nullptr; 
 }
@@ -208,7 +208,10 @@ void Character::shootFireball(){
 		startPos.y += 5;
 
         fireballs.emplace_back(new Fireball(startPos, movement->isFacingRight()));
-		auto [w, h] = activeAnimation->getCurrentShape(); 
+		
+		Vector2 curshape = activeAnimation->getCurrentShape(); 
+		float w = curshape.x;
+		float h = curshape.y;
 		
 		fireballs.back() ->setGroundLevel(groundLevel); 
     }

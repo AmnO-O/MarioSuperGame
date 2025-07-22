@@ -9,16 +9,25 @@ Game& Game::getInstance() {
 }
 
 Game::Game() {
-    InitWindow(1440, 810, "Mario Game");
+    InitWindow(1600, 900, "Mario Game");
     SetTargetFPS(60);
     isRunning = true;
 	Images::loadAllTextures("assets/images/");
+
     character = new Character(CharacterType::MARIO, {  100, 100 });
+    character->setGroundLevel(2.0f * GetScreenHeight());
+
+    maps.push_back(Map("assets/maps/1-1/"));
+
     myCam = new MyCamera2D(1600.0f, 900.0f); 
+    myCam->setMapSize(maps[currentMap].getSize());
 }
 
 Game::~Game() {
     CloseWindow();
+    Images::unloadAllTextures();
+    for (int i = 0; i < maps.size(); i++)
+        maps[i].Unload();
     delete character; 
     delete myCam; 
 }
@@ -40,8 +49,9 @@ void Game::processInput() {
 }
 
 void Game::update(float deltaTime) {
+    maps[currentMap].Update(deltaTime);
     character->update(deltaTime); 
-    myCam -> update(character->getPosition()); 
+    myCam -> update(character); 
 }
 
 void Game::render() {
@@ -52,12 +62,10 @@ void Game::render() {
     /// camera draw here
 
         BeginMode2D(camera); 
+            maps[currentMap].Draw();
             if(character)
                 character->render(); 
         EndMode2D(); 
-
-
-    DrawText("Hello Mario", 350, 280, 20, DARKGRAY);
 
 
     EndDrawing();

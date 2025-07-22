@@ -46,7 +46,7 @@ void PowerUp::render(){
 		case PowerUpType::STAR: power = Images::textures["star.png"]; break;
 	}
 	
-	DrawTexture(power, hitbox.x, hitbox.y, WHITE);
+	DrawTexture(power, (int)hitbox.x, (int)hitbox.y, WHITE);
 }
 
 void MushroomPowerUp::applyEffect(Character* &character) {

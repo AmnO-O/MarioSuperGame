@@ -17,7 +17,7 @@ private:
     void readRectAnimation(const std::string filePath); 
 public:
     Fireball(Vector2 startPos, bool facingRight) : position(startPos), active(true) {
-        velocity.x = facingRight ? 300 : -300;
+        velocity.x = facingRight ? 300.0f : -300.0f;
         velocity.y = 0; 
         hitbox = { position.x, position.y, 16, 16 };
         readRectAnimation("assets/animation/fireball.txt"); 
