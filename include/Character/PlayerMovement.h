@@ -12,15 +12,18 @@ class PlayerMovement{
 private:
     Vector2 position; 
     Vector2 velocity; 
+    Vector2 shape; 
     bool facingRight; 
 	std::unique_ptr<CharacterStats> stats;
     
-    float groundLevel = 100.0f; 
+    float groundLevel; 
 	float currentTime; 
 
 public: 
     PlayerMovement(Vector2 pos, Vector2 vel, std::unique_ptr<CharacterStats> stats_): 
-        position(pos), velocity(vel), stats(std::move(stats_)), facingRight(true){}; 
+        position(pos), velocity(vel), stats(std::move(stats_)), facingRight(true), currentTime(0.0f), groundLevel(0.0){
+            shape = {14, 14}; 
+        }; 
 
     PlayerMovement(const PlayerMovement& other)
       : position(other.position),
@@ -42,8 +45,12 @@ public:
         return *this;
     } 
 
+    void adaptCollision(const Rectangle& rect, IMoveState *&Mstate); 
     void update(float deltaTime, IShapeState *&Sstate, IMoveState  *&Mstate);
-    void setGroundLevel(float groundLevel) {this->groundLevel = groundLevel;}
+    void setGroundLevel(float groundLevel_); 
+    void setShape(const Rectangle &rect) {shape = {rect.width, rect.height};}
+    void setShape(const Vector2 &shape_) {shape = {shape_.x, shape_.y};}
+
     Vector2 getPosition() const {return position;}
     bool isFacingRight() const {return facingRight; }
 

@@ -6,6 +6,7 @@
 #include "Exceptions.h"
 #include "CharacterState.h"
 #include "PlayerMovement.h"
+#include "Fireball.h"
 
 class Character{
 private: 
@@ -15,19 +16,29 @@ private:
 
     CharacterType type; 
 	std::map<std::string, std::unique_ptr<AnimationManager>> animations; 
+    std::vector<Fireball*> fireballs;
 	AnimationManager *activeAnimation;
 
     Rectangle hitbox; 
+    float groundLevel; 
 
     void updateHitbox(); 
-    void readRectAnimation(const std::string filePath); 
+    void readRectAnimation(const std::string filePath, Texture2D &sheet); 
     std::string getShape_Action() const; 
+    void shootFireball();
+    void cleanFireballs(); 
+    void updateShape(); 
+    void setUp(); 
 public: 
-	
     Character(CharacterType type, Vector2 pos); 
+    Character(CharacterType type, float cordX, float groundLevel); 
+
     Vector2 getPosition() const {return movement->getPosition(); }
     Rectangle getHitbox() const {return hitbox; }
-    void setGroundLevel(float groundLevel) {movement->setGroundLevel(groundLevel);}
+
+    void adaptCollision(const Rectangle& rect);
+    void powerUp(PowerUpType type); 
+    void setGroundLevel(float groundLevel); 
     void update(float deltaTime); 
     void render(); 
     

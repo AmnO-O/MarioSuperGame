@@ -12,6 +12,8 @@ private:
 
     bool flipX; 
     int currentIndex; 
+
+    bool isOnePeriod = false; 
 public: 
     AnimationManager() = default; 
     AnimationManager(Texture2D &t, bool flip): 
@@ -19,6 +21,7 @@ public:
         flipX(flip), currentIndex(0){}; 
 
     Vector2 getCurrentShape() const;
+    bool isOnePeriodPassed() const {return isOnePeriod;}
     void addRect(const Rectangle& rect);   
     void update(float deltaTime); 
     void render(Vector2 position, bool flip = false); 

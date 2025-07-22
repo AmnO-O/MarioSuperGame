@@ -22,10 +22,10 @@ void AnimationManager::update(float deltaTime){
 
     if(currentTime >= timeSwitch){
         currentTime -= timeSwitch; 
-        currentIndex ++; 
+        currentIndex ++;
     }
 
-    if(currentIndex >= frames.size()) currentIndex = 0; 
+    if(currentIndex >= frames.size()) currentIndex = 0, isOnePeriod = true; 
 }
 
 void AnimationManager::render(Vector2 position, bool flip){
@@ -36,6 +36,8 @@ void AnimationManager::render(Vector2 position, bool flip){
 	Rectangle frameRec = frames[currentIndex];
 
     flip ^= flipX; 
+
+    assert(sheet.id != 0); 
 
 	if (flip) 
 		frameRec.width *= -1;

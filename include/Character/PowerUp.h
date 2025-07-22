@@ -19,7 +19,8 @@ public:
         hitbox = {position.x, position.y, 16, 16}; 
     }
 
-    void update(float deltaTime, Character *&player); 
+    virtual void applyEffect(Character* &character) = 0;
+    void update(float deltaTime); 
     bool isActive() const { return active; }
     void adaptCollision(const Rectangle& rect);
 
@@ -30,17 +31,20 @@ public:
 class MushroomPowerUp : public PowerUp {
 public: 
     MushroomPowerUp(Vector2 pos) : PowerUp(PowerUpType::MUSHROOM, pos) {};
+    void applyEffect(Character* &character) override; 
 };
 
 
 class FireFlowerPowerUp : public PowerUp {
 public:
     FireFlowerPowerUp(Vector2 pos) : PowerUp(PowerUpType::FIRE_FLOWER, pos) {};
+    void applyEffect(Character* &character) override; 
 };
 
 
 class StarPowerUp :public PowerUp {
 public: 
     StarPowerUp(Vector2 pos) : PowerUp(PowerUpType::STAR, pos) {}; 
+    void applyEffect(Character* &character) override; 
 };
 

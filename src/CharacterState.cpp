@@ -1,6 +1,12 @@
 #include "Character/CharacterState.h"
+#include <iostream>
 
 IMoveState *StandState::update(MoveContext *player){
+    if(player->isCrouch && player->isBig){
+        player->currentTime = 0; 
+        return new CrouchState(); 
+    }
+
     if(player->velocity.x != 0) {
         player->currentTime = 0; 
         player->facingRight = (player->velocity.x > 0); 
@@ -11,6 +17,11 @@ IMoveState *StandState::update(MoveContext *player){
 }
 
 IMoveState *RunState::update(MoveContext *player){
+    if(player->isCrouch && player->isBig){
+        player->currentTime = 0; 
+        return new CrouchState(); 
+    }
+    
     if(player->velocity.x  * player->force.x < 0){
         player->facingRight = (player->force.x >= 0);
         player->currentTime = 0;  
@@ -54,10 +65,9 @@ IMoveState *SkidState::update(MoveContext *player){
 }
 
 IMoveState *JumpState::update(MoveContext *player){
-
-    if(player->position.y >= player->groundLevel){
+    if(player->position.y >= player->groundLevel - player->shape.y){
         player->velocity.y = 0; 
-        player->position.y = player->groundLevel; 
+        player->position.y = player->groundLevel - player->shape.y; 
         return new StandState(); 
     }
 
@@ -65,28 +75,53 @@ IMoveState *JumpState::update(MoveContext *player){
 }
 
 IMoveState *CrouchState::update(MoveContext *player){
-    if(player -> isBig == 0) return this; 
+    if(player -> isBig == 0) 
+        return new StandState();
 
+    if(player->isCrouch == 0){
+        if(player->velocity.y != 0){
+            return new JumpState(); 
+        }
 
+        player->position.y = player->groundLevel - player->shape.y - 9; 
+
+        if(player->velocity.x != 0)
+            return new RunState();
+
+        return new StandState(); 
+    }
+
+    if(this->isJumping() && player->position.y >= player->groundLevel - player->shape.y){
+        player->velocity.y = 0; 
+        player->position.y = player->groundLevel - player->shape.y; 
+        this->changeIsJump();
+        player->force = {0, 0}; 
+    }
+
+    return this; 
 }
 
+IMoveState *ShootState::update(MoveContext *player){
+    if(this->currentTime >= 0.1){
+        if( player->position.y < player->groundLevel - player->shape.y){
+            return (new JumpState()) -> update(player); 
+        }else{
+            player->position.y = player->groundLevel - player->shape.y; 
+            player->velocity.y = 0; 
 
-void StandState::update(float deltaTime) {
+            if(player->velocity.x != 0) 
+                return (new RunState()) -> update(player); 
+            return (new StandState()) -> update(player); 
+        }
+    }
 
-}
+    if(this->isJumping() == false && player->position.y < player->groundLevel - player->shape.y){
+        this->changeIsJump(); 
+    }else if(player->position.y >= player->groundLevel - player->shape.y){
+        player->position.y = player->groundLevel - player->shape.y; 
+        player->velocity.y = 0.f; 
+        isJump = false; 
+    }
 
-void RunState::update(float deltaTime){
-
-}
-
-void JumpState::update(float deltaTime){
-
-}
-
-void SkidState::update(float deltaTime){
-
-}
-
-void CrouchState::update(float deltaTime){
-
+    return this; 
 }
