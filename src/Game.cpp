@@ -14,6 +14,7 @@ Game::Game() {
     isRunning = true;
 	Images::loadAllTextures("assets/images/");
     character = new Character(CharacterType::MARIO, {  100, 100 });
+    character->setGroundLevel(200); 
     myCam = new MyCamera2D(1600.0f, 900.0f); 
 }
 
@@ -40,7 +41,8 @@ void Game::processInput() {
 }
 
 void Game::update(float deltaTime) {
-    character->update(deltaTime); 
+    if(deltaTime < 0.2) 
+        character->update(deltaTime); 
     myCam -> update(character->getPosition()); 
 }
 

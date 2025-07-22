@@ -56,11 +56,11 @@ public:
 
 class LuigiStats : public CharacterStats {
 public: 
-	LuigiStats() : CharacterStats(180.0, -480.0, -900.0, 0.4) {
-		runSpeed = 180.0f;          
-		jumpInitialVelocity = -480.0f;  
-		jumpHoldAcceleration = -900.0f;
-		maxJumpTime = 0.4f;
+	LuigiStats() : CharacterStats(200.0f, -11000.0f, -1300.0f, 0.4) {
+		runSpeed = 200.0f;          
+		jumpInitialVelocity = -11000.0f;  
+		jumpHoldAcceleration = -1300.0f;
+		maxJumpTime = 0.3f;
 	};
 	~LuigiStats() {}; 
 };

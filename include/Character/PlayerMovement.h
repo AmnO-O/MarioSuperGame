@@ -21,7 +21,9 @@ private:
 
 public: 
     PlayerMovement(Vector2 pos, Vector2 vel, std::unique_ptr<CharacterStats> stats_): 
-        position(pos), velocity(vel), stats(std::move(stats_)), facingRight(true){}; 
+        position(pos), velocity(vel), stats(std::move(stats_)), facingRight(true), currentTime(0.0f), groundLevel(0.0){
+            shape = {14, 14}; 
+        }; 
 
     PlayerMovement(const PlayerMovement& other)
       : position(other.position),
@@ -45,7 +47,7 @@ public:
 
     void adaptCollision(const Rectangle& rect, IMoveState *&Mstate); 
     void update(float deltaTime, IShapeState *&Sstate, IMoveState  *&Mstate);
-    void setGroundLevel(float groundLevel_) {this->groundLevel = groundLevel_;}
+    void setGroundLevel(float groundLevel_); 
     void setShape(const Rectangle &rect) {shape = {rect.width, rect.height};}
     void setShape(const Vector2 &shape_) {shape = {shape_.x, shape_.y};}
 

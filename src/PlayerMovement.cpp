@@ -4,6 +4,14 @@
 #include "Exceptions.h"
 #include <cassert>
 
+void PlayerMovement::setGroundLevel(float groundLevel_){
+	 this->groundLevel = groundLevel_;
+
+	 if(groundLevel - shape.y < position.y){
+		position.y = groundLevel - shape.y; 
+	 }
+}
+
 void PlayerMovement::adaptCollision(const Rectangle& rect, IMoveState *&Mstate) {
 	float penLeft = (position.x + shape.x) - rect.x; 
 	float penRight = (rect.x + rect.width) - position.x;
@@ -85,7 +93,6 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 		}
 	}
 
-	// std::cout << pressingSpace << ' ' << isClickedSpace << ' ' << Mstate->isJumping() << '\n';  
 
 	
 	velocity.x += forceX * deltaTime;
