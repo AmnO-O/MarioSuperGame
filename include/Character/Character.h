@@ -30,6 +30,7 @@ private:
     void updateShape(); 
     void setUp(); 
     void adaptChangePosition(); 
+    void animationTransform(); 
 public: 
     Character(CharacterType type, Vector2 pos); 
     Character(CharacterType type, float cordX, float groundLevel); 

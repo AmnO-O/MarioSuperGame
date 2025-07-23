@@ -6,7 +6,6 @@ class IShapeState{
 public: 
 	IShapeState() = default; 
 	virtual std::string getShapeState() const = 0; 
-	virtual bool isTransformed() const {return false; }
 	virtual bool canBreakBrick() const {return false; }
 	virtual bool canShootFire() const {return false; }
 	virtual ~IShapeState() = default;
@@ -15,11 +14,6 @@ public:
 class SmallState: public IShapeState{
 public: 
 	std::string getShapeState() const override {return "SMALL";}
-}; 
-class TransformedState: public IShapeState{
-public: 
-	bool isTransformed() const override {return true; }
-	std::string getShapeState() const override {return "TRANSFORMED";}
 }; 
 
 class BigState: public IShapeState{
@@ -34,6 +28,76 @@ public:
 	bool canShootFire() const override {return true; }
 	std::string getShapeState() const override {return "FIRE";}
 }; 
+
+
+class ShapeStateDecorator : public IShapeState{
+protected:
+	IShapeState *wrapped;
+public: 
+    ShapeStateDecorator(IShapeState *base)
+        : wrapped(base) {}
+    std::string getShapeState() const override {
+        return wrapped->getShapeState();
+    }
+    bool canBreakBrick() const override {
+        return wrapped->canBreakBrick();
+    }
+    bool canShootFire() const override {
+        return wrapped->canShootFire();
+    }	
+
+	virtual ~ShapeStateDecorator() { delete wrapped; }
+};
+
+
+class MorphDecorator : public ShapeStateDecorator{
+private: 
+    float currentTime = 0.0f;
+    const float DURATION = 0.8f; 
+public:
+    MorphDecorator(IShapeState *base)
+        : ShapeStateDecorator(base) {}
+
+    IShapeState *update(float deltaTime) {
+        currentTime += deltaTime;
+
+		if (currentTime >= DURATION) 
+            return new BigState();
+			
+		return nullptr;
+    }
+
+    std::string getShapeState() const override {
+        return "MORPHING(" + wrapped->getShapeState() + ")";
+    }
+};
+
+class InvincibleDecorator : public ShapeStateDecorator{
+private:
+    float currentTime = 0.0f;
+    const float DURATION = 10.0f; 
+public:
+    InvincibleDecorator(IShapeState *base)
+        : ShapeStateDecorator(base) {}
+
+    IShapeState *update(float deltaTime) {
+        currentTime += deltaTime;
+
+	if (currentTime >= DURATION) {
+			IShapeState* base = wrapped; 
+			wrapped = nullptr;           
+			return base; 
+		}
+		return nullptr;
+    }
+
+    std::string getShapeState() const override {
+        return "INVINCIBLE_" + wrapped->getShapeState();
+    }
+};
+
+
+
 
 struct MoveContext {
     Vector2& position;

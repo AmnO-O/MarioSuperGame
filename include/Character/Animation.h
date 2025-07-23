@@ -22,6 +22,7 @@ public:
 
     Vector2 getCurrentShape() const;
     bool isOnePeriodPassed() const {return isOnePeriod;}
+    void setTimeSwitch(float timeSwitch) {this -> timeSwitch = timeSwitch;}
     void addRect(const Rectangle& rect);   
     void update(float deltaTime); 
     void render(Vector2 position, bool flip = false); 

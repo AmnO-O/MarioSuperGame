@@ -16,12 +16,17 @@ Game::Game() {
     character = new Character(CharacterType::MARIO, {  100, 100 });
     character->setGroundLevel(200); 
     myCam = new MyCamera2D(1600.0f, 900.0f); 
+    powerUpCreator = new StarCreator(); 
+    item = powerUpCreator->create({150, 100}); 
+    item -> setGroundLevel(200);
 }
 
 Game::~Game() {
     CloseWindow();
     delete character; 
     delete myCam; 
+    delete item; 
+    delete powerUpCreator; 
 }
 
 void Game::run() {
@@ -43,7 +48,13 @@ void Game::processInput() {
 void Game::update(float deltaTime) {
     if(deltaTime < 0.2) 
         character->update(deltaTime); 
-    myCam -> update(character->getPosition()); 
+    myCam->update(character->getPosition()); 
+    item->update(deltaTime);
+    
+
+    if(CheckCollisionRecs(character->getHitbox(), item->getHitbox())){
+        item->applyEffect(character); 
+    }
 }
 
 void Game::render() {
@@ -56,6 +67,9 @@ void Game::render() {
         BeginMode2D(camera); 
             if(character)
                 character->render(); 
+
+            if(item)
+                item->render(); 
         EndMode2D(); 
 
 
