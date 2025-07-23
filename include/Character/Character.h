@@ -34,6 +34,7 @@ public:
     Character(CharacterType type, float cordX, float groundLevel); 
 
     Vector2 getPosition() const {return movement->getPosition(); }
+    Vector2 setPosition(const Vector2 &pos) {movement->setPosition(pos); }
     Rectangle getHitbox() const {return hitbox; }
 
     void adaptCollision(const Rectangle& rect);
