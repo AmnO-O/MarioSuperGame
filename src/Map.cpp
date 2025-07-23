@@ -1,11 +1,26 @@
-#include "Map.hpp"
+#include "Map.h"
+#include "Blocks/Brick.h"
+#include "Blocks/Floor.h"
 #include <fstream>
 
-void Map::input(std::istream &is) {
+void Map::input(std::istream &is, Texture objectTex) {
     is >> space;
+    std::string s;
+    while (is >> s) {
+        int n;
+        is >> n;
+        if (s == "BRICK") {
+            for (int i = 0; i < n; i++)
+                blocks.push_back(new Brick(objectTex, is));
+        }
+        else if (s == "FLOOR") {
+            for (int i = 0; i < n; i++)
+                blocks.push_back(new Floor(objectTex, is));
+        }
+    }
 }
 
-Map::Map(const std::string& folderPath) {
+Map::Map(const std::string& folderPath, Texture objectTex) {
     std::string path = folderPath + "/map.png";
     background = LoadTexture(path.c_str());
     path = folderPath + "/info.txt";
@@ -13,29 +28,13 @@ Map::Map(const std::string& folderPath) {
     fin.open(path);
     if (!fin.is_open())
         throw ResourceException("Can't load map info");
-    input(fin);
-
-    // //Floor
-    // int n;
-    // fin >> n;
-    // for (int i = 0; i < n; i++) {
-    //     int x, y, num;
-    //     fin >> x >> y >> num;
-    //     blocks.push_back(new Floor(blockTex, {x * scale, y * scale}, num));
-    // }
-    // //Brick
-    // fin >> n;
-    // for (int i = 0; i < n; i++) {
-    //     int x, y;
-    //     fin >> x >> y;
-    //     blocks.push_back(new Brick(blockTex, {x * scale, y * scale}));
-    // }
+    input(fin, objectTex);
     fin.close();
 }
 
 void Map::Update(float delta) {
-    // for (int i = 0; i < blocks.size(); i++)
-    //     blocks[i]->Update();
+    for (int i = 0; i < blocks.size(); i++)
+        blocks[i]->Update(delta);
 }
 
 void Map::Draw() const {    
@@ -51,18 +50,25 @@ void Map::Draw() const {
     Vector2 origin = { 0.0f, 0.0f };
     DrawTexturePro(background, src, dest, origin, 0.0f, WHITE);
 
-    // for (int i = 0; i < blocks.size(); i++) {
-    //     blocks[i]->Draw(Camera, DrawStat::First);
-    // }
+    for (int i = 0; i < blocks.size(); i++) {
+        blocks[i]->Draw(DrawStat::First);
+    }
     
-    // for (int i = 0; i < blocks.size(); i++) {
-    //     blocks[i]->Draw(Camera, DrawStat::Second);
-    // }
+    for (int i = 0; i < blocks.size(); i++) {
+        blocks[i]->Draw(DrawStat::Second);
+    }
 
 }
 
 void Map::Unload() {
     UnloadTexture(background);
-    // for (int i = 0; i < blocks.size(); i++)
-    //     delete blocks[i];
+    for (int i = 0; i < blocks.size(); i++)
+        delete blocks[i];
+}
+
+void Map::SetUp(CollisionManager &cm, Character* player) const {
+    cm.Clear();
+    cm.SetMainCharacter(player);
+    for (int i = 0; i < blocks.size(); i++)
+        cm.Register(blocks[i]);
 }

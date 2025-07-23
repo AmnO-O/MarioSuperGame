@@ -17,9 +17,10 @@ Game::Game() {
     character = new Character(CharacterType::MARIO, {  100, 100 });
     character->setGroundLevel(2.0f * GetScreenHeight());
 
-    maps.push_back(Map("assets/maps/1-1/"));
+    maps.push_back(Map("assets/maps/1-1/", Images::textures["mapobject.png"]));
+    maps[currentMap].SetUp(cm, character);
 
-    myCam = new MyCamera2D(1600.0f, 900.0f); 
+    myCam = new MyCamera2D(1.0f * GetScreenWidth(), 1.0f * GetScreenHeight()); 
     myCam->setMapSize(maps[currentMap].getSize());
 }
 
@@ -49,6 +50,7 @@ void Game::processInput() {
 }
 
 void Game::update(float deltaTime) {
+    cm.CheckAllCollisions();
     maps[currentMap].Update(deltaTime);
     character->update(deltaTime); 
     myCam -> update(character); 

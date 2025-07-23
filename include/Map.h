@@ -1,33 +1,31 @@
-#ifndef MAP_HPP
-#define MAP_HPP
+#ifndef MAP_H
+#define MAP_H
 
 #include "raylib.h"
 #include <string>
-// #include "Block.hpp"
-// #include "Floor.hpp"
-// #include "Brick.hpp"
+#include "Blocks/Block.h"
 #include <vector>
 #include "Exceptions.h"
-// #include "CollisionManager.hpp"
+#include "Observer.h"
+#include "Character/Character.h"
 
 class Map {
 private:
     int space;
     int curspace = 0;
     Texture2D background;
+    std::vector<Block*> blocks;
 
-    void input(std::istream &is);
-    // std::vector<Block*> blocks;
+    void input(std::istream &is, Texture objectTex);
 public:
     Map() = delete;
-    Map(const std::string& folderPath);
+    Map(const std::string& folderPath, Texture objectTex);
     Vector2 getSize() const { return {1.0f * background.width, 1.0f * background.height / space}; }
 
+    void SetUp(CollisionManager &cm, Character* player) const;
     void Update(float delta);
     void Draw() const;
     void Unload();
-
-    friend class GameManager;
 };
 
 #endif

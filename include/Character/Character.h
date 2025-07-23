@@ -7,8 +7,9 @@
 #include "CharacterState.h"
 #include "PlayerMovement.h"
 #include "Fireball.h"
+#include "Observer.h"
 
-class Character{
+class Character : public ICollidable {
 private: 
     PlayerMovement* movement; 
     IShapeState *Sstate; 
@@ -34,9 +35,10 @@ public:
     Character(CharacterType type, float cordX, float groundLevel); 
 
     Vector2 getPosition() const {return movement->getPosition(); }
-    Rectangle getHitbox() const {return hitbox; }
+    Rectangle getHitbox() const override {return hitbox; }
+    bool isBig() const { return dynamic_cast<SmallState*>(Sstate) == nullptr; }
 
-    void adaptCollision(const Rectangle& rect);
+    void adaptCollision(ICollidable* other) override;
     void powerUp(PowerUpType type); 
     void setGroundLevel(float groundLevel) {this->groundLevel = groundLevel; movement->setGroundLevel(groundLevel);}
     void setPosition(Vector2 pos);

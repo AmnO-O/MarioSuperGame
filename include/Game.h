@@ -4,7 +4,8 @@
 #include "Character/Character.h"
 #include "Character/MyCamera2D.h"
 #include <vector>
-#include "Map.hpp"
+#include "Map.h"
+#include "Observer.h"
 
 class Game {
 public:
@@ -17,10 +18,11 @@ public:
     Game& operator=(Game&&) = delete;
 private:
 
+    CollisionManager cm;
     std::vector<Map> maps = {};
+    int currentMap = 0;
     Character *character; 
     MyCamera2D *myCam; 
-    int currentMap = 0;
     Game();
     ~Game();
 

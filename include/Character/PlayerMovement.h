@@ -4,6 +4,7 @@
 #include <string>
 #include "Global.h"
 #include "PowerUp.h"
+#include "Observer.h"
 
 class IMoveState; 
 class IShapeState; 
@@ -43,7 +44,7 @@ public:
         return *this;
     } 
 
-    void adaptCollision(const Rectangle& rect, IMoveState *&Mstate); 
+    void adaptCollision(ICollidable* other, IMoveState *&Mstate); 
     void update(float deltaTime, IShapeState *&Sstate, IMoveState  *&Mstate);
     void setGroundLevel(float groundLevel_) {this->groundLevel = groundLevel_;}
     void setShape(const Rectangle &rect) {shape = {rect.width, rect.height};}

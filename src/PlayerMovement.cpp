@@ -4,7 +4,8 @@
 #include "Exceptions.h"
 #include <cassert>
 
-void PlayerMovement::adaptCollision(const Rectangle& rect, IMoveState *&Mstate) {
+void PlayerMovement::adaptCollision(ICollidable* other, IMoveState *&Mstate) {
+	Rectangle rect = other->getHitbox();
 	float penLeft = (position.x + shape.x) - rect.x; 
 	float penRight = (rect.x + rect.width) - position.x;
 	float penX = penLeft < penRight ? -penLeft : penRight; 

@@ -224,8 +224,8 @@ void Character::cleanFireballs(){
     );
 }
 
-void Character::adaptCollision(const Rectangle &rect){
-	movement->adaptCollision(rect, Mstate); 
+void Character::adaptCollision(ICollidable* other){
+	movement->adaptCollision(other, Mstate); 
 	updateShape(); 
 	updateHitbox(); 
 }
