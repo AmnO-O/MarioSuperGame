@@ -48,6 +48,7 @@ public:
     void adaptCollision(const Rectangle& rect, IMoveState *&Mstate); 
     void update(float deltaTime, IShapeState *&Sstate, IMoveState  *&Mstate);
     void setGroundLevel(float groundLevel_); 
+    void setPosition(const Vector2 &pos) {position = pos;}
     void setShape(const Rectangle &rect) {shape = {rect.width, rect.height};}
     void setShape(const Vector2 &shape_) {shape = {shape_.x, shape_.y};}
 
