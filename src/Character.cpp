@@ -4,7 +4,7 @@
 
 
 void Character::setUp(){
-	Sstate = new FireState(); 
+	Sstate = new SmallState(); 
 	Mstate = new StandState(); 
 	activeAnimation = nullptr; 
 }
@@ -91,6 +91,13 @@ std::string Character::getShape_Action() const{
 void Character::updateShape(){
 	std::string animationKey = getShape_Action(); 
 
+	if ((int)animationKey.size() >= 7 && animationKey.substr(0, 8) == "MORPHING") {
+		animationKey = "SMALL_MORPHING"; 
+		animations[animationKey]->setTimeSwitch(0.4); 
+	}else if ((int)animationKey.size() >= 15 && animationKey.substr(0, 15) == "INVINCIBLE_FIRE"){
+        animationKey.replace(0, 15, "INVINCIBLE_BIG");
+	}
+
 	if(activeAnimation != animations[animationKey].get()){
 		activeAnimation = animations[animationKey].get(); 
 	}
@@ -117,7 +124,7 @@ void Character::readRectAnimation(const std::string filename, Texture2D &sheet) 
 		throw ResourceException("Can't load " + filename); 
 
 
-	for (int id = 0; id < 3; id++) {
+	for (int id = 0; id < 5; id++) {
 		std::string shape = "";
 		fin >> shape;
 
@@ -169,7 +176,7 @@ void Character::readRectAnimation(const std::string filename, Texture2D &sheet) 
 				fin >> action >> numAnimation;
 
 				std::string key = shape + action;
-				animations[key] = std::make_unique<AnimationManager>(Images::textures["mario.png"], 0);
+				animations[key] = std::make_unique<AnimationManager>(sheet, 0);
 
 				for (int j = 0; j < numAnimation; j++) {
 					float x, y, width, height;
@@ -179,6 +186,45 @@ void Character::readRectAnimation(const std::string filename, Texture2D &sheet) 
 			}
 		}
 
+		if(shape == "INVINCIBLE_SMALL"){
+			shape += "_";
+			std::string action = "";
+
+			for (int i = 0; i < 8; i++) {
+				int numAnimation;
+				fin >> action >> numAnimation;
+
+				std::string key = shape + action;
+				animations[key] = std::make_unique<AnimationManager>(sheet, 0);
+
+				for (int j = 0; j < numAnimation; j++) {
+					float x, y, width, height;
+					fin >> x >> y >> width >> height;
+					animations[key]->addRect(Rectangle({ x, y, width, height }));
+					animations[key]->setTimeSwitch(0.1); 
+				}
+			}
+		}
+
+		if(shape == "INVINCIBLE_BIG"){
+			shape += "_";
+			std::string action = "";
+
+			for (int i = 0; i < 8; i++) {
+				int numAnimation;
+				fin >> action >> numAnimation;
+
+				std::string key = shape + action;
+				animations[key] = std::make_unique<AnimationManager>(sheet, 0);
+
+				for (int j = 0; j < numAnimation; j++) {
+					float x, y, width, height;
+					fin >> x >> y >> width >> height;
+					animations[key]->addRect(Rectangle({ x, y, width, height }));
+					animations[key]->setTimeSwitch(0.1); 
+				}
+			}
+		}
 	}
 	fin.close(); 
 }
@@ -187,16 +233,13 @@ void Character::powerUp(PowerUpType t){
 	IShapeState *tmp = nullptr; 
 	switch (t) {
 	case PowerUpType::MUSHROOM:
-		if (Sstate -> getShapeState() == "SMALL"){
-			tmp = Sstate; 
-			Sstate = new TransformedState();
-			delete tmp;
+		if (Sstate -> getShapeState() == "SMALL"){            
+			Sstate = new MorphDecorator(Sstate);
 		}
 		break; 
 	case PowerUpType::FIRE_FLOWER:
 		if (Sstate -> getShapeState() == "SMALL"){
 			tmp = Sstate; 
-			Sstate = new TransformedState();
 			delete tmp;
 		}
 		else{
@@ -207,7 +250,7 @@ void Character::powerUp(PowerUpType t){
 		
 		break; 
 	case PowerUpType::STAR: 
-
+	    Sstate = new InvincibleDecorator(Sstate);
 		break;
 	default:
 		throw GameException("There is other type of power up !"); 
@@ -274,9 +317,37 @@ void Character::setPosition(const Vector2 &position){
 	adaptChangePosition(); 
 }
 
+void Character::animationTransform(){
+
+}
+
 void Character::update(float deltaTime){
 	if(movement == nullptr)
 		throw GameException("Movement is null in Character::update"); 
+
+	if (auto morph = dynamic_cast<MorphDecorator*>(Sstate)) {
+		IShapeState* next = morph->update(deltaTime);
+
+		if (next) {
+			delete Sstate;
+			Sstate = next;
+		}else{
+
+			if(activeAnimation)
+				activeAnimation->update(deltaTime); 
+			
+			adaptChangePosition(); 
+			return; 
+		}
+	}
+	else if (auto inv = dynamic_cast<InvincibleDecorator*>(Sstate)) {
+		IShapeState* next = inv->update(deltaTime);
+		if (next) {
+			delete Sstate;
+			Sstate = next;
+		}
+	}
+
 
 	movement->update(deltaTime, Sstate, Mstate); 
 	Mstate->update(deltaTime); 
@@ -314,4 +385,3 @@ Character::~Character() {
 
 	Images::unloadAllTextures();
 }
-

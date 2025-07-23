@@ -3,6 +3,7 @@
 
 #include "Character/Character.h"
 #include "Character/MyCamera2D.h"
+#include "Character/IPowerUpCreator.h"
 
 class Game {
 public:
@@ -15,6 +16,9 @@ public:
     Game& operator=(Game&&) = delete;
     Character *character; 
     MyCamera2D *myCam; 
+
+    IPowerUpCreator *powerUpCreator; 
+    PowerUp *item; 
 private:
     Game();
     ~Game();
