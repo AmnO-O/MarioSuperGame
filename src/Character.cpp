@@ -93,7 +93,7 @@ void Character::updateShape(){
 
 	if ((int)animationKey.size() >= 7 && animationKey.substr(0, 8) == "MORPHING") {
 		animationKey = "SMALL_MORPHING"; 
-		animations[animationKey]->setTimeSwitch(0.4); 
+		animations[animationKey]->setTimeSwitch(0.4f); 
 	}else if ((int)animationKey.size() >= 15 && animationKey.substr(0, 15) == "INVINCIBLE_FIRE"){
         animationKey.replace(0, 15, "INVINCIBLE_BIG");
 	}
@@ -201,7 +201,7 @@ void Character::readRectAnimation(const std::string filename, Texture2D &sheet) 
 					float x, y, width, height;
 					fin >> x >> y >> width >> height;
 					animations[key]->addRect(Rectangle({ x, y, width, height }));
-					animations[key]->setTimeSwitch(0.1); 
+					animations[key]->setTimeSwitch(0.1f); 
 				}
 			}
 		}
@@ -221,7 +221,7 @@ void Character::readRectAnimation(const std::string filename, Texture2D &sheet) 
 					float x, y, width, height;
 					fin >> x >> y >> width >> height;
 					animations[key]->addRect(Rectangle({ x, y, width, height }));
-					animations[key]->setTimeSwitch(0.1); 
+					animations[key]->setTimeSwitch(0.1f); 
 				}
 			}
 		}

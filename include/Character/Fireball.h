@@ -11,7 +11,7 @@ private:
     AnimationManager *activeAnimation = nullptr; 
     void readRectAnimation(const std::string filePath); 
 public:
-    Fireball(Vector2 startPos, bool facingRight) : position(startPos), active(true) {
+    Fireball(Vector2 startPos, bool facingRight) : GameObject(startPos, {0, 0}) {
         velocity.x = facingRight ? 300.0f : -300.0f;
         velocity.y = 0; 
         hitbox = { position.x, position.y, 16, 16 };
