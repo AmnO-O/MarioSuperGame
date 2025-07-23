@@ -29,12 +29,13 @@ private:
     void cleanFireballs(); 
     void updateShape(); 
     void setUp(); 
+    void adaptChangePosition(); 
 public: 
     Character(CharacterType type, Vector2 pos); 
     Character(CharacterType type, float cordX, float groundLevel); 
 
     Vector2 getPosition() const {return movement->getPosition(); }
-    Vector2 setPosition(const Vector2 &pos) {movement->setPosition(pos); }
+    void setPosition(const Vector2 &pos); 
     Rectangle getHitbox() const {return hitbox; }
 
     void adaptCollision(const Rectangle& rect);

@@ -246,9 +246,7 @@ void Character::adaptCollision(const Rectangle &rect){
 	updateHitbox(); 
 }
 
-void Character::setGroundLevel(float groundLevel_){
-	this->groundLevel = groundLevel_;
-
+void Character::adaptChangePosition(){
 	if(groundLevel - hitbox.height > hitbox.y){
 		delete Mstate; 
 		Mstate = new JumpState(); 
@@ -261,6 +259,19 @@ void Character::setGroundLevel(float groundLevel_){
 	movement->setShape(activeAnimation->getCurrentShape()); 
 	movement->setGroundLevel(groundLevel);
 	updateHitbox(); 
+}
+
+void Character::setGroundLevel(float groundLevel_){
+	this->groundLevel = groundLevel_;
+	adaptChangePosition(); 
+}
+
+void Character::setPosition(const Vector2 &position){
+	hitbox.x = position.x; 
+	hitbox.y = position.y;
+
+	movement->setPosition(position); 
+	adaptChangePosition(); 
 }
 
 void Character::update(float deltaTime){
