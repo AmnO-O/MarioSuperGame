@@ -101,23 +101,27 @@ IMoveState *CrouchState::update(MoveContext *player){
     return this; 
 }
 
+IMoveState *ShootState::update(MoveContext *player){
+    if(this->currentTime >= 0.1){
+        if( player->position.y < player->groundLevel - player->shape.y){
+            return (new JumpState()) -> update(player); 
+        }else{
+            player->position.y = player->groundLevel - player->shape.y; 
+            player->velocity.y = 0; 
 
-void StandState::update(float deltaTime) {
+            if(player->velocity.x != 0) 
+                return (new RunState()) -> update(player); 
+            return (new StandState()) -> update(player); 
+        }
+    }
 
-}
+    if(this->isJumping() == false && player->position.y < player->groundLevel - player->shape.y){
+        this->changeIsJump(); 
+    }else if(player->position.y >= player->groundLevel - player->shape.y){
+        player->position.y = player->groundLevel - player->shape.y; 
+        player->velocity.y = 0.f; 
+        isJump = false; 
+    }
 
-void RunState::update(float deltaTime){
-
-}
-
-void JumpState::update(float deltaTime){
-
-}
-
-void SkidState::update(float deltaTime){
-
-}
-
-void CrouchState::update(float deltaTime){
-
+    return this; 
 }

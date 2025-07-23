@@ -1,17 +1,6 @@
 #include "Character/PowerUp.h"
 #include "Character/Character.h"
-
-
-void PowerUp::update(float deltaTime) {
-    if(active == false) return ; 
-    velocity.y += 980 * deltaTime; 
-
-    position.x += velocity.x * deltaTime; 
-	position.y += velocity.y * deltaTime; 
-
-	hitbox.x = position.x;
-	hitbox.y = position.y;
-}
+#include <iostream>
 
 void PowerUp::adaptCollision(const Rectangle &rect){
 	float penLeft = (hitbox.x + hitbox.width) - rect.x;
@@ -44,6 +33,10 @@ void PowerUp::render(){
 	case PowerUpType::MUSHROOM: power = Images::textures["mushroom.png"];  break;
 		case PowerUpType::FIRE_FLOWER: power = Images::textures["mushroom.png"]; break;
 		case PowerUpType::STAR: power = Images::textures["star.png"]; break;
+	}
+
+	if(power.id == 0){
+		throw ResourceException("Can't load texture in powerup::render()\n");
 	}
 	
 	DrawTexture(power, (int)hitbox.x, (int)hitbox.y, WHITE);

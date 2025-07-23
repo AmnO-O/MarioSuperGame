@@ -6,6 +6,7 @@
 #include <vector>
 #include "Map.h"
 #include "Observer.h"
+#include "Character/IPowerUpCreator.h"
 
 class Game {
 public:
@@ -23,6 +24,10 @@ private:
     int currentMap = 0;
     Character *character; 
     MyCamera2D *myCam; 
+
+    IPowerUpCreator *powerUpCreator; 
+    PowerUp *item; 
+private:
     Game();
     ~Game();
 

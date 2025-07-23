@@ -24,12 +24,14 @@ private:
     float groundLevel; 
 
     void updateHitbox(); 
-    void readRectAnimation(const std::string filePath); 
+    void readRectAnimation(const std::string filePath, Texture2D &sheet); 
     std::string getShape_Action() const; 
     void shootFireball();
     void cleanFireballs(); 
     void updateShape(); 
-    void setup(); 
+    void setUp(); 
+    void adaptChangePosition(); 
+    void animationTransform(); 
 public: 
     Character(CharacterType type, Vector2 pos); 
     Character(CharacterType type, float cordX, float groundLevel); 
@@ -37,11 +39,11 @@ public:
     Vector2 getPosition() const {return movement->getPosition(); }
     Rectangle getHitbox() const override {return hitbox; }
     bool isBig() const { return dynamic_cast<SmallState*>(Sstate) == nullptr; }
+    void setPosition(const Vector2 &pos); 
 
     void adaptCollision(ICollidable* other) override;
     void powerUp(PowerUpType type); 
-    void setGroundLevel(float groundLevel) {this->groundLevel = groundLevel; movement->setGroundLevel(groundLevel);}
-    void setPosition(Vector2 pos);
+    void setGroundLevel(float groundLevel); 
     void update(float deltaTime); 
     void render(); 
     

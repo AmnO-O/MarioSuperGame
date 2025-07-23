@@ -1,36 +1,27 @@
 #pragma once
 #include "Global.h"
+#include "GameObject.h"
 
 class Character;
 
-class PowerUp{
+class PowerUp : public GameObject{
 protected: 
     PowerUpType type; 
-    Vector2 position; 
-    Vector2 velocity; 
-    Rectangle hitbox; 
-
-    bool active; 
-    bool onGround; 
-    
 public: 
-    PowerUp(PowerUpType t, Vector2 pos): type(t), position(pos), velocity({0, 0}),
-    active(true), onGround(false){
-        hitbox = {position.x, position.y, 16, 16}; 
+    PowerUp(PowerUpType t, Vector2 pos): type(t), GameObject(pos, {0, 0}){
+        hitbox = {pos.x, pos.y, 16, 16}; 
     }
 
     virtual void applyEffect(Character* &character) = 0;
-    void update(float deltaTime); 
+
     bool isActive() const { return active; }
     void adaptCollision(const Rectangle& rect);
-
-    Rectangle getHitbox() const { return hitbox;}
-    void render();
+    void render() override;
 }; 
 
 class MushroomPowerUp : public PowerUp {
 public: 
-    MushroomPowerUp(Vector2 pos) : PowerUp(PowerUpType::MUSHROOM, pos) {};
+    MushroomPowerUp(Vector2 pos) : PowerUp(PowerUpType::MUSHROOM, pos) {velocity.x = -30.0f;};
     void applyEffect(Character* &character) override; 
 };
 
@@ -44,7 +35,7 @@ public:
 
 class StarPowerUp :public PowerUp {
 public: 
-    StarPowerUp(Vector2 pos) : PowerUp(PowerUpType::STAR, pos) {}; 
+    StarPowerUp(Vector2 pos) : PowerUp(PowerUpType::STAR, pos) {velocity.x = -50.0f;}; 
     void applyEffect(Character* &character) override; 
 };
 
