@@ -40,6 +40,7 @@ public:
     Rectangle getHitbox() const override {return hitbox; }
     bool isBig() const { return dynamic_cast<SmallState*>(Sstate) == nullptr; }
     void setPosition(const Vector2 &pos); 
+    void setOnGround(); 
 
     void adaptCollision(ICollidable* other) override;
     void powerUp(PowerUpType type); 
