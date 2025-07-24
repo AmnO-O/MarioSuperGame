@@ -112,6 +112,8 @@ void Character::updateHitbox(){
 		throw GameException("Movement ptr activeAnimation is null in Character::updateHitbox"); 
 
 	auto [w, h] = activeAnimation->getCurrentShape(); 	
+	if(Sstate->canBreakBrick() == 0)
+		w = 12.0f; 
 	movement->setShape(Vector2{w, h}); 
 
 	Vector2 current = movement -> getPosition(); 
