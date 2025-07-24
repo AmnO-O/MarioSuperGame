@@ -108,7 +108,6 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 		}
 	}
 
-
 	
 	velocity.x += forceX * deltaTime;
 	velocity.y += forceY * deltaTime;
