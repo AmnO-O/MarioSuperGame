@@ -1,6 +1,7 @@
 #include "Character/Character.h"
 #include <iostream>
 #include <cassert>
+#include <algorithm>
 
 
 void Character::setUp(){

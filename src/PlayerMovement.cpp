@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Exceptions.h"
 #include <cassert>
+#include <cmath>
 
 void PlayerMovement::setOnGround(){
 	position.y = groundLevel - shape.y; 
