@@ -8,6 +8,7 @@
 
 class IMoveState; 
 class IShapeState; 
+class Character; 
 
 class PlayerMovement{
 private:
@@ -46,12 +47,13 @@ public:
         return *this;
     } 
 
-    void adaptCollision(ICollidable* other, IMoveState *&Mstate); 
+    void setOnGround(); 
+    void adaptCollision(ICollidable* other, IMoveState *&Mstate, Character *player); 
     void update(float deltaTime, IShapeState *&Sstate, IMoveState  *&Mstate);
     void setGroundLevel(float groundLevel_); 
     void setPosition(const Vector2 &pos) {position = pos;}
-    void setShape(const Rectangle &rect) {shape = {rect.width, rect.height};}
-    void setShape(const Vector2 &shape_) {shape = {shape_.x, shape_.y};}
+    void setShape(const Rectangle &rect) {position.y = position.y + shape.y - rect.height; shape = {rect.width, rect.height};}
+    void setShape(const Vector2 &shape_) {position.y = position.y + shape.y - shape_.y; shape = {shape_.x, shape_.y};}
 
     Vector2 getPosition() const {return position;}
     bool isFacingRight() const {return facingRight; }

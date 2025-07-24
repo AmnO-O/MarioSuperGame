@@ -1,19 +1,27 @@
 #include "Character/PlayerMovement.h"
 #include "Character/CharacterState.h"
+#include "Character/Character.h"
 #include <iostream>
 #include "Exceptions.h"
 #include <cassert>
 
+void PlayerMovement::setOnGround(){
+	position.y = groundLevel - shape.y; 
+	velocity.y = 0; 
+}
+
 void PlayerMovement::setGroundLevel(float groundLevel_){
 	 this->groundLevel = groundLevel_;
 
-	 if(groundLevel - shape.y < position.y){
+	 if(groundLevel - shape.y <= position.y){
 		position.y = groundLevel - shape.y; 
+		velocity.y = 0; 
 	 }
 }
 
-void PlayerMovement::adaptCollision(ICollidable* other, IMoveState *&Mstate) {
+void PlayerMovement::adaptCollision(ICollidable* other, IMoveState *&Mstate, Character *player) {
 	Rectangle rect = other->getHitbox();
+
 	float penLeft = (position.x + shape.x) - rect.x; 
 	float penRight = (rect.x + rect.width) - position.x;
 	float penX = penLeft < penRight ? -penLeft : penRight; 
@@ -30,10 +38,16 @@ void PlayerMovement::adaptCollision(ICollidable* other, IMoveState *&Mstate) {
 		position.y += penY; 
 		velocity.y = 0; 
 		if (penY < 0) {
-			if(Mstate ->getMoveState() != "STANDING"){
-				delete Mstate; 
-				Mstate = new StandState(); 
-			}
+            if (Mstate->isJumping()) {
+                delete Mstate;
+                if(velocity.x != 0) 
+					Mstate = new RunState();
+				else
+					Mstate = new StandState(); 
+            }
+
+            player->setGroundLevel(rect.y);
+			player->setOnGround(); 
 		}
 	}
 }

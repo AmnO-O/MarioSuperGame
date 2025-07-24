@@ -288,8 +288,21 @@ void Character::cleanFireballs(){
 }
 
 void Character::adaptCollision(ICollidable* other){
-	movement->adaptCollision(other, Mstate); 
+	movement->adaptCollision(other, Mstate, this); 
 	updateShape(); 
+	updateHitbox(); 
+}
+
+void Character::setOnGround(){
+	if(Mstate-> isJumping()){
+		delete Mstate; 
+		Mstate = new StandState(); 
+	}
+
+	updateShape(); 
+	movement->setShape(activeAnimation->getCurrentShape()); 
+	movement->setGroundLevel(groundLevel);
+	movement->setOnGround(); 
 	updateHitbox(); 
 }
 
@@ -300,6 +313,7 @@ void Character::adaptChangePosition(){
 	}else{
 		delete Mstate; 
 		Mstate = new StandState(); 
+		hitbox.y = groundLevel - hitbox.height; 
 	}
 	
 	updateShape(); 
@@ -336,7 +350,6 @@ void Character::update(float deltaTime){
 			delete Sstate;
 			Sstate = next;
 		}else{
-
 			if(activeAnimation)
 				activeAnimation->update(deltaTime); 
 			
@@ -364,6 +377,7 @@ void Character::update(float deltaTime){
 
 	if(activeAnimation)
 		activeAnimation->update(deltaTime); 
+	// std::cout << "GroundLevel: " << groundLevel << ' ' << Mstate->getMoveState() << '\n'; 
 
 	updateShape(); 
 	updateHitbox(); 

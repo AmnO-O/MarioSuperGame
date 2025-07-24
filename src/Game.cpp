@@ -62,6 +62,7 @@ void Game::update(float deltaTime) {
     if(deltaTime < 0.2) 
         character->update(deltaTime); 
 
+
     myCam -> update(character); 
     item->update(deltaTime);
     
