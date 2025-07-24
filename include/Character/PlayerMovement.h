@@ -45,7 +45,7 @@ private:
 public: 
     PlayerMovement(Vector2 pos, Vector2 vel, std::unique_ptr<CharacterStats> stats_): 
         position(pos), velocity(vel), stats(std::move(stats_)), facingRight(true), currentTime(0.0f), groundLevel(0.0){
-            shape = {14, 14}; 
+            shape = {12, 14}; 
         }; 
 
     PlayerMovement(const PlayerMovement& other)
