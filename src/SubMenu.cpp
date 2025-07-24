@@ -1,15 +1,26 @@
 #include "SubMenu.h"
 #include "MainMenu.h"
+#include "LevelMenu.h"
 
-SubMenu::SubMenu(StateManager& stateManager, const std::string& title)
+SubMenu::SubMenu(StateManager& stateManager, SoundManager& soundManager, bool checkMario)
   : stateManager(stateManager),
-    new_game_button("NEW GAME", {656, 294, 330, 60}, WHITE, RED, []() {}),
-    load_game_button("LOAD GAME", {644, 399, 330, 60}, WHITE, RED, []() {}),
-    return_button("D:/MarioSuperGame/assets/images/return_button.png", {25, 27, 100, 100}, [&]() {
-        stateManager.pushState(std::make_unique<MainMenu>(stateManager));
+    soundManager(soundManager),
+    isMario(checkMario),
+    new_game_button("NEW GAME", {656, 294, 330, 60}, WHITE, RED, [&]() {
+        stateManager.popState();
+        stateManager.pushState(std::make_unique<LevelMenu>(stateManager, soundManager, isMario));
     }),
-    title(title) 
+    load_game_button("LOAD GAME", {644, 399, 330, 60}, WHITE, RED, []() {}),
+    return_button("D:/MarioSuperGame/assets/images/turn_back.png", {25, 27, 100, 100}, [&]() {
+        stateManager.popState();
+        stateManager.pushState(std::make_unique<MainMenu>(stateManager, soundManager));
+    }) 
 {
+    if (isMario)
+        title = "MARIO GAME";
+    else
+        title = "LUIGI GAME";
+    
     sub_background = LoadTexture("D:/MarioSuperGame/assets/images/sub_menu_background.png");
     titleFont = LoadFont("D:/MarioSuperGame/assets/fonts/SuperMarioBros.ttf");
 }

@@ -4,7 +4,7 @@ void SoundManager::loadMenuSound()
 {
     InitAudioDevice();
     menuSound = LoadMusicStream(menu_filePath.c_str());
-    SetMusicVolume(menuSound, volume);
+    SetMusicVolume(menuSound, current_volume);
 }
 
 void SoundManager::playMenuSound()
@@ -22,4 +22,15 @@ void SoundManager::stopMenuSound()
 void SoundManager::updateMenuSound()
 {
     UpdateMusicStream(menuSound);
+}
+
+float SoundManager::getVolume() const
+{
+    return current_volume;
+}
+
+void SoundManager::setMusicVolume(float volume)
+{
+    current_volume = volume;
+    SetMusicVolume(menuSound, volume);
 }

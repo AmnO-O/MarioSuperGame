@@ -5,6 +5,7 @@
 #include "Button.h"
 #include "MenuState.h"
 #include "StateManager.h"
+#include "SoundManager.h"
 #include <memory>
 #include <string>
 
@@ -19,10 +20,12 @@ class SubMenu : public MenuState
         std::string title; 
         Font titleFont; 
         StateManager& stateManager;
+        SoundManager& soundManager;
+        bool isMario;
 
     public:
 
-        SubMenu(StateManager& stateManager, const std::string& title);
+        SubMenu(StateManager& stateManager, SoundManager& soundManager, bool isMario);
         ~SubMenu();
 
         void update(float deltaTime) override;

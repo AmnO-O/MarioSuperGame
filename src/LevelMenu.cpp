@@ -1,0 +1,48 @@
+#include "LevelMenu.h"
+#include "SubMenu.h"
+
+LevelMenu::LevelMenu(StateManager& stateManager, SoundManager& soundManager, bool checkMario)
+  : stateManager(stateManager),
+    soundManager(soundManager),
+    isMario(checkMario),
+    title("CHOOSE YOUR LEVEL"), 
+    high_score("TOP- 000000"),
+    return_button("D:/MarioSuperGame/assets/images/turn_back.png", {25,27,100,100}, [&]() {
+        stateManager.popState();
+        stateManager.pushState(std::make_unique<SubMenu>(stateManager, soundManager, isMario));
+    })
+    //world1_1("D:/MarioSuperGame/assets/images/World1_1.png", {90, 178, 500, 238}, []() {}),
+    //world1_2("D:/MarioSuperGame/assets/images/World1_2.png", {1010, 178, 500, 238}, []() {}),
+    //world1_3("D:/MarioSuperGame/assets/images/World1_3.png", {90, 568, 500, 238}, []() {}),
+    //world1_4("D:/MarioSuperGame/assets/images/World1_4.png", {1010, 568, 500, 238}, []() {})
+{
+    level_background = LoadTexture("D:/MarioSuperGame/assets/images/sub_menu_background.png");
+    font = LoadFont("D:/MarioSuperGame/assets/fonts/SuperMarioBros.ttf");
+}
+
+LevelMenu::~LevelMenu()
+{
+    UnloadFont(font);
+    UnloadTexture(level_background);
+}
+
+void LevelMenu::update(float deltaTime) {
+    /*world1_1.update(deltaTime);
+    world1_2.update(deltaTime);
+    world1_3.update(deltaTime);
+    world1_4.update(deltaTime);*/
+    return_button.update(deltaTime);
+}
+
+void LevelMenu::render() {
+    DrawTexture(level_background, 0, 0, WHITE);
+
+    /*world1_1.render();
+    world1_2.render();
+    world1_3.render();
+    world1_4.render();*/
+    return_button.render();
+
+    DrawTextEx(font, title.c_str(), {410, 104}, 50, 2, BLACK);
+    DrawTextEx(font, high_score.c_str(), {1088, 20}, 50, 2, BLACK);
+}

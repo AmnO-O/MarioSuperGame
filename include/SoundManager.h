@@ -4,14 +4,24 @@
 #include <raylib.h>
 #include <string>
 
+
 class SoundManager
 {
+    private:
+
+        float current_volume = 1.0f; //Current volume = default volume when first init
+        const std::string menu_filePath = "D:/MarioSuperGame/assets/sounds/SuperMarioBros_theme_song.mp3";
+        Music menuSound;
+    
     public:
 
     void loadMenuSound();
     void playMenuSound();
     void stopMenuSound();
     void updateMenuSound();
+
+    float getVolume() const;
+    void setMusicVolume(float volume);
     
     /*void loadGameSound();
     void playGameSound();
@@ -22,12 +32,6 @@ class SoundManager
     void stopEffect();
 
     void muteAll();*/
-
-    private:
-
-        float volume = 1.0f; //Default volume
-        const std::string menu_filePath = "D:/MarioSuperGame/assets/sounds/SuperMarioBros_theme_song.mp3";
-        Music menuSound;
 };
 
 #endif

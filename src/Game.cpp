@@ -16,7 +16,7 @@ Game::Game() {
 
     soundManager.loadMenuSound();
 
-    stateManager.pushState(std::make_unique<MainMenu>(stateManager));
+    stateManager.pushState(std::make_unique<MainMenu>(stateManager, soundManager));
 }
 
 Game::~Game() {
