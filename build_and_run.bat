@@ -15,8 +15,8 @@ IF %ERRORLEVEL% NEQ 0 (
 
 echo Build successful. Running executable...
 REM Path to your executable, assuming Debug configuration
+"./build/Debug/Mario.exe"
 "./build/Mario.exe"
-
 REM Change back to the original directory if needed, though usually not necessary for this script
 popd
 

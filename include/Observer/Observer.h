@@ -23,7 +23,7 @@ public:
     void CheckAllCollisions() {
         if (!mainCharacter) return;
         Character *player = dynamic_cast<Character*>(mainCharacter);
-        player->setGroundLevel(2.0f * GetScreenHeight());
+        bool isOnGround = false; 
 
         // Check character vs all others
         for (auto* obj : collidables) {
@@ -31,6 +31,16 @@ public:
                 mainCharacter->adaptCollision(obj);
                 obj->adaptCollision(mainCharacter);
             }
+
+            if(obj != mainCharacter && obj -> IsActive()){
+                Rectangle rect = obj->getHitbox();
+                rect.y -= 0.2f; 
+                isOnGround |= CheckCollisionRecs(mainCharacter->getHitbox(), rect);
+            }
+        }
+
+        if(isOnGround == false){
+            player->setGroundLevel(2.0f * GetScreenHeight());
         }
 
         // Check object vs object

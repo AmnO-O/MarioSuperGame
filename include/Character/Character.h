@@ -38,7 +38,9 @@ public:
 
     Vector2 getPosition() const {return movement->getPosition(); }
     Rectangle getHitbox() const override {return hitbox; }
-    bool isBig() const { return dynamic_cast<SmallState*>(Sstate) == nullptr; }
+    
+    bool isBig() const { return Sstate->canBreakBrick();}
+
     void setPosition(const Vector2 &pos); 
     void setOnGround(); 
 
