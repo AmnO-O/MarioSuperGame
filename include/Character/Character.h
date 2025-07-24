@@ -7,7 +7,7 @@
 #include "CharacterState.h"
 #include "PlayerMovement.h"
 #include "Fireball.h"
-#include "Observer.h"
+#include "Observer/ICollidable.h"
 
 class Character : public ICollidable {
 private: 

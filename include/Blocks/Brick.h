@@ -11,7 +11,7 @@ private:
     const float bounceHeight = 6;
     const float gravity = 800.0f;
     const float rotateTime = 0.2f;
-    const Vector2 initVelocity = {150.0f, -300.0f};
+    const Vector2 initVelocity = {50.0f, -150.0f};
     Vector2 fragmentVelocity = {0, 0};
     std::vector <Vector2> fragmentPos;
 

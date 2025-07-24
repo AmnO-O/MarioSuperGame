@@ -1,6 +1,7 @@
 #include "Character/PowerUp.h"
 #include "Character/Character.h"
 #include <iostream>
+#include <cmath>
 
 void PowerUp::adaptCollision(const Rectangle &rect){
 	float penLeft = (hitbox.x + hitbox.width) - rect.x;

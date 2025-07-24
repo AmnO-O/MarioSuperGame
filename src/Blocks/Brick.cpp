@@ -107,7 +107,8 @@ void Brick::DrawFragment() const {
 void Brick::adaptCollision(ICollidable* other) {
     if (stat == BlockStat::Normal) {
         Character* Char = dynamic_cast<Character*>(other);
-        if (Char) {
+        Rectangle hitbox = getHitbox();
+        if (Char && Char->getPosition().y >= hitbox.y + hitbox.height) {
             if (Char->isBig()) {
                 Break();
             }

@@ -3,6 +3,7 @@
 #include <cassert>
 #include "Exceptions.h"
 #include <iostream>
+#include <cmath>
 
 void Fireball::readRectAnimation(const std::string filePath){
     std::ifstream fin(filePath); 
@@ -62,7 +63,7 @@ void Fireball::update(float deltaTime){
         velocity.y = -velocity.y * bounceDamp;
     }
 
-    if (fabs(velocity.x) < 250.0f) active = false;
+    if (std::fabs(velocity.x) < 250.0f) active = false;
 
     updateHitbox(); 
 }

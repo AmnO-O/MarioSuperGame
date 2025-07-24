@@ -1,6 +1,7 @@
 #include "Character/Character.h"
 #include <iostream>
 #include <cassert>
+#include <algorithm>
 
 
 void Character::setUp(){
@@ -313,7 +314,8 @@ void Character::adaptChangePosition(){
 	}else{
 		delete Mstate; 
 		Mstate = new StandState(); 
-		hitbox.y = groundLevel - hitbox.height; 
+		hitbox.y = groundLevel - hitbox.height;
+
 	}
 	
 	updateShape(); 
@@ -377,7 +379,11 @@ void Character::update(float deltaTime){
 
 	if(activeAnimation)
 		activeAnimation->update(deltaTime); 
-	// std::cout << "GroundLevel: " << groundLevel << ' ' << Mstate->getMoveState() << '\n'; 
+	
+	// if(Mstate->isJumping()){
+	// 	movement->setFootHeightFactor(0.2f); 
+	// }else movement->setFootHeightFactor(0.1f);
+	// std::cout << "GroundLevel: " << groundLevel << ' ' << Mstate->getMoveState() << ' ' << movement->getPosition().x << ' ' << movement->getPosition().y << '\n'; 
 
 	updateShape(); 
 	updateHitbox(); 

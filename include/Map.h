@@ -6,7 +6,7 @@
 #include "Blocks/Block.h"
 #include <vector>
 #include "Exceptions.h"
-#include "Observer.h"
+#include "Observer/Observer.h"
 #include "Character/Character.h"
 
 class Map {
