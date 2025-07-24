@@ -3,14 +3,8 @@
 
 #include "raylib.h"
 #include "vector"
-
-class ICollidable {
-public:
-    virtual Rectangle getHitbox() const = 0;
-    virtual void adaptCollision(ICollidable* other) = 0;
-    virtual bool IsActive() const { return true; } 
-    virtual ~ICollidable() = default;
-};
+#include "ICollidable.h"
+#include "Character/Character.h"
 
 class CollisionManager {
 private:
@@ -28,6 +22,8 @@ public:
 
     void CheckAllCollisions() {
         if (!mainCharacter) return;
+        Character *player = dynamic_cast<Character*>(mainCharacter);
+        player->setGroundLevel(2.0f * GetScreenHeight());
 
         // Check character vs all others
         for (auto* obj : collidables) {

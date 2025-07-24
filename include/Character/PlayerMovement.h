@@ -4,7 +4,7 @@
 #include <string>
 #include "Global.h"
 #include "PowerUp.h"
-#include "Observer.h"
+#include "Observer/ICollidable.h"
 
 class IMoveState; 
 class IShapeState; 

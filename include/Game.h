@@ -5,7 +5,7 @@
 #include "Character/MyCamera2D.h"
 #include <vector>
 #include "Map.h"
-#include "Observer.h"
+#include "Observer/Observer.h"
 #include "Character/IPowerUpCreator.h"
 
 class Game {

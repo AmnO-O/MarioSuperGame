@@ -3,7 +3,7 @@
 
 #include "raylib.h"
 #include <iostream>
-#include "Observer.h"
+#include "Observer/Observer.h"
 
 enum class BlockStat {
     Normal,
