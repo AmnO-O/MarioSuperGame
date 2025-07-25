@@ -6,13 +6,13 @@ SubMenu::SubMenu(StateManager& stateManager, SoundManager& soundManager, bool ch
   : stateManager(stateManager),
     soundManager(soundManager),
     isMario(checkMario),
-    new_game_button("NEW GAME", {656, 294, 330, 60}, WHITE, RED, [&]() {
-        stateManager.popState();
+    new_game_button("NEW GAME", {625, 294, 330, 60}, WHITE, RED, [&]() {
+        //stateManager.popState();
         stateManager.pushState(std::make_unique<LevelMenu>(stateManager, soundManager, isMario));
     }),
-    load_game_button("LOAD GAME", {644, 399, 330, 60}, WHITE, RED, []() {}),
+    load_game_button("LOAD GAME", {598, 399, 330, 60}, WHITE, RED, []() {}),
     return_button("D:/MarioSuperGame/assets/images/turn_back.png", {25, 27, 100, 100}, [&]() {
-        stateManager.popState();
+        //stateManager.popState();
         stateManager.pushState(std::make_unique<MainMenu>(stateManager, soundManager));
     }) 
 {
@@ -31,13 +31,15 @@ SubMenu::~SubMenu()
     UnloadTexture(sub_background);
 }
 
-void SubMenu::update(float deltaTime) {
+void SubMenu::update(float deltaTime) 
+{
     new_game_button.update(deltaTime);
     load_game_button.update(deltaTime);
     return_button.update(deltaTime);
 }
 
-void SubMenu::render() {
+void SubMenu::render() 
+{
     DrawTexture(sub_background, 0, 0, WHITE);
 
     new_game_button.render();

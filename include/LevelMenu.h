@@ -15,10 +15,10 @@ class LevelMenu : public MenuState
     private:
 
         Texture2D level_background;
-        //ImageButton world1_1;
-        //ImageButton world1_2;
-        //ImageButton world1_3;
-        //ImageButton world1_4;
+        ImageButton world1_1;
+        ImageButton world1_2;
+        ImageButton world1_3;
+        ImageButton world1_4;
         ImageButton return_button;
 
         std::string high_score;
@@ -33,6 +33,7 @@ class LevelMenu : public MenuState
         LevelMenu(StateManager& stateManager, SoundManager& soundManager, bool isMario);
         ~LevelMenu(); 
 
+        void drawBorder(Rectangle bounds);
         void update(float deltaTime) override;
         void render() override;
 

@@ -41,6 +41,11 @@ ImageButton::~ImageButton()
     UnloadTexture(image);
 }
 
+Rectangle ImageButton::getBounds() const
+{
+    return {frame.x - 7, frame.y - 7, frame.width + 14, frame.height + 14};
+}
+
 void ImageButton::update(float deltaTime)
 {
     Vector2 pos = GetMousePosition();

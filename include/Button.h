@@ -44,8 +44,10 @@ class ImageButton
         ImageButton(const std::string& imagePath, Rectangle frame, std::function<void()> onClick);
         ~ImageButton();
 
+
+        Rectangle getBounds() const;
         void update(float deltaTime);
         void render();
 };
 
-#endif BUTTON_H
+#endif 

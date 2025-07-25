@@ -5,16 +5,16 @@
 MainMenu::MainMenu(StateManager& stateManager, SoundManager& soundManager)
   : stateManager(stateManager), 
     soundManager(soundManager),   
-    mario_button("MARIO GAME", {615, 450, 330, 60}, WHITE, RED, [&]() { 
-        stateManager.popState();
+    mario_button("MARIO GAME", {570, 450, 330, 60}, WHITE, RED, [&]() { 
+        //stateManager.popState();
         stateManager.pushState(std::make_unique<SubMenu>(stateManager, soundManager, true));  
     }),
-    luigi_button("LUIGI GAME", {615, 533, 330, 60}, WHITE, RED, [&]() { 
-        stateManager.popState();
+    luigi_button("LUIGI GAME", {570, 533, 330, 60}, WHITE, RED, [&]() { 
+        //stateManager.popState();
         stateManager.pushState(std::make_unique<SubMenu>(stateManager, soundManager, false));
     }), 
     settings_button("D:/MarioSuperGame/assets/images/setting.png", {25, 27, 100, 100}, [&]() {
-        stateManager.popState();       
+        //stateManager.popState();       
         stateManager.pushState(std::make_unique<SettingsMenu>(stateManager, soundManager));
     })
 {

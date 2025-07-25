@@ -15,8 +15,6 @@ class SettingsMenu : public MenuState
     private:
 
         Texture2D settings_background;
-        NormalButton music_button;
-        NormalButton soundFX_button;
         ImageButton return_button;
         std::string music;
         std::string soundFX;

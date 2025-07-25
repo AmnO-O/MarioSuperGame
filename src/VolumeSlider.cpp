@@ -1,45 +1,46 @@
 #include "VolumeSlider.h"
 
-VolumeSlider::VolumeSlider(float x, float y, float width, float height, SoundManager& soundManager)
-    : slider({x, y, width, height}),
+VolumeSlider::VolumeSlider(Rectangle frame, SoundManager& soundManager)
+    : slider(frame),
       volume(soundManager.getVolume()),
-      backgroundColor(LIGHTGRAY),
-      fillColor(GREEN),
-      knobColor(RED), 
+      background_color(LIGHTGRAY),
+      fill_color(GREEN),
+      knob_color(RED), 
       soundManager(soundManager) 
 {
 
 }
 
-void VolumeSlider::update() {
-    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+void VolumeSlider::update() 
+{
+    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) 
+    {
         Vector2 mousePos = GetMousePosition();
-        if (CheckCollisionPointRec(mousePos, slider)) {
-            volume = (mousePos.x - slider.x) / slider.width; // Calculate volume (0.0 to 1.0)
-            volume = Clamp(volume, 0.0f, 1.0f); // Ensure volume stays within bounds
+        if (CheckCollisionPointRec(mousePos, slider)) 
+        {
+            volume = (mousePos.x - slider.x) / slider.width; 
+            volume = Clamp(volume, 0.0f, 1.0f); 
             soundManager.setMusicVolume(volume);
         }
     }
 }
 
-void VolumeSlider::render(Font font) {
-    // Draw slider background
-    DrawRectangleRec(slider, backgroundColor);
+void VolumeSlider::render() 
+{
+    const float roundness = 0.5f;
+    const int segments = 16;
+    DrawRectangleRounded(slider, roundness, segments, background_color);
 
-    // Draw filled portion of the slider
-    DrawRectangle(slider.x, slider.y, slider.width * volume, slider.height, fillColor);
+    Rectangle filled_slider = {slider.x, slider.y, slider.width * volume, slider.height};
+    DrawRectangleRounded(filled_slider, roundness, segments, fill_color);
 
-    // Draw circular knob
-    float knobX = slider.x + slider.width * volume; // Position of the knob
-    float knobY = slider.y + slider.height / 2;     // Centered vertically
-    DrawCircle(knobX, knobY, slider.height / 2, knobColor);
-
-    // Render volume text
-    std::string volumeText = std::to_string(static_cast<int>(volume * 100)) + "%";
-    DrawTextEx(font, volumeText.c_str(), {slider.x + slider.width + 10, slider.y}, 20, 2, BLACK);
+    float knobX = slider.x + slider.width * volume; 
+    float knobY = slider.y + slider.height / 2;    
+    DrawCircle(knobX, knobY, slider.height / 2, knob_color);
 }
 
-float VolumeSlider::getCurrentVolume() const {
+float VolumeSlider::getCurrentVolume() const 
+{
     return volume;
 }
 
