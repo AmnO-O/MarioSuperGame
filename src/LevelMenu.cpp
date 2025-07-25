@@ -17,6 +17,7 @@ LevelMenu::LevelMenu(StateManager& stateManager, SoundManager& soundManager, boo
     world1_4("D:/MarioSuperGame/assets/images/World1-4.png", {977, 635, 532, 208}, []() {})
 {
     level_background = LoadTexture("D:/MarioSuperGame/assets/images/blue_background.png");
+    return_button_state = LoadTexture("D:/MarioSuperGame/assets/images/turn_back_red.png");
     font = LoadFont("D:/MarioSuperGame/assets/fonts/SuperMarioBros.ttf");
 }
 
@@ -24,6 +25,7 @@ LevelMenu::~LevelMenu()
 {
     UnloadFont(font);
     UnloadTexture(level_background);
+    UnloadTexture(return_button_state);
 }
 
 void LevelMenu::drawBorder(Rectangle bounds)
@@ -58,6 +60,9 @@ void LevelMenu::render()
     world1_4.render();
 
     return_button.render();
+    bool buttonHovered = CheckCollisionPointRec(GetMousePosition(), return_button.getBounds());
+    if (buttonHovered)
+        DrawTexture(return_button_state, 25, 27, WHITE);
 
     DrawTextEx(font, title.c_str(), {410, 104}, 50, 2, BLACK);
     DrawTextEx(font, high_score.c_str(), {1088, 20}, 50, 2, BLACK);

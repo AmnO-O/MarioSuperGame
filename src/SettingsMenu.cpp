@@ -15,6 +15,7 @@ SettingsMenu::SettingsMenu(StateManager& stateManager, SoundManager& soundManage
     soundFX("SOUND FX:") 
 {    
     settings_background = LoadTexture("D:/MarioSuperGame/assets/images/blue_background.png");
+    return_button_state = LoadTexture("D:/MarioSuperGame/assets/images/turn_back_red.png");
     font = LoadFont("D:/MarioSuperGame/assets/fonts/SuperMarioBros.ttf");
 }
 
@@ -22,6 +23,7 @@ SettingsMenu::~SettingsMenu()
 {
     UnloadFont(font);
     UnloadTexture(settings_background);
+    UnloadTexture(return_button_state);
 }
 
 void SettingsMenu::update(float deltaTime) 
@@ -36,6 +38,10 @@ void SettingsMenu::render()
     
     return_button.render();
     slider.render();
+
+    bool isHovered = CheckCollisionPointRec(GetMousePosition(), return_button.getBounds());
+    if (isHovered)  
+        DrawTexture(return_button_state, 25, 27, WHITE);
 
     DrawTextEx(font, music.c_str(), {258, 239}, 50, 2, BLACK);
     DrawTextEx(font, soundFX.c_str(), {258, 353}, 50, 2, BLACK);

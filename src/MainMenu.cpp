@@ -19,11 +19,13 @@ MainMenu::MainMenu(StateManager& stateManager, SoundManager& soundManager)
     })
 {
     background = LoadTexture("D:/MarioSuperGame/assets/images/main_menu_background.png"); 
+    settings_button_state = LoadTexture("D:/MarioSuperGame/assets/images/setting_red.png");
 }
 
 MainMenu::~MainMenu() 
 {
     UnloadTexture(background);
+    UnloadTexture(settings_button_state);
 }
 
 void MainMenu::update(float deltaTime) 
@@ -40,4 +42,8 @@ void MainMenu::render()
     mario_button.render(); 
     luigi_button.render(); 
     settings_button.render();
+
+    bool isHovered = CheckCollisionPointRec(GetMousePosition(), settings_button.getBounds());
+    if (isHovered)
+        DrawTexture(settings_button_state, 25, 27, WHITE);
 }

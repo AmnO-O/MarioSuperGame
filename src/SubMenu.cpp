@@ -22,6 +22,7 @@ SubMenu::SubMenu(StateManager& stateManager, SoundManager& soundManager, bool ch
         title = "LUIGI GAME";
     
     sub_background = LoadTexture("D:/MarioSuperGame/assets/images/sub_menu_background.png");
+    return_button_state = LoadTexture("D:/MarioSuperGame/assets/images/turn_back_red.png");
     titleFont = LoadFont("D:/MarioSuperGame/assets/fonts/SuperMarioBros.ttf");
 }
 
@@ -29,6 +30,7 @@ SubMenu::~SubMenu()
 {
     UnloadFont(titleFont);
     UnloadTexture(sub_background);
+    UnloadTexture(return_button_state);
 }
 
 void SubMenu::update(float deltaTime) 
@@ -45,6 +47,10 @@ void SubMenu::render()
     new_game_button.render();
     load_game_button.render();
     return_button.render();
+
+    bool isHovered = CheckCollisionPointRec(GetMousePosition(), return_button.getBounds());
+    if (isHovered)
+        DrawTexture(return_button_state, 25, 27, WHITE);
 
     DrawTextEx(titleFont, title.c_str(), {577, 79}, 50, 2, BLACK);
 }

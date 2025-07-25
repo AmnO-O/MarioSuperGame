@@ -20,6 +20,7 @@ class LevelMenu : public MenuState
         ImageButton world1_3;
         ImageButton world1_4;
         ImageButton return_button;
+        Texture2D return_button_state;
 
         std::string high_score;
         std::string title;

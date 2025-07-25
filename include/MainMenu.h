@@ -16,6 +16,7 @@ class MainMenu : public MenuState
         NormalButton mario_button;
         NormalButton luigi_button;
         ImageButton settings_button;
+        Texture2D settings_button_state;
         Texture2D background;
         StateManager& stateManager;
         SoundManager& soundManager;
