@@ -23,9 +23,9 @@ Game::Game() {
     myCam = new MyCamera2D(1.0f * GetScreenWidth(), 1.0f * GetScreenHeight()); 
     myCam->setMapSize(maps[currentMap].getSize());
     
-    powerUpCreator = new StarCreator(); 
-    item = powerUpCreator->create({150, 100}); 
-    item -> setGroundLevel(200);
+    powerUpCreator = new NormalMushroomCreator(); 
+    item = powerUpCreator->create({350, 100}); 
+    item -> setGroundLevel(205);
 }
 
 Game::~Game() {

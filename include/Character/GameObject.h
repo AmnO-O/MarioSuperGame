@@ -20,14 +20,8 @@ public:
         if(active == false) return ; 
 
         velocity.y += 980 * deltaTime; 
-        
         position.x += velocity.x * deltaTime; 
         position.y += velocity.y * deltaTime; 
-
-        if(position.y >= groundLevel - 16.0f){
-            position.y = groundLevel - 16.0f;
-            velocity.y = 0.0f; 
-        }
 
         hitbox.x = position.x;
         hitbox.y = position.y;

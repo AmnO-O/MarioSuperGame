@@ -23,62 +23,36 @@ void PlayerMovement::setGroundLevel(float groundLevel_){
 void PlayerMovement::adaptCollision(ICollidable* other,
                                     IMoveState*& Mstate,
                                     Character* player) {
-    Rectangle body  = bodyBox();
-    Rectangle feet  = footBox();
-    Rectangle hit   = other->getHitbox();
+	Rectangle rect = other->getHitbox();
 
-    // Check overlap
-    float left   = (body.x + body.width)  - hit.x;
-    float right  = (hit.x + hit.width)    - body.x;
-    float top    = (body.y + body.height) - hit.y;
-    float bottom = (hit.y + hit.height)   - body.y;
-    if (left <= 0 || right <= 0 || top <= 0 || bottom <= 0)
-        return;
+	float penLeft = (position.x + shape.x) - rect.x; 
+	float penRight = (rect.x + rect.width) - position.x;
+	float penX = penLeft < penRight ? -penLeft : penRight; 
 
-    // Determine minimal penetration direction
-    float minPen = left;
-    enum Dir { LEFT, RIGHT, TOP, BOTTOM } dir = LEFT;
-    if (right < minPen)  { minPen = right;  dir = RIGHT; }
-    if (top < minPen)    { minPen = top;    dir = TOP; }
-    if (bottom < minPen) { minPen = bottom; dir = BOTTOM; }
+	float penTop = (position.y + shape.y) - rect.y;
+	float penBot = (rect.y + rect.height) - position.y;
+	float penY = penTop < penBot ? -penTop : penBot;
 
-    const float EPS = 0.01f;
-    switch (dir) {
-        case LEFT:
-            if (std::fabs(left) > EPS) {
-                position.x -= left;
-                velocity.x = 0;
+	if (std::fabs(penX) < std::fabs(penY)) {
+		position.x += penX;
+		velocity.x = 0; 
+	}
+	else {
+		position.y += penY; 
+		velocity.y = 0; 
+		if (penY < 0) {
+            if (Mstate->isJumping()) {
+                delete Mstate;
+                if(velocity.x != 0) 
+					Mstate = new RunState();
+				else
+					Mstate = new StandState(); 
             }
-            break;
-        case RIGHT:
-            if (std::fabs(right) > EPS) {
-                position.x += right;
-                velocity.x = 0;
-            }
-            break;
-        case TOP:
-            // only when falling or stationary
-            if (velocity.y >= 0) {
-                // compute feet overlap
-                float fOverlap = (feet.y + feet.height) - hit.y;
-                if (fOverlap > EPS) {
-                    position.y -= fOverlap;
-                    velocity.y = 0;
-                    delete Mstate;
-                    if (std::fabs(velocity.x) > EPS) Mstate = new RunState();
-                    else                              Mstate = new StandState();
-                    player->setGroundLevel(hit.y);
-                }
-            }
-            break;
-        case BOTTOM:
-            // hitting ceiling
-            if (velocity.y < 0 && std::fabs(bottom) > EPS) {
-                position.y += bottom;
-                velocity.y = 0;
-            }
-            break;
-    }
+
+            player->setGroundLevel(rect.y);
+			player->setOnGround(); 
+		}
+	}
 }
 
 
@@ -143,8 +117,8 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 	velocity.x += forceX * deltaTime;
 	velocity.y += forceY * deltaTime;
 
-	velocity.x = std::min(velocity.x, 150.0f);
-	velocity.x = std::max(velocity.x, -150.0f);
+	velocity.x = std::min(velocity.x, 200.0f);
+	velocity.x = std::max(velocity.x, -200.0f);
 
 	position.x += velocity.x * deltaTime;
 	position.y += velocity.y * deltaTime;
