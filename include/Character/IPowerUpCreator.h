@@ -16,6 +16,13 @@ public:
     }
 }; 
 
+class NormalMushroomCreator : public IPowerUpCreator{
+public:
+    PowerUp* create(const Vector2& pos) const override {
+        return new NormalMushroomPowerUp(pos);
+    }
+}; 
+
 
 class FireFlowerCreator : public IPowerUpCreator{
 public:

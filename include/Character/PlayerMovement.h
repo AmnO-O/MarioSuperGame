@@ -21,27 +21,7 @@ private:
     float groundLevel; 
 	float currentTime; 
 
-    float footHeightFactor = 0.2f;
-
-    // Main body collider (ignores foot skirt)
-    Rectangle bodyBox() const {
-        float h = shape.y * (1.0f - footHeightFactor);
-        return { position.x,
-                 position.y,
-                 shape.x,
-                 h };
-    }
-
-    // Foot collider for ground detection
-    Rectangle footBox() const {
-        float h = shape.y * footHeightFactor;
-        float w = shape.x * 0.6f;
-        float x = position.x + (shape.x - w) * 0.5f;
-        float y = position.y + (shape.y - h);
-        return { x, y, w, h };
-    }
-
-    
+    float footHeightFactor = 0.2f;    
 public: 
     PlayerMovement(Vector2 pos, Vector2 vel, std::unique_ptr<CharacterStats> stats_): 
         position(pos), velocity(vel), stats(std::move(stats_)), facingRight(true), currentTime(0.0f), groundLevel(0.0){

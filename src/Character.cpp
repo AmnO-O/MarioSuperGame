@@ -112,8 +112,10 @@ void Character::updateHitbox(){
 		throw GameException("Movement ptr activeAnimation is null in Character::updateHitbox"); 
 
 	auto [w, h] = activeAnimation->getCurrentShape(); 	
-	if(Sstate->canBreakBrick() == 0)
-		w = 12.0f; 
+	
+	if(Sstate->canBreakBrick() == 0) w = 12.5f; 
+	else w = 14.5f; 
+
 	movement->setShape(Vector2{w, h}); 
 
 	Vector2 current = movement -> getPosition(); 
@@ -243,6 +245,7 @@ void Character::powerUp(PowerUpType t){
 	case PowerUpType::FIRE_FLOWER:
 		if (Sstate -> getShapeState() == "SMALL"){
 			tmp = Sstate; 
+			Sstate = new FireState();		
 			delete tmp;
 		}
 		else{
@@ -255,6 +258,9 @@ void Character::powerUp(PowerUpType t){
 	case PowerUpType::STAR: 
 	    Sstate = new InvincibleDecorator(Sstate);
 		break;
+	case PowerUpType::NORMAL_MUSHROOM:
+		
+		break; 
 	default:
 		throw GameException("There is other type of power up !"); 
 		break; 
