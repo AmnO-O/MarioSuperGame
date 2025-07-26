@@ -1,6 +1,7 @@
 #include "Map.h"
 #include "Blocks/Brick.h"
 #include "Blocks/Floor.h"
+#include "Blocks/Coin.h"
 #include <fstream>
 
 void Map::input(std::istream &is, Texture objectTex) {
@@ -16,6 +17,10 @@ void Map::input(std::istream &is, Texture objectTex) {
         else if (s == "FLOOR") {
             for (int i = 0; i < n; i++)
                 blocks.push_back(new Floor(objectTex, is));
+        }
+        else if (s == "COIN") {
+            for (int i = 0; i < n; i++)
+                blocks.push_back(new Coin(objectTex, is));
         }
     }
 }

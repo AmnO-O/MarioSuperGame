@@ -107,13 +107,29 @@ void Brick::DrawFragment() const {
 void Brick::adaptCollision(ICollidable* other) {
     if (stat == BlockStat::Normal) {
         Character* Char = dynamic_cast<Character*>(other);
-        Rectangle hitbox = getHitbox();
-        if (Char && Char->getPosition().y >= hitbox.y + hitbox.height) {
-            if (Char->isBig()) {
-                Break();
-            }
-            else {
-                Bounce();
+        if (Char) {
+            Rectangle body = Char->getHitbox(); // Use character's hitbox
+            Rectangle hitbox = getHitbox();
+            // Check overlap
+            float left = (body.x + body.width) - hitbox.x;
+            float right = (hitbox.x + hitbox.width) - body.x;
+            float top = (body.y + body.height) - hitbox.y;
+            float bottom = (hitbox.y + hitbox.height) - body.y;
+            if (left <= 0 || right <= 0 || top <= 0 || bottom <= 0) return;
+
+            // Find minimal penetration
+            float minPen = left;
+            enum Dir { LEFT, RIGHT, TOP, BOTTOM } dir = LEFT;
+            if (right < minPen) { minPen = right; dir = RIGHT; }
+            if (top < minPen) { minPen = top; dir = TOP; }
+            if (bottom < minPen) { minPen = bottom; dir = BOTTOM; }
+
+            if (dir == BOTTOM) { // Player hit brick from below
+                if (Char->isBig()) {
+                    Break();
+                } else {
+                    Bounce();
+                }
             }
         }
     }

@@ -19,6 +19,8 @@ private:
     Rectangle fragmentRect;
     BlockStat stat = BlockStat::Normal;
     float frameTime = 0.0f;
+    void Break(); // call this when hit from below by Big Mario
+    void Bounce(); // call this when hit from below by Normal Mario
 
 public:
     Brick(Texture2D tex, std::istream &is);
@@ -30,8 +32,6 @@ public:
     void adaptCollision(ICollidable* other) override;
 
     bool IsActive() const override;
-    void Break(); // call this when hit from below by Big Mario
-    void Bounce(); // call this when hit from below by Normal Mario
     ~Brick() override {}
 };
 

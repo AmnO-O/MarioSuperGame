@@ -28,8 +28,8 @@ public:
         // Check character vs all others
         for (auto* obj : collidables) {
             if (obj != mainCharacter && obj->IsActive() && CheckCollisionRecs(mainCharacter->getHitbox(), obj->getHitbox())) {
-                mainCharacter->adaptCollision(obj);
                 obj->adaptCollision(mainCharacter);
+                mainCharacter->adaptCollision(obj);
             }
 
             if(obj != mainCharacter && obj -> IsActive()){

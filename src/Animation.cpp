@@ -44,3 +44,15 @@ void AnimationManager::render(Vector2 position, bool flip){
 
 	DrawTextureRec(sheet, frameRec, position, WHITE);
 }
+
+void AnimationManager::Draw(Vector2 position) const {
+    if(currentIndex < 0 || currentIndex >= frames.size()){
+        throw GameException("Current index out of bounds in SpriteAnimated::render"); 
+    }
+
+	Rectangle frameRec = frames[currentIndex];
+
+    assert(sheet.id != 0); 
+
+	DrawTextureRec(sheet, frameRec, position, WHITE);
+}

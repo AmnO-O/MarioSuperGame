@@ -26,4 +26,5 @@ public:
     void addRect(const Rectangle& rect);   
     void update(float deltaTime); 
     void render(Vector2 position, bool flip = false); 
+    void Draw(Vector2 position) const;
 }; 
