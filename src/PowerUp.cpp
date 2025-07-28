@@ -76,7 +76,7 @@ void PowerUp::render(){
 	DrawTexture(power, (int) hitbox.x, (int) hitbox.y, WHITE);
 }
 
-void MushroomPowerUp::applyEffect(Character* &character) {
+void MushroomPowerUp::applyEffect(Player* &character) {
     if(active == false) return; 
 	active = false; 
 	character->powerUp(this->type); 
@@ -104,13 +104,13 @@ void NormalMushroomPowerUp::update(float deltaTime){
 	hitbox = { position.x, position.y, hitbox.width, hitbox.height };
 }
 
-void NormalMushroomPowerUp::applyEffect(Character* &character){
+void NormalMushroomPowerUp::applyEffect(Player* &character){
     if(active == false) return; 
 
 	active = false; 
 }
 
-void FireFlowerPowerUp::applyEffect(Character* &character) {
+void FireFlowerPowerUp::applyEffect(Player* &character) {
     if(active == false) return; 
 
 	active = false;
@@ -126,7 +126,7 @@ void FireFlowerPowerUp::update(float deltaTime) {
 }
 
 
-void StarPowerUp::applyEffect(Character* &character) {
+void StarPowerUp::applyEffect(Player* &character) {
     if(active == false) return; 
 
 	active = false;

@@ -4,7 +4,7 @@
 #include "Animation.h"
 #include "Observer/ICollidable.h"
 #include <iostream>
-class Character;
+class Player;
 
 class PowerUp : public GameObject, public ICollidable {
 protected:
@@ -19,7 +19,7 @@ public:
 
     virtual ~PowerUp() { delete activeAnimation; }
 
-    virtual void applyEffect(Character* &character) = 0;
+    virtual void applyEffect(Player* &character) = 0;
 
     bool IsActive() const override { return active; }
 
@@ -27,28 +27,28 @@ public:
         return GameObject::getHitbox();
     }
 
-    void readRectAnimation(const std::string filePath, Texture2D &sheet); 
-    void adaptCollision(ICollidable* other) override; 
+    void readRectAnimation(const std::string filePath, Texture2D &sheet);
+    void adaptCollision(ICollidable* other) override;
     virtual bool isSpecial() const {return true;}
-    virtual void adaptCollision(const Rectangle &other); 
+    virtual void adaptCollision(const Rectangle &other);
 
     virtual void update(float deltaTime){
         GameObject::update(deltaTime);
 
         if(activeAnimation)
-            activeAnimation->update(deltaTime); 
+            activeAnimation->update(deltaTime);
     }
 
-    void render() override; 
+    void render() override;
 };
 
 class MushroomPowerUp : public PowerUp {
-public: 
+public:
     MushroomPowerUp(Vector2 pos) : PowerUp(PowerUpType::MUSHROOM, pos) {
         velocity.x = 35.0f;
     }
-    void applyEffect(Character* &character) override; 
-    void update(float deltaTime) override; 
+    void applyEffect(Player* &character) override;
+    void update(float deltaTime) override;
 };
 
 
@@ -58,16 +58,16 @@ public:
         readRectAnimation("assets/animation/fireflower.txt", Images::textures["items1.png"]);
     }
 
-    void applyEffect(Character* &character) override; 
-    void update(float deltaTime) override; 
+    void applyEffect(Player* &character) override;
+    void update(float deltaTime) override;
 };
 
 
 class StarPowerUp :public PowerUp {
-private: 
-    const float bounceDamp = 0.4f; 
-    const float e = 1.0f; 
-    const float h_bounce = 50.0f; 
+private:
+    const float bounceDamp = 0.4f;
+    const float e = 1.0f;
+    const float h_bounce = 50.0f;
 
     Vector2 reflect(const Vector2& v, const Vector2& n) {
         float dot = v.x*n.x + v.y*n.y;
@@ -75,26 +75,26 @@ private:
         return { v.x - (1 + e) * dot * n.x,
                 v.y - (1 + e) * dot * n.y };
     }
-public: 
+public:
     StarPowerUp(Vector2 pos) : PowerUp(PowerUpType::STAR, pos) {
         velocity.x = 70.0f;
         readRectAnimation("assets/animation/star.txt", Images::textures["items.png"]);
     }
 
-    void adaptCollision(const Rectangle &other) override; 
-    void update(float deltaTime) override; 
-    void applyEffect(Character* &character) override; 
+    void adaptCollision(const Rectangle &other) override;
+    void update(float deltaTime) override;
+    void applyEffect(Player* &character) override;
 };
 
 
 class NormalMushroomPowerUp : public PowerUp{
-public: 
+public:
 
     NormalMushroomPowerUp(Vector2 pos) : PowerUp(PowerUpType::NORMAL_MUSHROOM, pos){
          velocity.x = 35.0f;
     }
 
     bool isSpecial() const {return false;}
-    void applyEffect(Character* &character) override; 
-    void update(float deltaTime) override; 
-}; 
+    void applyEffect(Player* &character) override;
+    void update(float deltaTime) override;
+};

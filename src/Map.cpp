@@ -66,7 +66,7 @@ void Map::Unload() {
         delete blocks[i];
 }
 
-void Map::SetUp(CollisionManager &cm, Character* player) const {
+void Map::SetUp(CollisionManager &cm, Player* player) const {
     cm.Clear();
     cm.SetMainCharacter(player);
     for (int i = 0; i < blocks.size(); i++)

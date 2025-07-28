@@ -22,7 +22,7 @@ public:
     Map(const std::string& folderPath, Texture objectTex);
     Vector2 getSize() const { return {1.0f * background.width, 1.0f * background.height / space}; }
 
-    void SetUp(CollisionManager &cm, Character* player) const;
+    void SetUp(CollisionManager &cm, Player* player) const;
     void Update(float delta);
     void Draw() const;
     void Unload();

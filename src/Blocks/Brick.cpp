@@ -106,7 +106,7 @@ void Brick::DrawFragment() const {
 
 void Brick::adaptCollision(ICollidable* other) {
     if (stat == BlockStat::Normal) {
-        Character* Char = dynamic_cast<Character*>(other);
+        Player* Char = dynamic_cast<Player*>(other);
         Rectangle hitbox = getHitbox();
         if (Char && Char->getPosition().y >= hitbox.y + hitbox.height) {
             if (Char->isBig()) {
@@ -126,7 +126,7 @@ void Brick::Break() {
     frameTime = 0.0f;
 }
 
-void Brick::Bounce() {    
+void Brick::Bounce() {
     stat = BlockStat::Bouncing;
     frameTime = 0.0f;
 }

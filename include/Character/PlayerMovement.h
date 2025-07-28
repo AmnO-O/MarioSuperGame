@@ -51,7 +51,7 @@ public:
         footHeightFactor = factor;
     }
     void setOnGround(); 
-    void adaptCollision(ICollidable* other, IMoveState *&Mstate, Character *player); 
+    void adaptCollision(ICollidable* other, IMoveState *&Mstate, Player *player); 
     void update(float deltaTime, IShapeState *&Sstate, IMoveState  *&Mstate);
     void setGroundLevel(float groundLevel_); 
     void setPosition(const Vector2 &pos) {position = pos;}

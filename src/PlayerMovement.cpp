@@ -22,7 +22,7 @@ void PlayerMovement::setGroundLevel(float groundLevel_){
 
 void PlayerMovement::adaptCollision(ICollidable* other,
                                     IMoveState*& Mstate,
-                                    Character* player) {
+                                    Player* player) {
 	Rectangle rect = other->getHitbox();
 
 	float penLeft = (position.x + shape.x) - rect.x; 
