@@ -1,18 +1,19 @@
+
 #include "Character/Character.h"
 #include <iostream>
 #include <cassert>
 #include <algorithm>
 
 
-void Character::setUp(){
-	Sstate = new SmallState(); 
-	Mstate = new StandState(); 
-	activeAnimation = nullptr; 
+void Player::setUp(){
+	Sstate = new SmallState();
+	Mstate = new StandState();
+	activeAnimation = nullptr;
 }
 
-Character::Character(CharacterType t, Vector2 pos):
+Player::Player(CharacterType t, Vector2 pos):
     type(t){
-	setUp(); 
+	setUp();
 
     if(type == CharacterType::MARIO){
 		Texture& mario = Images::textures["mario.png"];
@@ -21,12 +22,12 @@ Character::Character(CharacterType t, Vector2 pos):
 			throw GameException("Can't load image of mario.png");
 
 		readRectAnimation("assets/animation/mario.txt", mario);
-		updateShape(); 
-		groundLevel = pos.y + activeAnimation->getCurrentShape().y; 
+		updateShape();
+		groundLevel = pos.y + activeAnimation->getCurrentShape().y;
 
-		movement = new PlayerMovement(pos, {0, 0}, std::make_unique<MarioStats>()); 
-		movement->setGroundLevel(groundLevel); 
-		movement->setShape(activeAnimation->getCurrentShape()); 
+		movement = new PlayerMovement(pos, {0, 0}, std::make_unique<MarioStats>());
+		movement->setGroundLevel(groundLevel);
+		movement->setShape(activeAnimation->getCurrentShape());
 
 
 	}else if(type == CharacterType::LUIGI){
@@ -36,21 +37,21 @@ Character::Character(CharacterType t, Vector2 pos):
 			throw GameException("Can't load image of luigi.png");
 
 		readRectAnimation("assets/animation/luigi.txt", luigi);
-		updateShape(); 
-		groundLevel = pos.y + activeAnimation->getCurrentShape().y; 
+		updateShape();
+		groundLevel = pos.y + activeAnimation->getCurrentShape().y;
 
-		movement = new PlayerMovement(pos, {0, 0}, std::make_unique<LuigiStats>()); 
-		movement->setGroundLevel(groundLevel); 
+		movement = new PlayerMovement(pos, {0, 0}, std::make_unique<LuigiStats>());
+		movement->setGroundLevel(groundLevel);
 		movement->setShape(activeAnimation->getCurrentShape());
     }
 
-	updateHitbox(); 
+	updateHitbox();
 }
 
-Character::Character(CharacterType t,  float cordX, float groundLevel):
+Player::Player(CharacterType t,  float cordX, float groundLevel):
     type(t){
 
-	setUp(); 
+	setUp();
 
     if(type == CharacterType::MARIO){
 		Texture& mario = Images::textures["mario.png"];
@@ -59,11 +60,11 @@ Character::Character(CharacterType t,  float cordX, float groundLevel):
 			throw GameException("Can't load image of mario.png");
 
 		readRectAnimation("assets/animation/mario.txt", mario);
-		updateShape(); 
+		updateShape();
 		Vector2 pos = {cordX, groundLevel - activeAnimation->getCurrentShape().y };
 
-		movement = new PlayerMovement(pos, {0, 0}, std::make_unique<MarioStats>()); 
-		movement->setGroundLevel(groundLevel); 
+		movement = new PlayerMovement(pos, {0, 0}, std::make_unique<MarioStats>());
+		movement->setGroundLevel(groundLevel);
 
 	}else if(type == CharacterType::LUIGI){
 		Texture& luigi = Images::textures["luigi.png"];
@@ -72,61 +73,61 @@ Character::Character(CharacterType t,  float cordX, float groundLevel):
 			throw GameException("Can't load image of luigi.png");
 
 		readRectAnimation("assets/animation/luigi.txt", luigi);
-		updateShape(); 
+		updateShape();
 		Vector2 pos = {cordX, groundLevel - activeAnimation->getCurrentShape().y };
 
-		movement = new PlayerMovement(pos, {0, 0}, std::make_unique<LuigiStats>()); 
-		movement->setGroundLevel(groundLevel); 
+		movement = new PlayerMovement(pos, {0, 0}, std::make_unique<LuigiStats>());
+		movement->setGroundLevel(groundLevel);
     }
 
-	updateHitbox(); 
+	updateHitbox();
 }
 
-std::string Character::getShape_Action() const{
-	assert(Mstate != nullptr); 
-	assert(Sstate != nullptr); 
+std::string Player::getShape_Action() const{
+	assert(Mstate != nullptr);
+	assert(Sstate != nullptr);
 
-	return Sstate->getShapeState() + "_" + Mstate->getMoveState(); 
+	return Sstate->getShapeState() + "_" + Mstate->getMoveState();
 }
 
-void Character::updateShape(){
-	std::string animationKey = getShape_Action(); 
+void Player::updateShape(){
+	std::string animationKey = getShape_Action();
 
 	if ((int)animationKey.size() >= 7 && animationKey.substr(0, 8) == "MORPHING") {
-		animationKey = "SMALL_MORPHING"; 
-		animations[animationKey]->setTimeSwitch(0.4f); 
+		animationKey = "SMALL_MORPHING";
+		animations[animationKey]->setTimeSwitch(0.4f);
 	}else if ((int)animationKey.size() >= 15 && animationKey.substr(0, 15) == "INVINCIBLE_FIRE"){
         animationKey.replace(0, 15, "INVINCIBLE_BIG");
 	}
 
 	if(activeAnimation != animations[animationKey].get()){
-		activeAnimation = animations[animationKey].get(); 
+		activeAnimation = animations[animationKey].get();
 	}
 
 	if(activeAnimation == nullptr)
-		throw GameException("Active animation is null in Character::updateShape " + animationKey);
+		throw GameException("Active animation is null in Player::updateShape " + animationKey);
 }
 
-void Character::updateHitbox(){	
+void Player::updateHitbox(){
 	if(movement == nullptr || activeAnimation == nullptr)
-		throw GameException("Movement ptr activeAnimation is null in Character::updateHitbox"); 
+		throw GameException("Movement ptr activeAnimation is null in Player::updateHitbox");
 
-	auto [w, h] = activeAnimation->getCurrentShape(); 	
-	
-	if(Sstate->canBreakBrick() == 0) w = 12.5f; 
-	else w = 14.5f; 
+	auto [w, h] = activeAnimation->getCurrentShape();
 
-	movement->setShape(Vector2{w, h}); 
+	if(Sstate->canBreakBrick() == 0) w = 12.5f;
+	else w = 14.5f;
 
-	Vector2 current = movement -> getPosition(); 
-	hitbox = {current.x, current.y, w, h}; 	
+	movement->setShape(Vector2{w, h});
+
+	Vector2 current = movement -> getPosition();
+	hitbox = {current.x, current.y, w, h};
 }
 
-void Character::readRectAnimation(const std::string filename, Texture2D &sheet) {
-	std::ifstream fin(filename); 
+void Player::readRectAnimation(const std::string filename, Texture2D &sheet) {
+	std::ifstream fin(filename);
 
-	if (!fin.is_open()) 
-		throw ResourceException("Can't load " + filename); 
+	if (!fin.is_open())
+		throw ResourceException("Can't load " + filename);
 
 
 	for (int id = 0; id < 5; id++) {
@@ -206,7 +207,7 @@ void Character::readRectAnimation(const std::string filename, Texture2D &sheet) 
 					float x, y, width, height;
 					fin >> x >> y >> width >> height;
 					animations[key]->addRect(Rectangle({ x, y, width, height }));
-					animations[key]->setTimeSwitch(0.1f); 
+					animations[key]->setTimeSwitch(0.1f);
 				}
 			}
 		}
@@ -226,132 +227,132 @@ void Character::readRectAnimation(const std::string filename, Texture2D &sheet) 
 					float x, y, width, height;
 					fin >> x >> y >> width >> height;
 					animations[key]->addRect(Rectangle({ x, y, width, height }));
-					animations[key]->setTimeSwitch(0.1f); 
+					animations[key]->setTimeSwitch(0.1f);
 				}
 			}
 		}
 	}
-	fin.close(); 
+	fin.close();
 }
 
-void Character::powerUp(PowerUpType t){
-	IShapeState *tmp = nullptr; 
+void Player::powerUp(PowerUpType t){
+	IShapeState *tmp = nullptr;
 	switch (t) {
 	case PowerUpType::MUSHROOM:
-		if (Sstate -> getShapeState() == "SMALL"){            
+		if (Sstate -> getShapeState() == "SMALL"){
 			Sstate = new MorphDecorator(Sstate);
 		}
-		break; 
+		break;
 	case PowerUpType::FIRE_FLOWER:
 		if (Sstate -> getShapeState() == "SMALL"){
-			tmp = Sstate; 
-			Sstate = new FireState();		
+			tmp = Sstate;
+			Sstate = new FireState();
 			delete tmp;
 		}
 		else{
-			tmp = Sstate; 
-			Sstate = new FireState();		
+			tmp = Sstate;
+			Sstate = new FireState();
 			delete tmp;
 		}
-		
-		break; 
-	case PowerUpType::STAR: 
+
+		break;
+	case PowerUpType::STAR:
 	    Sstate = new InvincibleDecorator(Sstate);
 		break;
 	case PowerUpType::NORMAL_MUSHROOM:
-		
-		break; 
+
+		break;
 	default:
-		throw GameException("There is other type of power up !"); 
-		break; 
+		throw GameException("There is other type of power up !");
+		break;
 	}
 }
 
-void Character::shootFireball(){
+void Player::shootFireball(){
 	if (IsKeyPressed(KEY_F) && Sstate->canShootFire()) {
-		delete Mstate; 
-		Mstate = new ShootState(); 
-		
-		updateShape(); 
-		updateHitbox(); 
+		delete Mstate;
+		Mstate = new ShootState();
 
-		Vector2 startPos = movement->getPosition(); 
-		startPos.x += (movement->isFacingRight() ? 15 : -5); 
+		updateShape();
+		updateHitbox();
+
+		Vector2 startPos = movement->getPosition();
+		startPos.x += (movement->isFacingRight() ? 15 : -5);
 		startPos.y += 5;
 
         fireballs.emplace_back(new Fireball(startPos, movement->isFacingRight()));
-		
-		Vector2 curshape = activeAnimation->getCurrentShape(); 
+
+		Vector2 curshape = activeAnimation->getCurrentShape();
 		float w = curshape.x;
 		float h = curshape.y;
-		
-		fireballs.back() ->setGroundLevel(groundLevel); 
+
+		fireballs.back() ->setGroundLevel(groundLevel);
     }
 }
 
-void Character::cleanFireballs(){
+void Player::cleanFireballs(){
     fireballs.erase(
         std::remove_if(fireballs.begin(), fireballs.end(), [](const auto &fb) { return !fb->isActive(); }),
         fireballs.end()
     );
 }
 
-void Character::adaptCollision(ICollidable* other){
-	movement->adaptCollision(other, Mstate, this); 
-	updateShape(); 
-	updateHitbox(); 
+void Player::adaptCollision(ICollidable* other){
+	movement->adaptCollision(other, Mstate, this);
+	updateShape();
+	updateHitbox();
 }
 
-void Character::setOnGround(){
+void Player::setOnGround(){
 	if(Mstate-> isJumping()){
-		delete Mstate; 
-		Mstate = new StandState(); 
+		delete Mstate;
+		Mstate = new StandState();
 	}
 
-	updateShape(); 
-	movement->setShape(activeAnimation->getCurrentShape()); 
+	updateShape();
+	movement->setShape(activeAnimation->getCurrentShape());
 	movement->setGroundLevel(groundLevel);
-	movement->setOnGround(); 
-	updateHitbox(); 
+	movement->setOnGround();
+	updateHitbox();
 }
 
-void Character::adaptChangePosition(){
+void Player::adaptChangePosition(){
 	if(groundLevel - hitbox.height > hitbox.y){
-		delete Mstate; 
-		Mstate = new JumpState(); 
+		delete Mstate;
+		Mstate = new JumpState();
 	}else{
-		delete Mstate; 
-		Mstate = new StandState(); 
+		delete Mstate;
+		Mstate = new StandState();
 		hitbox.y = groundLevel - hitbox.height;
 
 	}
-	
-	updateShape(); 
-	movement->setShape(activeAnimation->getCurrentShape()); 
+
+	updateShape();
+	movement->setShape(activeAnimation->getCurrentShape());
 	movement->setGroundLevel(groundLevel);
-	updateHitbox(); 
+	updateHitbox();
 }
 
-void Character::setGroundLevel(float groundLevel_){
+void Player::setGroundLevel(float groundLevel_){
 	this->groundLevel = groundLevel_;
-	adaptChangePosition(); 
+	adaptChangePosition();
 }
 
-void Character::setPosition(const Vector2 &position){
-	hitbox.x = position.x; 
+void Player::setPosition(const Vector2 &position){
+	hitbox.x = position.x;
 	hitbox.y = position.y;
 
-	movement->setPosition(position); 
-	adaptChangePosition(); 
+	movement->setPosition(position);
+	adaptChangePosition();
 }
 
-void Character::animationTransform(){
+void Player::animationTransform(){
 
 }
 
-void Character::update(float deltaTime){
+void Player::update(float deltaTime){
 	if(movement == nullptr)
-		throw GameException("Movement is null in Character::update"); 
+		throw GameException("Movement is null in Player::update");
 
 	if (auto morph = dynamic_cast<MorphDecorator*>(Sstate)) {
 		IShapeState* next = morph->update(deltaTime);
@@ -361,10 +362,10 @@ void Character::update(float deltaTime){
 			Sstate = next;
 		}else{
 			if(activeAnimation)
-				activeAnimation->update(deltaTime); 
-			
-			adaptChangePosition(); 
-			return; 
+				activeAnimation->update(deltaTime);
+
+			adaptChangePosition();
+			return;
 		}
 	}
 	else if (auto inv = dynamic_cast<InvincibleDecorator*>(Sstate)) {
@@ -376,43 +377,43 @@ void Character::update(float deltaTime){
 	}
 
 
-	movement->update(deltaTime, Sstate, Mstate); 
-	Mstate->update(deltaTime); 
+	movement->update(deltaTime, Sstate, Mstate);
+	Mstate->update(deltaTime);
 
-	shootFireball(); 
+	shootFireball();
 	cleanFireballs();
 
-	for (auto& fb : fireballs) 
+	for (auto& fb : fireballs)
 		fb->update(deltaTime);
 
 	if(activeAnimation)
-		activeAnimation->update(deltaTime); 
-	
+		activeAnimation->update(deltaTime);
+
 	// if(Mstate->isJumping()){
-	// 	movement->setFootHeightFactor(0.2f); 
+	// 	movement->setFootHeightFactor(0.2f);
 	// }else movement->setFootHeightFactor(0.1f);
-	// std::cout << "GroundLevel: " << groundLevel << ' ' << Mstate->getMoveState() << ' ' << movement->getPosition().x << ' ' << movement->getPosition().y << '\n'; 
+	// std::cout << "GroundLevel: " << groundLevel << ' ' << Mstate->getMoveState() << ' ' << movement->getPosition().x << ' ' << movement->getPosition().y << '\n';
 
-	updateShape(); 
-	updateHitbox(); 
+	updateShape();
+	updateHitbox();
 }
 
-void Character::render(){
-	if(activeAnimation) 
+void Player::render(){
+	if(activeAnimation)
 		activeAnimation->render(movement->getPosition(), movement->isFacingRight() == false);
-	
-	for (auto& fireball : fireballs) 
-		fireball->render(); 
+
+	for (auto& fireball : fireballs)
+		fireball->render();
 }
 
-Character::~Character() {
-	delete Sstate; 
-	delete Mstate; 
-	delete movement; 
+Player::~Player() {
+	delete Sstate;
+	delete Mstate;
+	delete movement;
 
 	for(auto &fireball : fireballs){
-		delete fireball; 
-		fireball = nullptr; 
+		delete fireball;
+		fireball = nullptr;
 	}
 
 	Images::unloadAllTextures();

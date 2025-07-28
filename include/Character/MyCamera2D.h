@@ -11,7 +11,7 @@ public:
 	MyCamera2D(float baseWidth_, float baseHeight_);
 
 	Camera2D getCamera() {return camera;}
-	void update(Character* player); 
+	void update(Player* player); 
 	void setTarget(Vector2 newTarget);
 	void setTarget(float x, float y);
 	void setZoom(float zoomLevel_); 

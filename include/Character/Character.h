@@ -9,7 +9,63 @@
 #include "Fireball.h"
 #include "Observer/ICollidable.h"
 
-class Character : public ICollidable {
+
+class Character{
+protected:
+    Vector2 position; 
+    Vector2 velocity; 
+    bool dead = false; 
+    AnimationManager *activeAnimation = nullptr; 
+    Rectangle hitbox; 
+    float groundLevel; 
+
+    virtual void updateHitbox(){
+        if(activeAnimation == nullptr)
+            throw GameException("Movement ptr activeAnimation is null in Character::updateHitbox");
+
+        auto [w, h] = activeAnimation->getCurrentShape();
+        hitbox = {position.x, position.y, w, h};
+    }
+
+    virtual void readRectAnimation(const std::string filePath, Texture2D &sheet){}
+public: 
+    Character(): position({0, 0}), velocity({0, 0}), dead(false), activeAnimation(nullptr), groundLevel(10000.0f){
+        hitbox = {0, 0, 16, 16}; 
+    }
+    // Getters
+    Rectangle getHitbox() const {return hitbox; }
+    Vector2 getPosition() const {return position;}
+    Vector2 getVelocity() const {return velocity;}
+
+    // Setters
+    virtual void setPosition(const Vector2 &pos) {this->position = pos; updateHitbox();}
+    virtual void setGroundLevel(float groundLevel){this->groundLevel = groundLevel; }
+    virtual void setOnGround(){
+        if(activeAnimation == nullptr)
+            throw GameException("Movement ptr activeAnimation is null in Character::setOnGround");
+
+        auto [w, h] = activeAnimation->getCurrentShape();
+        position.y = groundLevel - h; 
+        velocity.y = 0.0f; 
+        updateHitbox();
+    }
+
+    /// Other stuff
+    virtual void update(float deltaTime){
+        if(activeAnimation)
+		    activeAnimation->update(deltaTime);
+        
+        position.x += velocity.x * deltaTime;
+	    position.y += velocity.y * deltaTime;
+    }
+    virtual void render(){
+        if(activeAnimation)
+		    activeAnimation->render(position, false);
+    }
+    virtual ~Character() {}; 
+}; 
+
+class Player : public ICollidable, public Character{
 private: 
     PlayerMovement* movement; 
     IShapeState *Sstate; 
@@ -19,9 +75,6 @@ private:
 	std::map<std::string, std::unique_ptr<AnimationManager>> animations; 
     std::vector<Fireball*> fireballs;
 	AnimationManager *activeAnimation;
-
-    Rectangle hitbox; 
-    float groundLevel; 
 
     void updateHitbox(); 
     void readRectAnimation(const std::string filePath, Texture2D &sheet); 
@@ -33,8 +86,8 @@ private:
     void adaptChangePosition(); 
     void animationTransform(); 
 public: 
-    Character(CharacterType type, Vector2 pos); 
-    Character(CharacterType type, float cordX, float groundLevel); 
+    Player(CharacterType type, Vector2 pos); 
+    Player(CharacterType type, float cordX, float groundLevel); 
 
     Vector2 getPosition() const {return movement->getPosition(); }
     Rectangle getHitbox() const override {return hitbox; }
@@ -50,5 +103,5 @@ public:
     void update(float deltaTime); 
     void render(); 
     
-    ~Character(); 
+    ~Player(); 
 }; 

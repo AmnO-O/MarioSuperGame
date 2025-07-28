@@ -22,8 +22,8 @@ public:
 
     void CheckAllCollisions() {
         if (!mainCharacter) return;
-        Character *player = dynamic_cast<Character*>(mainCharacter);
-        bool isOnGround = false; 
+        Player *player = dynamic_cast<Player*>(mainCharacter);
+        bool isOnGround = false;
 
         // Check character vs all others
         for (auto* obj : collidables) {
@@ -34,7 +34,7 @@ public:
 
             if(obj != mainCharacter && obj -> IsActive()){
                 Rectangle rect = obj->getHitbox();
-                rect.y -= 0.2f; 
+                rect.y -= 0.2f;
                 isOnGround |= CheckCollisionRecs(mainCharacter->getHitbox(), rect);
             }
         }
