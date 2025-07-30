@@ -6,7 +6,7 @@
 
 
 void Player::setUp(){
-	Sstate = new SmallState();
+	Sstate = new FireState();
 	Mstate = new StandState();
 	activeAnimation = nullptr;
 }
@@ -177,11 +177,13 @@ void Player::readRectAnimation(const std::string filename, Texture2D &sheet) {
 			shape += "_";
 			std::string action = "";
 
-			for (int i = 0; i < 9; i++) {
+			for (int i = 0; i < 10; i++) {
 				int numAnimation;
 				fin >> action >> numAnimation;
 
 				std::string key = shape + action;
+				std::cout << key << '\n'; 
+				
 				animations[key] = std::make_unique<AnimationManager>(sheet, 0);
 
 				for (int j = 0; j < numAnimation; j++) {
@@ -267,6 +269,23 @@ void Player::powerUp(PowerUpType t){
 		break;
 	}
 }
+
+Fireball* Player::generateFireball(){
+	Fireball *ball = nullptr; 
+
+	if (IsKeyPressed(KEY_F) && Sstate->canShootFire()) {
+		
+		Vector2 startPos = movement->getPosition();
+		startPos.x += (movement->isFacingRight() ? 15 : -5);
+		startPos.y += 5;
+
+        ball = new Fireball(startPos, movement->isFacingRight()); 
+		ball->setGroundLevel(groundLevel); 
+    }
+
+	return ball; 
+}
+
 
 void Player::shootFireball(){
 	if (IsKeyPressed(KEY_F) && Sstate->canShootFire()) {
@@ -376,7 +395,6 @@ void Player::update(float deltaTime){
 		}
 	}
 
-
 	movement->update(deltaTime, Sstate, Mstate);
 	Mstate->update(deltaTime);
 
@@ -388,6 +406,8 @@ void Player::update(float deltaTime){
 
 	if(activeAnimation)
 		activeAnimation->update(deltaTime);
+
+	std::cout << getShape_Action() << '\n'; 
 
 	// if(Mstate->isJumping()){
 	// 	movement->setFootHeightFactor(0.2f);

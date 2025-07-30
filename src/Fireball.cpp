@@ -42,6 +42,46 @@ void Fireball::explode(){
 
 }
 
+
+void Fireball::adaptCollision(const Rectangle &other){
+    float penTop    = (hitbox.y + hitbox.height) - other.y;
+    float penBottom = (other.y + other.height) - hitbox.y;
+    float penLeft   = (hitbox.x + hitbox.width)  - other.x;
+    float penRight  = (other.x + other.width)    - hitbox.x;
+
+    float minPen = penTop;
+    Vector2 normal = { 0, +1 };  
+    if (penBottom < minPen) {
+        minPen = penBottom;
+        normal = { 0, -1 };     
+    }
+    if (penLeft < minPen) {
+        minPen = penLeft;
+        normal = { +1, 0 };     
+    }
+    if (penRight < minPen) {
+        minPen = penRight;
+        normal = { -1, 0 };     
+    }
+
+    position.x += normal.x * minPen;
+    position.y += normal.y * minPen;
+	
+	hitbox = { position.x, position.y, hitbox.width, hitbox.height };
+
+    velocity = reflect(velocity, normal);
+
+    if (std::fabs(normal.y) > 0.5f) {
+        velocity.y = -std::sqrt(2.0f * 980.0f * h_bounce);
+    } else {
+        velocity = reflect(velocity, normal);
+    }
+}
+
+void Fireball::adaptCollision(ICollidable *other){
+    adaptCollision(other->getHitbox()); 
+}
+
 void Fireball::update(float deltaTime){
     if(active == false){
         if(activeAnimation -> isOnePeriodPassed() == false){
@@ -58,12 +98,13 @@ void Fireball::update(float deltaTime){
     position.x += velocity.x * deltaTime;
     position.y += velocity.y * deltaTime;
 
-    if (position.y >= groundLevel - 1) {
-        position.y = groundLevel;
-        velocity.y = -velocity.y * bounceDamp;
-    }
+	if (position.y >= groundLevel) {
+        position.y = groundLevel;    
+		hitbox = { position.x, position.y, hitbox.width, hitbox.height };
 
-    if (std::fabs(velocity.x) < 250.0f) active = false;
+        Rectangle groundRect = { -1e6f, groundLevel, 2e6f, 1.0f };
+        adaptCollision(groundRect);
+    }
 
     updateHitbox(); 
 }

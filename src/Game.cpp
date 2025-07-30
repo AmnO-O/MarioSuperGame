@@ -14,7 +14,7 @@ Game::Game() {
     isRunning = true;
 	Images::loadAllTextures("assets/images/");
 
-    character = new Player(CharacterType::MARIO, {  100, 100 });
+    character = new Player(CharacterType::LUIGI, {  100, 100 });
     character->setGroundLevel(2.0f * GetScreenHeight());
 
     maps.push_back(Map("assets/maps/1-1/", Images::textures["mapobject.png"]));
