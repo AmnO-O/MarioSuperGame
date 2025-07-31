@@ -11,7 +11,7 @@ class NormalButton
     private:
 
         std::string text;
-        const std::string fontPath = "D:/MarioSuperGame/assets/fonts/SuperMarioBros.ttf";
+        const std::string fontPath = "../assets/fonts/SuperMarioBros.ttf";
         Font font;
         Rectangle frame;
         Color normalColor;

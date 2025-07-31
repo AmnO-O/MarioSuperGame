@@ -3,7 +3,6 @@
 
 #include <raylib.h>
 #include "Button.h"
-#include "MenuState.h"
 #include "StateManager.h"
 #include "SoundManager.h"
 #include "VolumeSlider.h"

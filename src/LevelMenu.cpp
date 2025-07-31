@@ -1,5 +1,6 @@
 #include "LevelMenu.h"
 #include "SubMenu.h"
+#include "World11.h"
 
 LevelMenu::LevelMenu(StateManager& stateManager, SoundManager& soundManager, bool checkMario)
   : stateManager(stateManager),
@@ -7,18 +8,20 @@ LevelMenu::LevelMenu(StateManager& stateManager, SoundManager& soundManager, boo
     isMario(checkMario),
     title("CHOOSE YOUR LEVEL"), 
     high_score("TOP- 000000"),
-    return_button("D:/MarioSuperGame/assets/images/turn_back.png", {25,27,100,100}, [&]() {
+    return_button("../assets/images/turn_back.png", {25,27,100,100}, [&]() {
         //stateManager.popState();
         stateManager.pushState(std::make_unique<SubMenu>(stateManager, soundManager, isMario));
     }),
-    world1_1("D:/MarioSuperGame/assets/images/World1-1.png", {73, 277, 532, 208}, []() {}),
-    world1_2("D:/MarioSuperGame/assets/images/World1-2.png", {977, 277, 532, 208}, []() {}),
-    world1_3("D:/MarioSuperGame/assets/images/World1-3.png", {73, 635, 532, 208}, []() {}),
-    world1_4("D:/MarioSuperGame/assets/images/World1-4.png", {977, 635, 532, 208}, []() {})
+    world1_1("../assets/images/World1-1.png", {73, 277, 532, 208}, [&]() {
+        stateManager.pushState(std::make_unique<World1_1>());
+    }),
+    world1_2("../assets/images/World1-2.png", {977, 277, 532, 208}, []() {}),
+    world1_3("../assets/images/World1-3.png", {73, 635, 532, 208}, []() {}),
+    world1_4("../assets/images/World1-4.png", {977, 635, 532, 208}, []() {})
 {
-    level_background = LoadTexture("D:/MarioSuperGame/assets/images/blue_background.png");
-    return_button_state = LoadTexture("D:/MarioSuperGame/assets/images/turn_back_red.png");
-    font = LoadFont("D:/MarioSuperGame/assets/fonts/SuperMarioBros.ttf");
+    level_background = LoadTexture("../assets/images/blue_background.png");
+    return_button_state = LoadTexture("../assets/images/turn_back_red.png");
+    font = LoadFont("../assets/fonts/SuperMarioBros.ttf");
 }
 
 LevelMenu::~LevelMenu()
@@ -37,6 +40,7 @@ void LevelMenu::drawBorder(Rectangle bounds)
 
 void LevelMenu::update(float deltaTime) 
 {
+
     world1_1.update(deltaTime);
     world1_2.update(deltaTime);
     world1_3.update(deltaTime);
@@ -47,6 +51,7 @@ void LevelMenu::update(float deltaTime)
 
 void LevelMenu::render() 
 {
+    
     DrawTexture(level_background, 0, 0, WHITE);
 
     drawBorder(world1_1.getBounds());

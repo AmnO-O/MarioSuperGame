@@ -3,7 +3,21 @@
 
 #include <stack>
 #include <memory>
-#include "MenuState.h"
+#include <iostream>
+
+
+class MenuState;
+class StateManager;
+
+class MenuState
+{
+    public:
+
+        virtual ~MenuState() = default;
+
+        virtual void update(float deltaTime) = 0;
+        virtual void render() = 0;
+};
 
 class StateManager 
 {
@@ -23,5 +37,7 @@ class StateManager
         void render();
         
 };
+
+
 
 #endif

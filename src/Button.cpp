@@ -50,11 +50,8 @@ void ImageButton::update(float deltaTime)
 {
     Vector2 pos = GetMousePosition();
 
-    if (CheckCollisionPointRec(pos, frame))
-    {
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-            onClick();
-    }
+    if (CheckCollisionPointRec(pos, frame) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        onClick();
 }
 
 void ImageButton::render()
