@@ -17,6 +17,13 @@ void Map::input(std::istream &is, Texture objectTex) {
             for (int i = 0; i < n; i++)
                 blocks.push_back(new Floor(objectTex, is));
         }
+        else if (s == "GOOMBA") {
+            for (int i = 0; i < n; i++) {
+                float x, y;
+                is >> x >> y;
+                enemies.push_back(new Goomba({x, y}));
+            }
+        }
     }
 }
 
@@ -35,6 +42,9 @@ Map::Map(const std::string& folderPath, Texture objectTex) {
 void Map::Update(float delta) {
     for (int i = 0; i < blocks.size(); i++)
         blocks[i]->Update(delta);
+
+    for (int i = 0; i < enemies.size(); i++)
+        enemies[i]->update(delta);
 }
 
 void Map::Draw() const {    
@@ -58,12 +68,18 @@ void Map::Draw() const {
         blocks[i]->Draw(DrawStat::Second);
     }
 
+    for (int i = 0; i < enemies.size(); i++) {
+        enemies[i]->render();
+    }
 }
 
 void Map::Unload() {
     UnloadTexture(background);
     for (int i = 0; i < blocks.size(); i++)
         delete blocks[i];
+
+    for (int i = 0; i < enemies.size(); i++)
+        delete enemies[i];
 }
 
 void Map::SetUp(CollisionManager &cm, Player* player) const {
@@ -71,4 +87,7 @@ void Map::SetUp(CollisionManager &cm, Player* player) const {
     cm.SetMainCharacter(player);
     for (int i = 0; i < blocks.size(); i++)
         cm.Register(blocks[i]);
+
+    for (int i = 0; i < enemies.size(); i++) 
+        cm.Register(enemies[i]);
 }

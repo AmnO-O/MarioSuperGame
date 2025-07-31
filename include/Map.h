@@ -8,6 +8,8 @@
 #include "Exceptions.h"
 #include "Observer/Observer.h"
 #include "Character/Character.h"
+// #include "Character/Enemy.h"
+#include "Character/Goomba.h"
 
 class Map {
 private:
@@ -15,6 +17,7 @@ private:
     int curspace = 0;
     Texture2D background;
     std::vector<Block*> blocks;
+    std::vector<Enemy*> enemies;
 
     void input(std::istream &is, Texture objectTex);
 public:
