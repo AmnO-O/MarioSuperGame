@@ -61,6 +61,7 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 	currentTime += deltaTime; 
 
 
+
 	bool pressingLeft = IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT);
 	bool pressingRight = IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT) ;
 	
@@ -81,10 +82,12 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 		forceX += stats->runSpeed; 
 	}
 	else {
+
 		if (velocity.x < 0)
 			velocity.x = std::min(velocity.x + 150 * deltaTime, 0.0f);
 		else if (velocity.x > 0)
 			velocity.x = std::max(velocity.x - 150 * deltaTime, 0.0f);
+
 	}
 
 	if(isClickedSpace && Mstate->isJumping() == false){

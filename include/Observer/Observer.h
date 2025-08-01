@@ -9,11 +9,14 @@
 class CollisionManager {
 private:
     std::vector<ICollidable*> collidables;
+
     std::vector<ICollidable*> fireballs; 
+
     ICollidable* mainCharacter = nullptr; // e.g., Mario
 
 public:
     void Register(ICollidable* obj) {
+
         if(obj == nullptr || obj->IsActive() == false) return; 
         collidables.push_back(obj);
     }
@@ -22,6 +25,7 @@ public:
         if(obj == nullptr || obj->IsActive() == false) return; 
         fireballs.push_back(obj); 
     }
+
 
     void SetMainCharacter(ICollidable* character) {
         mainCharacter = character;
@@ -64,6 +68,7 @@ public:
 
 
 
+
         // Check fireballs vs object
         for(auto *fireball : fireballs) if(fireball->IsActive()){
             isOnGround = false; 
@@ -88,6 +93,7 @@ public:
                 thisFireball->setGroundLevel(2.0f * GetScreenHeight());
             }
         }
+
     }
 
     void Clear() {

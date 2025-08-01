@@ -4,6 +4,7 @@
 #include <string>
 #include "Global.h"
 #include "GameObject.h"
+
 #include "Observer/ICollidable.h"
 
 class Fireball : public GameObject, public ICollidable{
@@ -46,8 +47,10 @@ public:
         }
     }
 
+
     void updateHitbox(); 
     void explode(); 
+
 
     void adaptCollision(ICollidable* other) override; 
     void adaptCollision(const Rectangle &rect); 

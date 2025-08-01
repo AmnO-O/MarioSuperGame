@@ -55,7 +55,9 @@ public:
 class FireFlowerPowerUp : public PowerUp {
 public:
     FireFlowerPowerUp(Vector2 pos) : PowerUp(PowerUpType::FIRE_FLOWER, pos) {
+
         readRectAnimation("assets/animation/fireflower.txt", Images::textures["items1.png"]);
+
     }
 
     void applyEffect(Player* &character) override;
@@ -78,7 +80,9 @@ private:
 public:
     StarPowerUp(Vector2 pos) : PowerUp(PowerUpType::STAR, pos) {
         velocity.x = 70.0f;
+
         readRectAnimation("assets/animation/star.txt", Images::textures["items.png"]);
+
     }
 
     void adaptCollision(const Rectangle &other) override;

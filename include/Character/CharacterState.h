@@ -8,7 +8,9 @@ public:
 	virtual std::string getShapeState() const = 0; 
 	virtual bool canBreakBrick() const {return false; }
 	virtual bool canShootFire() const {return false; }
+
 	virtual bool isInvincible() const {return false; }
+
 	virtual ~IShapeState() = default;
 };
 
@@ -47,9 +49,11 @@ public:
         return wrapped->canShootFire();
     }	
 
+
 	virtual bool isInvincible() const{
 		return wrapped->isInvincible(); 
 	}
+
 
 	virtual ~ShapeStateDecorator() { delete wrapped; }
 };
@@ -95,6 +99,7 @@ public:
 		}
 		return nullptr;
     }
+
 
 	bool isInvincible() const override{
 		return true; 

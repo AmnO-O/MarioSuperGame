@@ -1,12 +1,10 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "Character/Character.h"
-#include "Character/MyCamera2D.h"
-#include <vector>
-#include "Map.h"
-#include "Observer/Observer.h"
-#include "Character/IPowerUpCreator.h"
+#include <memory>
+#include "./Resources/StateManager.h"
+#include "./Resources/SoundManager.h"
+
 
 class Game {
 public:
@@ -35,6 +33,8 @@ private:
     void update(float deltaTime);
     void render();
     bool isRunning;
+    StateManager stateManager;
+    SoundManager soundManager;
 };
 
 #endif

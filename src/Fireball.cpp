@@ -24,8 +24,10 @@ void Fireball::readRectAnimation(const std::string filePath){
 
 void Fireball::explode(){
     delete activeAnimation; 
+
     active = false; 
     std::ifstream fin("assets/animation/fireball_explode.txt"); 
+
     activeAnimation = new AnimationManager(Images::textures["enemies_sprites.png"], 0);
 
     if(Images::textures["enemies_sprites.png"].id == 0)
@@ -38,6 +40,7 @@ void Fireball::explode(){
     }
 
     fin.close(); 
+
 }
 
 
@@ -91,6 +94,7 @@ void Fireball::adaptCollision(const Rectangle &rect) {
 
 void Fireball::adaptCollision(ICollidable *other){
     adaptCollision(other->getHitbox()); 
+
 }
 
 void Fireball::update(float deltaTime){
@@ -109,20 +113,24 @@ void Fireball::update(float deltaTime){
     position.x += velocity.x * deltaTime;
     position.y += velocity.y * deltaTime;
 
+
 	if (position.y >= groundLevel - hitbox.height) {
         Rectangle groundRect = { -1e6f, groundLevel, 2e6f, 1.0f };
         adaptCollision(groundRect);
     }
+
 
     updateHitbox(); 
 }
 
 
 void Fireball::updateHitbox(){
+
     hitbox.x = position.x; 
     hitbox.y = position.y; 
     hitbox.height = 16.0f; 
     hitbox.width = 16.0f;
+
 }
 
 

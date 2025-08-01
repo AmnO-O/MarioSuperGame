@@ -58,14 +58,13 @@ public:
         position.x += velocity.x * deltaTime;
 	    position.y += velocity.y * deltaTime;
     }
-    
+
     virtual void render(){
         if(activeAnimation)
 		    activeAnimation->render(position, false);
     }
     virtual ~Character() {}; 
 }; 
-
 
 
 class Player : public ICollidable, public Character{
@@ -82,11 +81,13 @@ private:
     void updateHitbox(); 
     void readRectAnimation(const std::string filePath, Texture2D &sheet); 
     std::string getShape_Action() const; 
+
     void cleanFireballs(); 
     void updateShape(); 
     void setUp(); 
     void adaptChangePosition(); 
     void animationTransform(); 
+
     void switchPlayer(); 
 public: 
     Player(CharacterType type, Vector2 pos); 
@@ -96,12 +97,16 @@ public:
     Rectangle getHitbox() const override {return hitbox; }
     
     bool isBig() const { return Sstate->canBreakBrick();}
+
     bool isInvincible() const {return Sstate->isInvincible();}
+
 
     void setPosition(const Vector2 &pos); 
     void setOnGround(); 
 
+
     Fireball* shootFireball();
+
 
     void adaptCollision(ICollidable* other) override;
     void powerUp(PowerUpType type); 
