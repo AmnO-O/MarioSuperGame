@@ -68,6 +68,8 @@ void Game::update(float deltaTime) {
     if(CheckCollisionRecs(character->getHitbox(), item->getHitbox())){
         item->applyEffect(character); 
     }
+
+    cm.addFireball(character->shootFireball());
 }
 
 void Game::render() {

@@ -82,7 +82,6 @@ private:
     void updateHitbox(); 
     void readRectAnimation(const std::string filePath, Texture2D &sheet); 
     std::string getShape_Action() const; 
-    void shootFireball();
     void cleanFireballs(); 
     void updateShape(); 
     void setUp(); 
@@ -102,7 +101,7 @@ public:
     void setPosition(const Vector2 &pos); 
     void setOnGround(); 
 
-    Fireball*generateFireball(); 
+    Fireball* shootFireball();
 
     void adaptCollision(ICollidable* other) override;
     void powerUp(PowerUpType type); 

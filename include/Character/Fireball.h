@@ -13,7 +13,7 @@ private:
 
     const float bounceDamp = 0.4f;
     const float e = 1.0f;
-    const float h_bounce = 30.0f;
+    const float h_bounce = 20.0f;
 
     Vector2 reflect(const Vector2& v, const Vector2& n) {
         float dot = v.x*n.x + v.y*n.y;
@@ -29,12 +29,21 @@ public:
         velocity.y = 0; 
         hitbox = { position.x, position.y, 16, 16 };
         readRectAnimation("assets/animation/fireball.txt"); 
+        activeAnimation->setTimeSwitch(0.08f);
     }
 
     bool isActive() const {return (active || activeAnimation->isOnePeriodPassed() == false);}
+    bool IsActive() const override {return active;}
     
     Rectangle getHitbox() const override {
         return GameObject::getHitbox();
+    }
+
+    void setGroundLevel(float groundLevel) override {
+        this->groundLevel = groundLevel;
+        if(position.y >= groundLevel - 16){
+            position.y = groundLevel - 16;    
+        }
     }
 
     void updateHitbox(); 

@@ -9,11 +9,18 @@
 class CollisionManager {
 private:
     std::vector<ICollidable*> collidables;
+    std::vector<ICollidable*> fireballs; 
     ICollidable* mainCharacter = nullptr; // e.g., Mario
 
 public:
     void Register(ICollidable* obj) {
+        if(obj == nullptr || obj->IsActive() == false) return; 
         collidables.push_back(obj);
+    }
+
+    void addFireball(ICollidable* obj){
+        if(obj == nullptr || obj->IsActive() == false) return; 
+        fireballs.push_back(obj); 
     }
 
     void SetMainCharacter(ICollidable* character) {
@@ -52,6 +59,33 @@ public:
                     a->adaptCollision(b);
                     b->adaptCollision(a);
                 }
+            }
+        }
+
+
+
+        // Check fireballs vs object
+        for(auto *fireball : fireballs) if(fireball->IsActive()){
+            isOnGround = false; 
+
+            for(auto *obj : collidables) if(obj != mainCharacter){
+
+                if (obj->IsActive() && CheckCollisionRecs(fireball->getHitbox(), obj->getHitbox())) {
+                    fireball->adaptCollision(obj);
+                    obj->adaptCollision(fireball);
+                }
+                
+                if(obj -> IsActive()){
+                    Rectangle rect = obj->getHitbox();
+                    rect.y -= 0.2f;
+                    isOnGround |= CheckCollisionRecs(fireball->getHitbox(), rect);
+                }
+            }
+    
+
+            if(isOnGround == false){
+                Fireball *thisFireball = dynamic_cast<Fireball*>(fireball);
+                thisFireball->setGroundLevel(2.0f * GetScreenHeight());
             }
         }
     }
