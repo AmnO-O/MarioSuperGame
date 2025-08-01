@@ -29,7 +29,7 @@ Game::~Game() {
         stateManager.popState();
     }
     CloseWindow();
-    
+
 }
 
 void Game::run() {

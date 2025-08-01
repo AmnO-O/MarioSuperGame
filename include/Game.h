@@ -16,7 +16,7 @@ public:
     Game(Game&&) = delete;
     Game& operator=(Game&&) = delete;
 
-private:
+    private:
     Game();
     ~Game();
 

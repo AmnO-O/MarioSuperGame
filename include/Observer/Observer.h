@@ -9,7 +9,6 @@
 class CollisionManager {
 private:
     std::vector<ICollidable*> collidables;
-
     std::vector<ICollidable*> fireballs; 
 
     ICollidable* mainCharacter = nullptr; // e.g., Mario
@@ -65,7 +64,6 @@ public:
                 }
             }
         }
-
 
 
 
