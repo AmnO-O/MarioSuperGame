@@ -13,13 +13,13 @@ MainMenu::MainMenu(StateManager& stateManager, SoundManager& soundManager)
         //stateManager.popState();
         stateManager.pushState(std::make_unique<SubMenu>(stateManager, soundManager, false));
     }), 
-    settings_button("../assets/images/setting.png", {25, 27, 100, 100}, [&]() {
+    settings_button("assets/images/setting.png", {25, 27, 100, 100}, [&]() {
         //stateManager.popState();       
         stateManager.pushState(std::make_unique<SettingsMenu>(stateManager, soundManager));
     })
 {
-    background = LoadTexture("../assets/images/main_menu_background.png"); 
-    settings_button_state = LoadTexture("../assets/images/setting_red.png");
+    background = LoadTexture("assets/images/main_menu_background.png"); 
+    settings_button_state = LoadTexture("assets/images/setting_red.png");
 }
 
 

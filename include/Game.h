@@ -17,15 +17,6 @@ public:
     Game& operator=(Game&&) = delete;
 private:
 
-    CollisionManager cm;
-    std::vector<Map> maps = {};
-    int currentMap = 0;
-    Player *character; 
-    MyCamera2D *myCam; 
-
-    IPowerUpCreator *powerUpCreator; 
-    PowerUp *item; 
-private:
     Game();
     ~Game();
 
