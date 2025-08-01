@@ -7,7 +7,6 @@
 #include "Map.h"
 #include "Observer/Observer.h"
 #include "Character/IPowerUpCreator.h"
-
 class Game {
 public:
     static Game& getInstance();
@@ -23,7 +22,7 @@ private:
     std::vector<Map> maps = {};
     int currentMap = 0;
     Player *character; 
-    MyCamera2D *myCam; 
+    MyCamera2D *myCam;
 
     IPowerUpCreator *powerUpCreator; 
     PowerUp *item; 
