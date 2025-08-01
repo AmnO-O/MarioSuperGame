@@ -16,8 +16,8 @@ private:
     bool isOnePeriod = false; 
 public: 
     AnimationManager() = default; 
-    AnimationManager(Texture2D &t, bool flip): 
-        sheet(t), currentTime(0.0f), timeSwitch(0.2f), 
+    AnimationManager(Texture2D &t, bool flip, float timeSwitch): 
+        sheet(t), currentTime(0.0f), timeSwitch(timeSwitch), 
         flipX(flip), currentIndex(0){}; 
 
     Vector2 getCurrentShape() const;

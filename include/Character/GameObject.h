@@ -9,6 +9,7 @@ protected:
     float groundLevel; 
     bool active; 
 public: 
+    GameObject(): position({0, 0}), velocity({0, 0}), groundLevel(0.0f), active(true){} 
     GameObject(Vector2 pos, Vector2 vel): position(pos), velocity(vel), groundLevel(0.0f), active(true){} 
 
     Rectangle getHitbox() const {return hitbox;}

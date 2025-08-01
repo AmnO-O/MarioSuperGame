@@ -1,7 +1,7 @@
 #include "Blocks/Coin.h"
 #include "Character/Character.h"
 
-Coin::Coin(Texture2D tex, std::istream &is) : Block(tex), ani(tex, false) {
+Coin::Coin(Texture2D &tex, std::istream &is) : Block(tex), ani(tex, false, 0.2f), coinAni(tex, {0, 0, 0, 0}, 1.0f, 40.0f, 0.1f), GameObject() {
     int num = 0;
     is >> num;
     for (int i = 0; i < num; i++) {
@@ -9,8 +9,15 @@ Coin::Coin(Texture2D tex, std::istream &is) : Block(tex), ani(tex, false) {
         is >> x >> y >> w >> h;
         ani.addRect({1.0f * x, 1.0f * y, 1.0f * w, 1.0f * h});
     }
+    is >> num;
+    for (int i = 0; i < num; i++) {
+        int x, y, w, h;
+        is >> x >> y >> w >> h;
+        coinAni.addRect({1.0f * x, 1.0f * y, 1.0f * w, 1.0f * h});
+    }
     is >> pos.x >> pos.y;
-    coinAni.input(tex, is, getHitbox());
+    Vector2 shape = ani.getCurrentShape();
+    coinAni.setBlockRec({pos.x, pos.y, shape.x, shape.y});
 }
 
 Rectangle Coin::getHitbox() const {
@@ -78,11 +85,13 @@ void Coin::adaptCollision(ICollidable* other) {
 }
 
 void Coin::Break() {
+    std::cout << "Get Coin\n";
     stat = BlockStat::Broken;
     drawStat = DrawStat::None;
 }
 
 void Coin::Bounce() {
+    std::cout << "Bounce Coin\n";
     stat = BlockStat::Bouncing;
 }
 

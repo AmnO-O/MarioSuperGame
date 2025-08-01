@@ -75,7 +75,7 @@ void PlayerMovement::adaptCollision(ICollidable* other,
             // hitting ceiling
             if (velocity.y < 0 && std::fabs(bottom) > EPS) {
                 position.y += bottom;
-                velocity.y = 0;
+                velocity.y = 100.0f;
             }
             break;
     }

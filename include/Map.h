@@ -16,10 +16,10 @@ private:
     Texture2D background;
     std::vector<Block*> blocks;
 
-    void input(std::istream &is, Texture objectTex);
+    void input(std::istream &is, Texture2D &objectTex);
 public:
     Map() = delete;
-    Map(const std::string& folderPath, Texture objectTex);
+    Map(const std::string& folderPath, Texture2D &objectTex);
     Vector2 getSize() const { return {1.0f * background.width, 1.0f * background.height / space}; }
 
     void SetUp(CollisionManager &cm, Character* player) const;

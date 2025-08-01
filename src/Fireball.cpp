@@ -8,7 +8,7 @@
 void Fireball::readRectAnimation(const std::string filePath){
     std::ifstream fin(filePath); 
 
-    activeAnimation = new AnimationManager(Images::textures["enemies1.png"], 0);
+    activeAnimation = new AnimationManager(Images::textures["enemies1.png"], 0, 0.2f);
 
     if(Images::textures["enemies1.png"].id == 0)
 		throw GameException("Can't load image of mario.png");
@@ -26,7 +26,7 @@ void Fireball::explode(){
     delete activeAnimation; 
     
     std::ifstream fin("assets/animation/fireball_explode.txt"); 
-    activeAnimation = new AnimationManager(Images::textures["enemies_sprites.png"], 0);
+    activeAnimation = new AnimationManager(Images::textures["enemies_sprites.png"], 0, 0.2f);
 
     if(Images::textures["enemies_sprites.png"].id == 0)
 		throw GameException("Can't load image of mario.png");

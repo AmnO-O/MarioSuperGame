@@ -141,7 +141,7 @@ void Character::readRectAnimation(const std::string filename, Texture2D &sheet) 
 				fin >> action >> numAnimation;
 
 				std::string key = shape + action;
-				animations[key] = std::make_unique<AnimationManager>(sheet, 0);
+				animations[key] = std::make_unique<AnimationManager>(sheet, 0, 0.2f);
 
 				for (int j = 0; j < numAnimation; j++) {
 					float x, y, width, height;
@@ -160,7 +160,7 @@ void Character::readRectAnimation(const std::string filename, Texture2D &sheet) 
 				fin >> action >> numAnimation;
 
 				std::string key = shape + action;
-				animations[key] = std::make_unique<AnimationManager>(sheet, 0);
+				animations[key] = std::make_unique<AnimationManager>(sheet, 0, 0.2f);
 
 				for (int j = 0; j < numAnimation; j++) {
 					float x, y, width, height;
@@ -179,7 +179,7 @@ void Character::readRectAnimation(const std::string filename, Texture2D &sheet) 
 				fin >> action >> numAnimation;
 
 				std::string key = shape + action;
-				animations[key] = std::make_unique<AnimationManager>(sheet, 0);
+				animations[key] = std::make_unique<AnimationManager>(sheet, 0, 0.2f);
 
 				for (int j = 0; j < numAnimation; j++) {
 					float x, y, width, height;
@@ -198,7 +198,7 @@ void Character::readRectAnimation(const std::string filename, Texture2D &sheet) 
 				fin >> action >> numAnimation;
 
 				std::string key = shape + action;
-				animations[key] = std::make_unique<AnimationManager>(sheet, 0);
+				animations[key] = std::make_unique<AnimationManager>(sheet, 0, 0.2f);
 
 				for (int j = 0; j < numAnimation; j++) {
 					float x, y, width, height;
@@ -218,7 +218,7 @@ void Character::readRectAnimation(const std::string filename, Texture2D &sheet) 
 				fin >> action >> numAnimation;
 
 				std::string key = shape + action;
-				animations[key] = std::make_unique<AnimationManager>(sheet, 0);
+				animations[key] = std::make_unique<AnimationManager>(sheet, 0, 0.2f);
 
 				for (int j = 0; j < numAnimation; j++) {
 					float x, y, width, height;
@@ -291,6 +291,8 @@ void Character::cleanFireballs(){
 }
 
 void Character::adaptCollision(ICollidable* other){
+	if (dynamic_cast<GameObject*>(other))
+		return;
 	movement->adaptCollision(other, Mstate, this); 
 	updateShape(); 
 	updateHitbox(); 

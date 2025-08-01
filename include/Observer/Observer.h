@@ -8,8 +8,22 @@
 
 class CollisionManager {
 private:
-    std::vector<ICollidable*> collidables;
+    static std::vector<ICollidable*> collidables;
     ICollidable* mainCharacter = nullptr; // e.g., Mario
+    float overlap(Rectangle charBox, Rectangle objBox) {
+        // Compute intersection rectangle
+        float x1 = std::max(charBox.x, objBox.x);
+        float y1 = std::max(charBox.y, objBox.y);
+        float x2 = std::min(charBox.x + charBox.width, objBox.x + objBox.width);
+        float y2 = std::min(charBox.y + charBox.height, objBox.y + objBox.height);
+
+        float overlapWidth = x2 - x1;
+        float overlapHeight = y2 - y1;
+        float area = overlapWidth * overlapHeight;
+        if (area > 0)
+            return area;
+        return 0;
+    }
 
 public:
     void Register(ICollidable* obj) {
@@ -24,12 +38,17 @@ public:
         if (!mainCharacter) return;
         Character *player = dynamic_cast<Character*>(mainCharacter);
         bool isOnGround = false; 
+        ICollidable* mostOverlapObj = nullptr;
+        float maxOverlap = 0.0f;
 
         // Check character vs all others
         for (auto* obj : collidables) {
             if (obj != mainCharacter && obj->IsActive() && CheckCollisionRecs(mainCharacter->getHitbox(), obj->getHitbox())) {
-                obj->adaptCollision(mainCharacter);
-                mainCharacter->adaptCollision(obj);
+                float curOverlap = overlap(mainCharacter->getHitbox(), obj->getHitbox());
+                if (curOverlap > maxOverlap) {
+                    mostOverlapObj = obj;
+                    maxOverlap = curOverlap;
+                }
             }
 
             if(obj != mainCharacter && obj -> IsActive()){
@@ -37,6 +56,11 @@ public:
                 rect.y -= 0.2f; 
                 isOnGround |= CheckCollisionRecs(mainCharacter->getHitbox(), rect);
             }
+        }
+
+        if (mostOverlapObj) {
+            mainCharacter->adaptCollision(mostOverlapObj);
+            mostOverlapObj->adaptCollision(mainCharacter);
         }
 
         if(isOnGround == false){
@@ -59,6 +83,26 @@ public:
     void Clear() {
         collidables.clear();
     }
+    static void NotifyAbove(ICollidable* base) {
+        Rectangle baseHitbox = base->getHitbox();
+        Rectangle aboveBox = {
+            baseHitbox.x,
+            baseHitbox.y - 5,          // a little space above the block
+            baseHitbox.width,
+            5
+        };
+
+        for (auto* obj : collidables) {
+            if (obj == base || !obj->IsActive()) continue;
+
+            Rectangle objBox = obj->getHitbox();
+            if (CheckCollisionRecs(aboveBox, objBox)) {
+                obj->isHitBelow();
+            }
+        }
+    }
 };
+
+inline std::vector<ICollidable*> CollisionManager::collidables = {};
 
 #endif

@@ -1,10 +1,12 @@
 #include "Blocks/Brick.h"
 #include "Character/Character.h"
 
-Brick::Brick(Texture2D tex, std::istream &is) : Block(tex) {
+Brick::Brick(Texture2D &tex, std::istream &is) : Block(tex), bounceAni(tex, {0, 0, 0, 0}, 0.25f, 6.0f, 1.0f) {
     is >> srcRect.x >> srcRect.y >> srcRect.width >> srcRect.height;
+    bounceAni.addRect(srcRect);
     is >> fragmentRect.x >> fragmentRect.y >> fragmentRect.width >> fragmentRect.height;
     is >> pos.x >> pos.y;
+    bounceAni.setBlockRec({pos.x, pos.y, srcRect.width, srcRect.height});
 
     float fw = fragmentRect.width;
     float fh = fragmentRect.height;
@@ -21,24 +23,18 @@ Brick::Brick(Texture2D tex, std::istream &is) : Block(tex) {
 
 Rectangle Brick::getHitbox() const {
     if (stat == BlockStat::Broken || stat == BlockStat::Breaking) return {-1, -1, 0, 0};
-    return { pos.x, pos.y - bounceOffset, srcRect.width, srcRect.height };
+    Vector2 position = bounceAni.getPosition();
+    return { position.x, position.y, srcRect.width, srcRect.height };
 }
 
 void Brick::Update(float delta) {
     if (stat == BlockStat::Broken) return; // Don't update if broken
 
     if (stat == BlockStat::Bouncing) {
-        frameTime += delta;
-        if (frameTime <= bounceTime / 2)
-            bounceOffset = (frameTime / (bounceTime / 2)) * bounceHeight;
-        else
-            if (frameTime < bounceTime)
-                bounceOffset = ((bounceTime - frameTime) / (bounceTime / 2)) * bounceHeight;
-            else {
-                stat = BlockStat::Normal;
-                bounceOffset = 0;
-            }
-        return;
+        bounceAni.Update(delta);
+        if (bounceAni.ended()) {
+            stat = BlockStat::Normal;
+        }
     }
 
     if (stat == BlockStat::Breaking) {
@@ -71,9 +67,10 @@ void Brick::Draw(DrawStat ds) const {
         return;
     }
 
+    Vector2 position = bounceAni.getPosition();
     Rectangle dest = {
-        pos.x,
-        pos.y - bounceOffset,
+        position.x,
+        position.y,
         srcRect.width,
         srcRect.height
     };
@@ -115,7 +112,7 @@ void Brick::adaptCollision(ICollidable* other) {
             float right = (hitbox.x + hitbox.width) - body.x;
             float top = (body.y + body.height) - hitbox.y;
             float bottom = (hitbox.y + hitbox.height) - body.y;
-            if (left <= 0 || right <= 0 || top <= 0 || bottom <= 0) return;
+            //if (left <= 0 || right <= 0 || top <= 0 || bottom <= 0) return;
 
             // Find minimal penetration
             float minPen = left;
@@ -136,6 +133,7 @@ void Brick::adaptCollision(ICollidable* other) {
 }
 
 void Brick::Break() {
+    CollisionManager::NotifyAbove(this);
     stat = BlockStat::Breaking;
     drawStat = DrawStat::Second;
     fragmentVelocity = initVelocity;
@@ -143,8 +141,8 @@ void Brick::Break() {
 }
 
 void Brick::Bounce() {    
+    CollisionManager::NotifyAbove(this);
     stat = BlockStat::Bouncing;
-    frameTime = 0.0f;
 }
 
 bool Brick::IsActive() const {
