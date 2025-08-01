@@ -177,11 +177,12 @@ void Player::readRectAnimation(const std::string filename, Texture2D &sheet) {
 			shape += "_";
 			std::string action = "";
 
-			for (int i = 0; i < 9; i++) {
+			for (int i = 0; i < 10; i++) {
 				int numAnimation;
 				fin >> action >> numAnimation;
 
 				std::string key = shape + action;
+				
 				animations[key] = std::make_unique<AnimationManager>(sheet, 0);
 
 				for (int j = 0; j < numAnimation; j++) {
@@ -249,7 +250,7 @@ void Player::powerUp(PowerUpType t){
 			Sstate = new FireState();
 			delete tmp;
 		}
-		else{
+		else if(Sstate->canShootFire() == false){
 			tmp = Sstate;
 			Sstate = new FireState();
 			delete tmp;
@@ -257,7 +258,9 @@ void Player::powerUp(PowerUpType t){
 
 		break;
 	case PowerUpType::STAR:
-	    Sstate = new InvincibleDecorator(Sstate);
+		if(Sstate->isInvincible() == false){
+	    	Sstate = new InvincibleDecorator(Sstate);
+		}
 		break;
 	case PowerUpType::NORMAL_MUSHROOM:
 
@@ -268,26 +271,26 @@ void Player::powerUp(PowerUpType t){
 	}
 }
 
-void Player::shootFireball(){
+Fireball* Player::shootFireball(){
+		Fireball *fireball = nullptr; 
+
 	if (IsKeyPressed(KEY_F) && Sstate->canShootFire()) {
 		delete Mstate;
 		Mstate = new ShootState();
 
 		updateShape();
 		updateHitbox();
-
+		
 		Vector2 startPos = movement->getPosition();
 		startPos.x += (movement->isFacingRight() ? 15 : -5);
 		startPos.y += 5;
 
-        fireballs.emplace_back(new Fireball(startPos, movement->isFacingRight()));
-
-		Vector2 curshape = activeAnimation->getCurrentShape();
-		float w = curshape.x;
-		float h = curshape.y;
-
-		fireballs.back() ->setGroundLevel(groundLevel);
+		fireball = new Fireball(startPos, movement->isFacingRight()); 
+		fireball->setGroundLevel(2 * GetScreenHeight()); 
+        fireballs.emplace_back(fireball);
     }
+
+	return fireball; 
 }
 
 void Player::cleanFireballs(){
@@ -354,6 +357,31 @@ void Player::update(float deltaTime){
 	if(movement == nullptr)
 		throw GameException("Movement is null in Player::update");
 
+	if(IsKeyPressed(KEY_Q)){
+		if (Sstate -> getShapeState() == "SMALL"){
+			Sstate = new MorphDecorator(Sstate);
+		}
+	}
+
+	if(IsKeyPressed(KEY_W)){
+		if (Sstate -> getShapeState() == "SMALL"){
+			IShapeState *tmp = Sstate;
+			Sstate = new FireState();
+			delete tmp;
+		}
+		else if(Sstate->canShootFire() == false){
+			IShapeState *tmp = Sstate;
+			Sstate = new FireState();
+			delete tmp;
+		}
+	}
+
+	if(IsKeyPressed(KEY_E)){
+		if(Sstate->isInvincible() == false){
+	    	Sstate = new InvincibleDecorator(Sstate);
+		}	
+	}
+
 	if (auto morph = dynamic_cast<MorphDecorator*>(Sstate)) {
 		IShapeState* next = morph->update(deltaTime);
 
@@ -376,11 +404,10 @@ void Player::update(float deltaTime){
 		}
 	}
 
-
 	movement->update(deltaTime, Sstate, Mstate);
 	Mstate->update(deltaTime);
 
-	shootFireball();
+	// shootFireball();
 	cleanFireballs();
 
 	for (auto& fb : fireballs)
@@ -388,6 +415,7 @@ void Player::update(float deltaTime){
 
 	if(activeAnimation)
 		activeAnimation->update(deltaTime);
+
 
 	// if(Mstate->isJumping()){
 	// 	movement->setFootHeightFactor(0.2f);
