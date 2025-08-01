@@ -13,7 +13,7 @@ class GameState
 
         virtual ~GameState() = default;
 
-        virtual void processInput(StateManager& stateManager) = 0;
+        virtual void processInput() = 0;
         virtual void update(float deltaTime) = 0;
         virtual void render() = 0;
 };

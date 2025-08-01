@@ -20,7 +20,7 @@ Game::Game() {
 }
 
 Game::~Game() {
-    soundManager.stopMenuSound();
+    soundManager.unloadMenuSound();
     
     while (stateManager.getCurrentState()) {
         stateManager.popState();

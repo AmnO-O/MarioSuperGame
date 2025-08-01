@@ -17,21 +17,14 @@ class SoundManager
 
     void loadMenuSound();
     void playMenuSound();
-    void stopMenuSound();
+    void pauseMenuSound();
+    void resumeMenuSound();
+    void unloadMenuSound();
     void updateMenuSound();
 
     float getVolume() const;
     void setMusicVolume(float volume);
-    
-    /*void loadGameSound();
-    void playGameSound();
-    void stopGameSound();
-
-    void loadEffect();
-    void playEffect();
-    void stopEffect();
-
-    void muteAll();*/
+   
 };
 
 #endif

@@ -23,14 +23,15 @@ class PopUpMenu1_1
         Rectangle frame;
 
         StateManager& stateManager;
+        SoundManager& soundManager;
 
     public:
 
-        PopUpMenu1_1(StateManager& stateManager);
+        PopUpMenu1_1(StateManager& stateManager, SoundManager& soundManager);
         ~PopUpMenu1_1() = default;
 
         bool isVisible;
-        void restart(StateManager& stateManager);
+        void restart(StateManager& stateManager, SoundManager& soundManager);
         void exitGame(StateManager& stateManager);
         void toggle();
         void update(float deltaTime);
@@ -57,13 +58,14 @@ class World1_1: public GameState
         PopUpMenu1_1 popup_menu;
 
         StateManager& stateManager;
+        SoundManager& soundManager;
 
     public:
 
-        World1_1(StateManager& stateManager);
+        World1_1(StateManager& stateManager, SoundManager& soundManager);
         ~World1_1();
 
-        void processInput(StateManager& stateManager) override {};
+        void processInput() override;
         void update(float deltaTime) override;
         void render() override;
         bool isRunning;

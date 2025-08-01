@@ -12,7 +12,17 @@ void SoundManager::playMenuSound()
     PlayMusicStream(menuSound);
 }
 
-void SoundManager::stopMenuSound()
+void SoundManager::pauseMenuSound()
+{
+    PauseMusicStream(menuSound);
+}
+
+void SoundManager::resumeMenuSound()
+{
+    ResumeMusicStream(menuSound);
+}
+
+void SoundManager::unloadMenuSound()
 {
     StopMusicStream(menuSound);
     UnloadMusicStream(menuSound);

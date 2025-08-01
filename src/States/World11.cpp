@@ -3,9 +3,10 @@
 #include "Resources/ResourceManager.h"
 #include <raylib.h>
 
-World1_1::World1_1(StateManager& stateManager)
+World1_1::World1_1(StateManager& stateManager, SoundManager& soundManager)
   : stateManager(stateManager),
-    popup_menu(stateManager),
+    soundManager(soundManager),
+    popup_menu(stateManager, soundManager),
     settings_button("../assets/images/setting.png", {25, 27, 100, 100}, [&]() {
         popup_menu.toggle();
     }),
@@ -42,30 +43,32 @@ World1_1::~World1_1()
     delete powerUpCreator; 
 }
 
-/*void World1_1::processInput(StateManager& stateManager)
+void World1_1::processInput()
 {
     if (IsKeyPressed(KEY_P))
         popup_menu.toggle();
-}*/
+}
 
 void World1_1::update(float deltaTime) 
 {
+    processInput();
+
     if (!popup_menu.isVisible)
     {
-    cm.CheckAllCollisions();
-    maps[currentMap].Update(deltaTime);
+        cm.CheckAllCollisions();
+        maps[currentMap].Update(deltaTime);
 
-    if(deltaTime < 0.2) 
-        character->update(deltaTime); 
+        if(deltaTime < 0.2) 
+                character->update(deltaTime); 
 
-    myCam -> update(character); 
-    item->update(deltaTime);
-            
-    if(CheckCollisionRecs(character->getHitbox(), item->getHitbox())){
-        item->applyEffect(character); 
+        myCam -> update(character); 
+        item->update(deltaTime);
+
+        if(CheckCollisionRecs(character->getHitbox(), item->getHitbox())) {
+                item->applyEffect(character); 
+        }
     }
-    }
-    
+        
     if (!popup_menu.isVisible)
         settings_button.update(deltaTime);
 
@@ -81,13 +84,13 @@ void World1_1::render()
 
     /// camera draw here
     BeginMode2D(camera); 
-        maps[currentMap].Draw();
-        if(character)
-            character->render(); 
+    maps[currentMap].Draw();
+    if(character)
+        character->render(); 
 
-        if(item)
-            item->render(); 
-        EndMode2D(); 
+    if(item)
+        item->render(); 
+    EndMode2D(); 
 
     settings_button.render();
 
@@ -103,14 +106,15 @@ void World1_1::render()
     //EndDrawing();
 }
 
-PopUpMenu1_1::PopUpMenu1_1(StateManager& stateManager)
+PopUpMenu1_1::PopUpMenu1_1(StateManager& stateManager, SoundManager& soundManager)
   : isVisible(false),
     stateManager(stateManager),
+    soundManager(soundManager),
     resume_button("RESUME", {663, 296, 330, 50}, WHITE, RED, [&](){
         toggle();
     }),
     restart_button("RESTART", {639, 392, 330, 50}, WHITE, RED, [&]() {
-        restart(stateManager);
+        restart(stateManager, soundManager);
     }),
     exit_button("EXIT", {710, 488, 330, 50}, WHITE, RED, [&]() {
         exitGame(stateManager);
@@ -123,20 +127,27 @@ PopUpMenu1_1::PopUpMenu1_1(StateManager& stateManager)
 
 }
 
-void PopUpMenu1_1::restart(StateManager& stateManager)
+void PopUpMenu1_1::restart(StateManager& stateManager, SoundManager& soundManager)
 {
     stateManager.popState();
-    stateManager.pushState(std::make_unique<World1_1>(stateManager));
+    stateManager.pushState(std::make_unique<World1_1>(stateManager, soundManager));
+    soundManager.resumeMenuSound();
 }
 
 void PopUpMenu1_1::exitGame(StateManager& stateManager)
 {
     stateManager.popState();
+    soundManager.resumeMenuSound();
 }
 
 void PopUpMenu1_1::toggle()
 {
     isVisible = !isVisible;
+
+    if (isVisible)
+        soundManager.pauseMenuSound();
+    else
+        soundManager.resumeMenuSound();
 }
 
 void PopUpMenu1_1::update(float deltaTime)
