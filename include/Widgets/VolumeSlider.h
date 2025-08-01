@@ -4,7 +4,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <string>
-#include "SoundManager.h"
+#include "../Resources/SoundManager.h"
 
 class VolumeSlider 
 {

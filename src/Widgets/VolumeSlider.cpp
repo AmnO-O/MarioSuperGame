@@ -1,4 +1,4 @@
-#include "VolumeSlider.h"
+#include "Widgets/VolumeSlider.h"
 
 VolumeSlider::VolumeSlider(Rectangle frame, SoundManager& soundManager)
     : slider(frame),

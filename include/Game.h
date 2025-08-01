@@ -2,8 +2,8 @@
 #define GAME_H
 
 #include <memory>
-#include "StateManager.h"
-#include "SoundManager.h"
+#include "./Resources/StateManager.h"
+#include "./Resources/SoundManager.h"
 
 class Game {
 public:

@@ -1,6 +1,6 @@
-#include "World11.h"
+#include "States/World11.h"
 #include "Game.h"
-#include "ResourceManager.h"
+#include "Resources/ResourceManager.h"
 #include <raylib.h>
 
 World1_1::World1_1() 

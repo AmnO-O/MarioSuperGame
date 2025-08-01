@@ -1,7 +1,7 @@
-#include "SettingsMenu.h"
-#include "MainMenu.h"
-#include "LevelMenu.h"
-#include "SoundManager.h"
+#include "States/SettingsMenu.h"
+#include "States/MainMenu.h"
+#include "States/LevelMenu.h"
+#include "Resources/SoundManager.h"
 
 SettingsMenu::SettingsMenu(StateManager& stateManager, SoundManager& soundManager)
   : stateManager(stateManager),

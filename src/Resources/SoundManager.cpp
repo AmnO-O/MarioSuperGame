@@ -1,4 +1,4 @@
-#include "SoundManager.h"
+#include "Resources/SoundManager.h"
 
 void SoundManager::loadMenuSound()
 {

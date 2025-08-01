@@ -2,13 +2,13 @@
 #define SUB_MENU_H
 
 #include <raylib.h>
-#include "Button.h"
-#include "StateManager.h"
-#include "SoundManager.h"
+#include "../Widgets/Button.h"
+#include "../Resources/StateManager.h"
+#include "../Resources/SoundManager.h"
 #include <memory>
 #include <string>
 
-class SubMenu : public MenuState
+class SubMenu : public GameState
 {
     private:
 

@@ -1,18 +1,18 @@
 #ifndef WORLD_11_H
 #define WORLD_11_H
 
-#include "Character/Character.h"
-#include "Character/MyCamera2D.h"
+#include "../Character/Character.h"
+#include "../Character/MyCamera2D.h"
 #include <vector>
-#include "Map.h"
-#include "Observer/Observer.h"
-#include "Character/IPowerUpCreator.h"
-#include "StateManager.h"
-#include "SoundManager.h"
+#include "../Resources/Map.h"
+#include "../Observer/Observer.h"
+#include "../Character/IPowerUpCreator.h"
+#include "../Resources/StateManager.h"
+#include "../Resources/SoundManager.h"
 #include <iostream>
 
 
-class World1_1: public MenuState
+class World1_1: public GameState
 {
 
     private:

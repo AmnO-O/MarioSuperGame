@@ -5,15 +5,11 @@
 #include <memory>
 #include <iostream>
 
-
-class MenuState;
-class StateManager;
-
-class MenuState
+class GameState
 {
     public:
 
-        virtual ~MenuState() = default;
+        virtual ~GameState() = default;
 
         virtual void update(float deltaTime) = 0;
         virtual void render() = 0;
@@ -23,16 +19,16 @@ class StateManager
 {
     private:
 
-        std::stack<std::unique_ptr<MenuState>> stateStack;
+        std::stack<std::unique_ptr<GameState>> stateStack;
 
     public:
 
         StateManager() = default;
         ~StateManager() = default;
 
-        void pushState(std::unique_ptr<MenuState> newState);
+        void pushState(std::unique_ptr<GameState> newState);
         void popState();
-        MenuState* getCurrentState();
+        GameState* getCurrentState();
         void update(float deltaTime);
         void render();
         

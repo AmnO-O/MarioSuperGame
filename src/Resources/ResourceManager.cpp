@@ -1,4 +1,4 @@
-#include "ResourceManager.h"
+#include "Resources/ResourceManager.h"
 
 // Singleton instance
 ResourceManager& ResourceManager::getInstance() {

@@ -2,14 +2,14 @@
 #define SETTINGS_MENU_H
 
 #include <raylib.h>
-#include "Button.h"
-#include "StateManager.h"
-#include "SoundManager.h"
-#include "VolumeSlider.h"
+#include "../Widgets/Button.h"
+#include "../Resources/StateManager.h"
+#include "../Resources/SoundManager.h"
+#include "../Widgets/VolumeSlider.h"
 #include <memory>
 #include <string>
 
-class SettingsMenu : public MenuState
+class SettingsMenu : public GameState
 {
     private:
 

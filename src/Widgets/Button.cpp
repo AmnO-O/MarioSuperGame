@@ -1,4 +1,4 @@
-#include "Button.h"
+#include "Widgets/Button.h"
 
 NormalButton::NormalButton(const std::string& text, Rectangle rect, Color normalColor, Color hoverColor, std::function<void()> onClick)
     : text(text), frame(rect), normalColor(normalColor), hoverColor(hoverColor), onClick(onClick)

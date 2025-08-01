@@ -1,6 +1,6 @@
-#include "MainMenu.h"
-#include "SubMenu.h"
-#include "SettingsMenu.h"
+#include "States/MainMenu.h"
+#include "States/SubMenu.h"
+#include "States/SettingsMenu.h"
 
 MainMenu::MainMenu(StateManager& stateManager, SoundManager& soundManager)
   : stateManager(stateManager), 

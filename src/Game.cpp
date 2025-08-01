@@ -1,7 +1,7 @@
 #include "Game.h"
-#include "ResourceManager.h"
+#include "./Resources/ResourceManager.h"
 #include "raylib.h"
-#include "MainMenu.h"
+#include "./States/MainMenu.h"
 
 // Singleton instance
 Game& Game::getInstance() {

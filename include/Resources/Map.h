@@ -3,11 +3,11 @@
 
 #include "raylib.h"
 #include <string>
-#include "Blocks/Block.h"
+#include "../Blocks/Block.h"
 #include <vector>
-#include "Exceptions.h"
-#include "Observer/Observer.h"
-#include "Character/Character.h"
+#include "../Exceptions.h"
+#include "../Observer/Observer.h"
+#include "../Character/Character.h"
 
 class Map {
 private:

@@ -1,6 +1,6 @@
-#include "SubMenu.h"
-#include "MainMenu.h"
-#include "LevelMenu.h"
+#include "States/SubMenu.h"
+#include "States/MainMenu.h"
+#include "States/LevelMenu.h"
 
 SubMenu::SubMenu(StateManager& stateManager, SoundManager& soundManager, bool checkMario)
   : stateManager(stateManager),

@@ -2,14 +2,14 @@
 #define LEVEL_MENU_H
 
 #include <raylib.h>
-#include "SoundManager.h"
-#include "StateManager.h"
-#include "Button.h"
+#include "../Resources/SoundManager.h"
+#include "../Resources/StateManager.h"
+#include "../Widgets/Button.h"
 #include <string>
 #include <vector>
 #include <memory>
 
-class LevelMenu : public MenuState
+class LevelMenu : public GameState
 {
     private:
 

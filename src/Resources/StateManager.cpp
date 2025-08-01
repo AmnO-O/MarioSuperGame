@@ -1,6 +1,6 @@
-#include "StateManager.h"
+#include "Resources/StateManager.h"
 
-void StateManager::pushState(std::unique_ptr<MenuState> newState)
+void StateManager::pushState(std::unique_ptr<GameState> newState)
 {
     stateStack.push(std::move(newState));
 }
@@ -11,7 +11,7 @@ void StateManager::popState()
         stateStack.pop();
 }
 
-MenuState* StateManager::getCurrentState()
+GameState* StateManager::getCurrentState()
 {
     if (!stateStack.empty())
         return stateStack.top().get();
@@ -21,14 +21,14 @@ MenuState* StateManager::getCurrentState()
 
 void StateManager::update(float deltaTime)
 {
-    MenuState* currentState = getCurrentState();
+    GameState* currentState = getCurrentState();
     if (currentState)
         currentState->update(deltaTime);
 }
 
 void StateManager::render()
 {
-    MenuState* currentState = getCurrentState();
+    GameState* currentState = getCurrentState();
     if (currentState)
         currentState->render();
 }
