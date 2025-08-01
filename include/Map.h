@@ -8,7 +8,7 @@
 #include "Exceptions.h"
 #include "Observer/Observer.h"
 #include "Character/Character.h"
-// #include "Character/Enemy.h"
+#include "Character/Enemy.h"
 #include "Character/Goomba.h"
 
 class Map {
@@ -23,7 +23,7 @@ private:
 public:
     Map() = delete;
     Map(const std::string& folderPath, Texture objectTex);
-    Vector2 getSize() const { return {1.0f * background.width, 1.0f * background.height / space}; }
+    Vector2 getSize() const { return {1.0f * background.width, 1.0f * background.height / (space)}; }
 
     void SetUp(CollisionManager &cm, Player* player) const;
     void Update(float delta);
