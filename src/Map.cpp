@@ -30,7 +30,7 @@ void Map::input(std::istream &is, Texture objectTex) {
                 enemies.push_back(new Goomba({x * 1.0f, y * 1.0f}));
             }
         }
-        else if (s = = "KOOPA") {
+        else if (s == "KOOPA") {
             for (int i = 0; i < n; i++) {
                 int x, y;
                 is >> x >> y;

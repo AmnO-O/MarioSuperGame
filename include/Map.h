@@ -10,6 +10,7 @@
 #include "Character/Character.h"
 #include "Character/Enemy.h"
 #include "Character/Goomba.h"
+#include "Character/Koopa.h"
 
 class Map {
 private:
