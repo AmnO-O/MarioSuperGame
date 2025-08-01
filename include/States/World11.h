@@ -9,7 +9,33 @@
 #include "../Character/IPowerUpCreator.h"
 #include "../Resources/StateManager.h"
 #include "../Resources/SoundManager.h"
+#include "../Widgets/Button.h"
 #include <iostream>
+
+class PopUpMenu1_1
+{
+    private:
+
+        NormalButton resume_button;
+        NormalButton restart_button;
+        NormalButton exit_button;
+        NormalButton save_button;
+        Rectangle frame;
+
+        StateManager& stateManager;
+
+    public:
+
+        PopUpMenu1_1(StateManager& stateManager);
+        ~PopUpMenu1_1() = default;
+
+        bool isVisible;
+        void restart(StateManager& stateManager);
+        void exitGame(StateManager& stateManager);
+        void toggle();
+        void update(float deltaTime);
+        void render();
+};
 
 
 class World1_1: public GameState
@@ -25,15 +51,24 @@ class World1_1: public GameState
 
         IPowerUpCreator *powerUpCreator; 
         PowerUp *item; 
+        
+        ImageButton settings_button;
+        Texture2D settings_button_state;
+        PopUpMenu1_1 popup_menu;
+
+        StateManager& stateManager;
 
     public:
 
-        World1_1();
+        World1_1(StateManager& stateManager);
         ~World1_1();
 
+        void processInput(StateManager& stateManager) override {};
         void update(float deltaTime) override;
         void render() override;
         bool isRunning;
 };
+
+
 
 #endif

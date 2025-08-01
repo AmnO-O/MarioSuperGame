@@ -3,7 +3,13 @@
 #include "Resources/ResourceManager.h"
 #include <raylib.h>
 
-World1_1::World1_1() 
+World1_1::World1_1(StateManager& stateManager)
+  : stateManager(stateManager),
+    popup_menu(stateManager),
+    settings_button("../assets/images/setting.png", {25, 27, 100, 100}, [&]() {
+        popup_menu.toggle();
+    }),
+    settings_button_state(LoadTexture("../assets/images/setting_red.png"))
 {
     isRunning = true;
 	Images::loadAllTextures("../assets/levelImages/");
@@ -28,14 +34,24 @@ World1_1::~World1_1()
     for (int i = 0; i < maps.size(); i++)
         maps[i].Unload();
     
+    UnloadTexture(settings_button_state);
+
     delete character; 
     delete myCam; 
     delete item; 
     delete powerUpCreator; 
 }
 
+/*void World1_1::processInput(StateManager& stateManager)
+{
+    if (IsKeyPressed(KEY_P))
+        popup_menu.toggle();
+}*/
+
 void World1_1::update(float deltaTime) 
 {
+    if (!popup_menu.isVisible)
+    {
     cm.CheckAllCollisions();
     maps[currentMap].Update(deltaTime);
 
@@ -44,10 +60,17 @@ void World1_1::update(float deltaTime)
 
     myCam -> update(character); 
     item->update(deltaTime);
-    
+            
     if(CheckCollisionRecs(character->getHitbox(), item->getHitbox())){
         item->applyEffect(character); 
     }
+    }
+    
+    if (!popup_menu.isVisible)
+        settings_button.update(deltaTime);
+
+    if (popup_menu.isVisible)
+        popup_menu.update(deltaTime);
 }
 
 void World1_1::render() 
@@ -57,8 +80,7 @@ void World1_1::render()
     //ClearBackground(RAYWHITE);
 
     /// camera draw here
-
-        BeginMode2D(camera); 
+    BeginMode2D(camera); 
         maps[currentMap].Draw();
         if(character)
             character->render(); 
@@ -67,6 +89,78 @@ void World1_1::render()
             item->render(); 
         EndMode2D(); 
 
+    settings_button.render();
 
+    if (!popup_menu.isVisible)
+    {
+        bool isHovered = CheckCollisionPointRec(GetMousePosition(), settings_button.getBounds());
+        if (isHovered)
+            DrawTexture(settings_button_state, 25, 27, WHITE);
+    }
+
+    if (popup_menu.isVisible)
+        popup_menu.render();
     //EndDrawing();
+}
+
+PopUpMenu1_1::PopUpMenu1_1(StateManager& stateManager)
+  : isVisible(false),
+    stateManager(stateManager),
+    resume_button("RESUME", {663, 296, 330, 50}, WHITE, RED, [&](){
+        toggle();
+    }),
+    restart_button("RESTART", {639, 392, 330, 50}, WHITE, RED, [&]() {
+        restart(stateManager);
+    }),
+    exit_button("EXIT", {710, 488, 330, 50}, WHITE, RED, [&]() {
+        exitGame(stateManager);
+    }),
+    save_button("SAVE GAME", {594, 584, 330, 50}, WHITE, RED, []() {
+
+    }),
+    frame({500, 225, 600, 472})
+{
+
+}
+
+void PopUpMenu1_1::restart(StateManager& stateManager)
+{
+    stateManager.popState();
+    stateManager.pushState(std::make_unique<World1_1>(stateManager));
+}
+
+void PopUpMenu1_1::exitGame(StateManager& stateManager)
+{
+    stateManager.popState();
+}
+
+void PopUpMenu1_1::toggle()
+{
+    isVisible = !isVisible;
+}
+
+void PopUpMenu1_1::update(float deltaTime)
+{
+    if (isVisible)
+    {
+        resume_button.update(deltaTime);
+        restart_button.update(deltaTime);
+        exit_button.update(deltaTime);
+        save_button.update(deltaTime);
+    }
+
+}
+
+void PopUpMenu1_1::render()
+{
+    if (isVisible)
+    {
+        DrawRectangleRec(frame, Fade(BLACK, 0.8f));
+        DrawRectangleLinesEx(frame, 5, WHITE);
+
+        resume_button.render();
+        restart_button.render();
+        exit_button.render();
+        save_button.render();
+    }
 }

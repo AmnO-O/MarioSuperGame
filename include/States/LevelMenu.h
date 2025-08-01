@@ -34,6 +34,7 @@ class LevelMenu : public GameState
         ~LevelMenu(); 
 
         void drawBorder(Rectangle bounds);
+        void processInput(StateManager& stateManager) override {};
         void update(float deltaTime) override;
         void render() override;
 
