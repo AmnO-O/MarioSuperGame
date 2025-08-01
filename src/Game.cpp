@@ -14,9 +14,12 @@ Game::Game() {
     SetTargetFPS(60);
     isRunning = true;
 
+
     soundManager.loadMenuSound();
 
     stateManager.pushState(std::make_unique<MainMenu>(stateManager, soundManager));
+ 
+
 }
 
 Game::~Game() {
@@ -26,6 +29,13 @@ Game::~Game() {
         stateManager.popState();
     }
     CloseWindow();
+    Images::unloadAllTextures();
+    for (int i = 0; i < maps.size(); i++)
+        maps[i].Unload();
+    delete character; 
+    delete myCam; 
+    delete item; 
+    delete powerUpCreator; 
 }
 
 void Game::run() {
@@ -47,14 +57,20 @@ void Game::processInput() {
 }
 
 void Game::update(float deltaTime) {
+
     soundManager.updateMenuSound();
     stateManager.update(deltaTime);
+
 }
 
 void Game::render() {
+     
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
+
     stateManager.render();
+
+    
     EndDrawing();
 }
