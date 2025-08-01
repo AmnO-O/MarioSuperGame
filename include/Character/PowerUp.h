@@ -2,7 +2,7 @@
 #include "Global.h"
 #include "GameObject.h"
 #include "Animation.h"
-#include "Observer/ICollidable.h"
+#include "../Observer/ICollidable.h"
 #include <iostream>
 class Player;
 
@@ -56,7 +56,7 @@ class FireFlowerPowerUp : public PowerUp {
 public:
     FireFlowerPowerUp(Vector2 pos) : PowerUp(PowerUpType::FIRE_FLOWER, pos) {
 
-        readRectAnimation("assets/animation/fireflower.txt", Images::textures["items1.png"]);
+        readRectAnimation("../assets/animation/fireflower.txt", Images::textures["items1.png"]);
 
     }
 
@@ -81,7 +81,7 @@ public:
     StarPowerUp(Vector2 pos) : PowerUp(PowerUpType::STAR, pos) {
         velocity.x = 70.0f;
 
-        readRectAnimation("assets/animation/star.txt", Images::textures["items.png"]);
+        readRectAnimation("../assets/animation/star.txt", Images::textures["items.png"]);
 
     }
 

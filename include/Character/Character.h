@@ -3,11 +3,11 @@
 #include "raylib.h"
 #include "Animation.h"
 #include "Global.h"
-#include "Exceptions.h"
+#include "../Exceptions.h"
 #include "CharacterState.h"
 #include "PlayerMovement.h"
 #include "Fireball.h"
-#include "Observer/ICollidable.h"
+#include "../Observer/ICollidable.h"
 
 
 class Character{

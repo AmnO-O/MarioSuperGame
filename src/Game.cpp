@@ -1,7 +1,7 @@
 #include "Game.h"
-#include "./Resources/ResourceManager.h"
+#include "Resources/ResourceManager.h"
 #include "raylib.h"
-#include "./States/MainMenu.h"
+#include "States/MainMenu.h"
 
 // Singleton instance
 Game& Game::getInstance() {
@@ -29,13 +29,7 @@ Game::~Game() {
         stateManager.popState();
     }
     CloseWindow();
-    Images::unloadAllTextures();
-    for (int i = 0; i < maps.size(); i++)
-        maps[i].Unload();
-    delete character; 
-    delete myCam; 
-    delete item; 
-    delete powerUpCreator; 
+    
 }
 
 void Game::run() {

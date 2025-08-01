@@ -26,7 +26,7 @@ void Fireball::explode(){
     delete activeAnimation; 
 
     active = false; 
-    std::ifstream fin("assets/animation/fireball_explode.txt"); 
+    std::ifstream fin("../assets/animation/fireball_explode.txt"); 
 
     activeAnimation = new AnimationManager(Images::textures["enemies_sprites.png"], 0);
 

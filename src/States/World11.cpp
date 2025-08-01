@@ -13,7 +13,7 @@ World1_1::World1_1(StateManager& stateManager, SoundManager& soundManager)
     settings_button_state(LoadTexture("../assets/images/setting_red.png"))
 {
     isRunning = true;
-	Images::loadAllTextures("../assets/levelImages/");
+	Images::loadAllTextures("../assets/images/");
 
     character = new Player(CharacterType::MARIO, {  100, 100 });
     character->setGroundLevel(2.0f * GetScreenHeight());
