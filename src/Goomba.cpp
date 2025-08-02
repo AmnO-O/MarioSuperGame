@@ -2,15 +2,17 @@
 #include "Character/Character.h"
 
 void Goomba::update(float deltaTime) {
-    if (dead) {
+    if (state == GoombaState::DIE) {
         velocity = { 0, 0 };
+        delayDead += deltaTime;
+        if (delayDead >= 0.5f) setDead();
     }
 
     Enemy::update(deltaTime);
 }
 
 void Goomba::updateAnimationType() {
-    if (dead) {
+    if (state == GoombaState::DIE) {
         position.y += hitbox.height * 0.5f;
         activeAnimation = animations["DIE"].get();
     } 
@@ -24,7 +26,10 @@ void Goomba::adaptCollision(ICollidable* other) {
         Rectangle playerHitbox = player->getHitbox();
 
         if (playerHitbox.y + playerHitbox.height <= hitbox.y + 5) {
-            setDead();
+            if (state == GoombaState::RUNNING) {
+                state = GoombaState::DIE;
+                updateAnimationType();
+            }
         } 
         else {
             // Nếu va chạm ngang => player mất mạng (handle ở Player)
