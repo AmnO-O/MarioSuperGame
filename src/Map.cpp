@@ -45,20 +45,13 @@ Map::Map(const std::string& folderPath, Texture2D &objectTex) {
 void Map::Update(float delta) {
     for (int i = 0; i < blocks.size(); i++)
         blocks[i]->Update(delta);
+        
+    if(character)
+        character->update(delta); 
 }
 
 void Map::Draw() const {    
-    Rectangle src = {
-        0,
-        0,
-        1.0f * GetScreenWidth(),
-        1.0f * GetScreenHeight()
-    };
-
-    Rectangle dest = src;
-
-    Vector2 origin = { 0.0f, 0.0f };
-    DrawTexturePro(background, src, dest, origin, 0.0f, WHITE);
+    DrawTexture(background, 0, 0, WHITE);
 
     for (int i = 0; i < blocks.size(); i++) {
         blocks[i]->Draw(DrawStat::First);
@@ -68,6 +61,8 @@ void Map::Draw() const {
         blocks[i]->Draw(DrawStat::Second);
     }
 
+    if(character)
+        character->render(); 
 }
 
 void Map::Unload() {
@@ -76,9 +71,10 @@ void Map::Unload() {
         delete blocks[i];
 }
 
-void Map::SetUp(CollisionManager &cm, Character* player) const {
-    cm.Clear();
-    cm.SetMainCharacter(player);
+void Map::SetUp(Character* player) {
+    CollisionManager::getInstance().Clear();
+    CollisionManager::getInstance().SetMainCharacter(player);
     for (int i = 0; i < blocks.size(); i++)
-        cm.Register(blocks[i]);
+        CollisionManager::getInstance().Register(blocks[i]);
+    character = player;
 }

@@ -149,10 +149,6 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 	position.x += velocity.x * deltaTime;
 	position.y += velocity.y * deltaTime;
 
-	if (position.x < 0.0f)
-		position.x = 0.0f;
-
-
 	Vector2 force = {forceX, forceY}; 
 	MoveContext currentContext = {position, velocity, force, shape, facingRight, groundLevel, currentTime, pressingCrounch, Sstate->canBreakBrick()}; 
 

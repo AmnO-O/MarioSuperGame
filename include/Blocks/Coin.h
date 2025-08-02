@@ -4,11 +4,23 @@
 #include "raylib.h"
 #include "Block.h"
 #include "iostream"
-#include "Character/Animation.h"
-#include "Appearance.h"
-#include "Character/GameObject.h"
+#include "Animation/Animation.h"
+#include "Animation/Appearance.h"
+#include "Object/GameObject.h"
+#include <vector>
 
-class Coin : public Block, public GameObject {
+class ContainCoin : public GameObject {
+private:
+    BounceAnimation coinAni;
+public:
+    ContainCoin(Texture2D &tex, std::vector<Rectangle> recs, Rectangle block);    
+    Vector2 getPosition() const { return coinAni.getPosition(); }
+    virtual void setGroundLevel(float groundLevel) {}
+    void update(float deltaTime) override;
+    void render() override;
+};
+
+class Coin : public Block {
 private:
     BounceAnimation coinAni;
     AnimationManager ani;
@@ -23,7 +35,6 @@ public:
     void adaptCollision(ICollidable* other) override;
     void Update(float delta) override;
     bool IsActive() const override;
-    void render() override {}
     void isHitBelow() override { Bounce(); }
     ~Coin() override {}
 };

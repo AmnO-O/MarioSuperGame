@@ -3,7 +3,7 @@
 
 #include "Block.h"
 #include <vector>
-#include "Appearance.h"
+#include "Animation/Appearance.h"
 
 class Brick : public Block {
 private:

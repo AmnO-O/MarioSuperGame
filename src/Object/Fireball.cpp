@@ -1,4 +1,4 @@
-#include "Character/Fireball.h"
+#include "Object/Fireball.h"
 #include <fstream>
 #include <cassert>
 #include "Exceptions.h"

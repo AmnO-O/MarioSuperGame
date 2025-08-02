@@ -2,18 +2,37 @@
 #include "Character/Character.h"
 
 Question::Question(Texture2D &tex, std::istream &is) : Block(tex), bounceAni(tex, {0, 0, 0, 0}, 0.25f, 6.0f, 1.0f), ani(tex, false, 0.2f) {
-    int num = 0;
-    is >> num;
-    for (int i = 0; i < num; i++) {
+    int n = 0;
+    is >> n;
+    for (int i = 0; i < n; i++) {
         int x, y, w, h;
         is >> x >> y >> w >> h;
         ani.addRect({1.0f * x, 1.0f * y, 1.0f * w, 1.0f * h});
     }
+
     is >> BrokenRect.x >> BrokenRect.y >> BrokenRect.width >> BrokenRect.height;
-    bounceAni.addRect(BrokenRect);
     is >> pos.x >> pos.y;
+
     Vector2 shape = ani.getCurrentShape();
+    bounceAni.addRect(BrokenRect);
     bounceAni.setBlockRec({pos.x, pos.y, shape.x, shape.y});
+
+    is >> num;
+    std::string s;
+    is >> s;
+    std::vector<Rectangle> temp;
+    is >> n;
+    for (int i = 0; i < n; i++) {
+        int x, y, w, h;
+        is >> x >> y >> w >> h;
+        temp.push_back({1.0f * x, 1.0f * y, 1.0f * w, 1.0f * h});
+    }
+    if (s == "COIN") 
+        creator = new CoinCreator(tex, temp, {pos.x, pos.y, shape.x, shape.y});
+    else if (s == "BIG") 
+        creator = new MushroomCreator(tex, temp, {pos.x, pos.y, shape.x, shape.y});
+    else if (s == "STAR") 
+        creator = new StarCreator(tex, temp, {pos.x, pos.y, shape.x, shape.y});
 }
 
 Rectangle Question::getHitbox() const {
@@ -22,6 +41,8 @@ Rectangle Question::getHitbox() const {
 }
 
 void Question::Update(float delta) {
+    if (object && object->IsActive()) object->update(delta);
+
     if (stat == BlockStat::Broken) return; // Don't update if broken
 
     if (stat == BlockStat::Bouncing) {
@@ -36,6 +57,7 @@ void Question::Update(float delta) {
 
 void Question::Draw(DrawStat ds) const {
     if (drawStat != ds) return;
+    if (object && object->IsActive()) object->render();
 
     if (stat == BlockStat::Bouncing || stat == BlockStat::Broken) {
         bounceAni.Draw();
@@ -77,11 +99,8 @@ void Question::adaptCollision(ICollidable* other) {
 }
 
 void Question::Break() {
-    CollisionManager::NotifyAbove(this);
-    stat = BlockStat::Bouncing;
-}
-
-void Question::Bounce() {    
-    CollisionManager::NotifyAbove(this);
+    CollisionManager::getInstance().NotifyAbove(this);
+    if (creator)
+        object = creator->create();
     stat = BlockStat::Bouncing;
 }

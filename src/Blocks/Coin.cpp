@@ -1,7 +1,27 @@
 #include "Blocks/Coin.h"
 #include "Character/Character.h"
 
-Coin::Coin(Texture2D &tex, std::istream &is) : Block(tex), ani(tex, false, 0.2f), coinAni(tex, {0, 0, 0, 0}, 1.0f, 40.0f, 0.1f), GameObject() {
+ContainCoin::ContainCoin(Texture2D &tex, std::vector<Rectangle> recs, Rectangle block) : GameObject(), coinAni(tex, block , 1.0f, 40.0f, 0.1f) {
+    for (Rectangle &r : recs)
+        coinAni.addRect(r);
+    block.y -= recs[0].height;
+    coinAni.setBlockRec(block);
+    hitbox = {-1, -1, 0, 0};
+}
+
+void ContainCoin::update(float delta) {
+    coinAni.Update(delta);
+    if (coinAni.ended()) {
+        active = false;
+    }
+    return;
+}
+
+void ContainCoin::render() {
+    coinAni.Draw();
+}
+
+Coin::Coin(Texture2D &tex, std::istream &is) : Block(tex), ani(tex, false, 0.2f), coinAni(tex, {0, 0, 0, 0}, 1.0f, 40.0f, 0.1f) {
     int num = 0;
     is >> num;
     for (int i = 0; i < num; i++) {

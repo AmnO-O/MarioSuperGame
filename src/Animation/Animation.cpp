@@ -1,5 +1,5 @@
 #pragma once
-#include "Character/Animation.h"
+#include "Animation/Animation.h"
 #include <cassert>
 #include "Exceptions.h"
 

@@ -1,9 +1,29 @@
-#include "Character/PowerUp.h"
+#include "Object/PowerUp.h"
 #include "Character/Character.h"
 #include <iostream>
 #include <cmath>
 
-void PowerUp::adaptCollision(const Rectangle &rect){
+void PowerUp::update(float delta) {
+	if (!active) return;
+	if (hasSpawned) 
+		GameObject::update(delta);
+	else {
+		ani.Update(delta);
+		if (ani.ended())
+			hasSpawned = true;
+	}
+}
+
+void PowerUp::adaptCollision(ICollidable *other) {
+	Character* player = dynamic_cast<Character*>(other);
+	if (player) {
+		applyEffect(player);
+		active = false;
+		return;
+	}
+
+	Rectangle rect = other->getHitbox();
+
 	float penLeft = (hitbox.x + hitbox.width) - rect.x;
 	float penRight = (rect.x + rect.width) - hitbox.x;
 	float penX = penLeft < penRight ? -penLeft : penRight;
@@ -27,20 +47,10 @@ void PowerUp::adaptCollision(const Rectangle &rect){
 
 void PowerUp::render(){
 	if (!active) return; 
-
-	Texture2D power; 
-
-	switch (type) {
-	case PowerUpType::MUSHROOM: power = Images::textures["mushroom.png"];  break;
-		case PowerUpType::FIRE_FLOWER: power = Images::textures["mushroom.png"]; break;
-		case PowerUpType::STAR: power = Images::textures["star.png"]; break;
-	}
-
-	if(power.id == 0){
-		throw ResourceException("Can't load texture in powerup::render()\n");
-	}
-	
-	DrawTexture(power, (int)hitbox.x, (int)hitbox.y, WHITE);
+	if (hasSpawned)
+		DrawTextureRec(tex, srcRect, position, WHITE);
+	else	
+		ani.Draw();
 }
 
 void MushroomPowerUp::applyEffect(Character* &character) {

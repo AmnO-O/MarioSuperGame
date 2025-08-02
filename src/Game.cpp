@@ -18,14 +18,10 @@ Game::Game() {
     character->setGroundLevel(2.0f * GetScreenHeight());
 
     maps.push_back(Map("assets/maps/1-1/", Images::textures["mapobject.png"]));
-    maps[currentMap].SetUp(cm, character);
+    maps[currentMap].SetUp(character);
 
     myCam = new MyCamera2D(1.0f * GetScreenWidth(), 1.0f * GetScreenHeight()); 
     myCam->setMapSize(maps[currentMap].getSize());
-    
-    powerUpCreator = new StarCreator(); 
-    item = powerUpCreator->create({150, 100}); 
-    item -> setGroundLevel(200);
 }
 
 Game::~Game() {
@@ -35,8 +31,6 @@ Game::~Game() {
         maps[i].Unload();
     delete character; 
     delete myCam; 
-    delete item; 
-    delete powerUpCreator; 
 }
 
 void Game::run() {
@@ -56,18 +50,11 @@ void Game::processInput() {
 }
 
 void Game::update(float deltaTime) {
-    cm.CheckAllCollisions();
+    CollisionManager::getInstance().CheckAllCollisions();
     maps[currentMap].Update(deltaTime);
 
-    if(deltaTime < 0.2) 
-        character->update(deltaTime); 
-
     myCam -> update(character); 
-    item->update(deltaTime);
     
-    if(CheckCollisionRecs(character->getHitbox(), item->getHitbox())){
-        item->applyEffect(character); 
-    }
 }
 
 void Game::render() {
@@ -79,11 +66,6 @@ void Game::render() {
 
         BeginMode2D(camera); 
             maps[currentMap].Draw();
-            if(character)
-                character->render(); 
-
-            if(item)
-                item->render(); 
         EndMode2D(); 
 
 

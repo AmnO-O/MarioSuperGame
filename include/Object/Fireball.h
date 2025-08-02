@@ -1,9 +1,9 @@
 #pragma once
 #include "raylib.h"
-#include "Animation.h"
+#include "Animation/Animation.h"
 #include <string>
-#include "Global.h"
-#include "GameObject.h"
+#include "Character/Global.h"
+#include "Object/GameObject.h"
 
 class Fireball : public GameObject{
 private:

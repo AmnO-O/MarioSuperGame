@@ -1,4 +1,5 @@
 #include "Character/Character.h"
+#include "Blocks/Coin.h"
 #include <iostream>
 #include <cassert>
 #include <algorithm>
@@ -291,7 +292,7 @@ void Character::cleanFireballs(){
 }
 
 void Character::adaptCollision(ICollidable* other){
-	if (dynamic_cast<GameObject*>(other))
+	if (dynamic_cast<Coin*>(other))
 		return;
 	movement->adaptCollision(other, Mstate, this); 
 	updateShape(); 

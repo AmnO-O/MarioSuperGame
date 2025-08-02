@@ -133,7 +133,7 @@ void Brick::adaptCollision(ICollidable* other) {
 }
 
 void Brick::Break() {
-    CollisionManager::NotifyAbove(this);
+    CollisionManager::getInstance().NotifyAbove(this);
     stat = BlockStat::Breaking;
     drawStat = DrawStat::Second;
     fragmentVelocity = initVelocity;
@@ -141,7 +141,7 @@ void Brick::Break() {
 }
 
 void Brick::Bounce() {    
-    CollisionManager::NotifyAbove(this);
+    CollisionManager::getInstance().NotifyAbove(this);
     stat = BlockStat::Bouncing;
 }
 

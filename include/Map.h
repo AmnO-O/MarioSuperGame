@@ -15,6 +15,7 @@ private:
     int curspace = 0;
     Texture2D background;
     std::vector<Block*> blocks;
+    Character *character;
 
     void input(std::istream &is, Texture2D &objectTex);
 public:
@@ -22,7 +23,7 @@ public:
     Map(const std::string& folderPath, Texture2D &objectTex);
     Vector2 getSize() const { return {1.0f * background.width, 1.0f * background.height / space}; }
 
-    void SetUp(CollisionManager &cm, Character* player) const;
+    void SetUp(Character* player);
     void Update(float delta);
     void Draw() const;
     void Unload();

@@ -1,6 +1,6 @@
 #pragma once
 #include <raylib.h>
-#include "Character.h"
+#include "Character/Character.h"
 
 class MyCamera2D {
 private:

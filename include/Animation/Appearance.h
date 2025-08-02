@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include "iostream"
 #include <vector>
+#include "Exceptions.h"
 
 class AppearanceAnimation {
 protected:
@@ -29,11 +30,13 @@ public:
             offset = 0;
         }
     }
-    void Draw() const {
+    virtual void Draw() const {
         if (recs.size() == 0) throw GameException("Appearance doesn't init recs!");
         int curframe = (int)std::floor(frameTime / delay);
         curframe %= recs.size();
-        DrawTextureRec(tex, recs[curframe], {blockRec.x + (blockRec.width - recs[curframe].width) / 2, blockRec.y - offset}, WHITE);
+        Rectangle rec = recs[curframe];
+        rec.height = offset;
+        DrawTextureRec(tex, rec, {blockRec.x + (blockRec.width - recs[curframe].width) / 2, blockRec.y - offset}, WHITE);
     }
     Vector2 getPosition() const {
         if (recs.size() == 0) throw GameException("Appearance doesn't init recs!");
@@ -61,6 +64,12 @@ public:
                 frameTime = 0;
                 offset = 0;
             }
+    }
+    void Draw() const override {
+        if (recs.size() == 0) throw GameException("Appearance doesn't init recs!");
+        int curframe = (int)std::floor(frameTime / delay);
+        curframe %= recs.size();
+        DrawTextureRec(tex, recs[curframe], {blockRec.x + (blockRec.width - recs[curframe].width) / 2, blockRec.y - offset}, WHITE);
     }
 };
 
