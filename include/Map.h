@@ -27,7 +27,7 @@ public:
     Vector2 getSize() const { return {1.0f * background.width, 1.0f * background.height / (space)}; }
 
     void SetUp(CollisionManager &cm, Player* player) const;
-    void Update(float delta);
+    void Update(float delta, CollisionManager &cm);
     void Draw() const;
     void Unload();
 };

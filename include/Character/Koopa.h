@@ -1,6 +1,8 @@
 #pragma once
 #include "Enemy.h"
 
+
+
 class Koopa : public Enemy {
 public:
     Koopa(Vector2 pos) : Enemy(CharacterType::KOOPA, pos) {

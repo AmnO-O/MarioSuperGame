@@ -57,7 +57,7 @@ void Game::processInput() {
 
 void Game::update(float deltaTime) {
     cm.CheckAllCollisions();
-    maps[currentMap].Update(deltaTime);
+    maps[currentMap].Update(deltaTime, cm);
 
     if(deltaTime < 0.2) 
         character->update(deltaTime); 
