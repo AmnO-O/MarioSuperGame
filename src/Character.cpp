@@ -21,7 +21,7 @@ Player::Player(CharacterType t, Vector2 pos):
 			throw GameException("Can't load image of mario.png");
 
 
-		readRectAnimation("../assets/animation/mario.txt", mario);
+		readRectAnimation("assets/animation/mario.txt", mario);
 
 		updateShape();
 		groundLevel = pos.y + activeAnimation->getCurrentShape().y;
@@ -37,7 +37,7 @@ Player::Player(CharacterType t, Vector2 pos):
 		if(luigi.id == 0)
 			throw GameException("Can't load image of luigi.png");
 
-		readRectAnimation("../assets/animation/luigi.txt", luigi);
+		readRectAnimation("assets/animation/luigi.txt", luigi);
 
 		updateShape();
 		groundLevel = pos.y + activeAnimation->getCurrentShape().y;
@@ -61,7 +61,7 @@ Player::Player(CharacterType t,  float cordX, float groundLevel):
 		if(mario.id == 0)
 			throw GameException("Can't load image of mario.png");
 
-		readRectAnimation("../assets/animation/mario.txt", mario);
+		readRectAnimation("assets/animation/mario.txt", mario);
 
 		updateShape();
 		Vector2 pos = {cordX, groundLevel - activeAnimation->getCurrentShape().y };
@@ -76,7 +76,7 @@ Player::Player(CharacterType t,  float cordX, float groundLevel):
 			throw GameException("Can't load image of luigi.png");
 
 
-		readRectAnimation("../assets/animation/luigi.txt", luigi);
+		readRectAnimation("assets/animation/luigi.txt", luigi);
 
 		updateShape();
 		Vector2 pos = {cordX, groundLevel - activeAnimation->getCurrentShape().y };

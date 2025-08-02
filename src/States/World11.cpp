@@ -7,20 +7,20 @@ World1_1::World1_1(StateManager& stateManager, SoundManager& soundManager)
   : stateManager(stateManager),
     soundManager(soundManager),
     popup_menu(stateManager, soundManager),
-    settings_button("../assets/images/setting.png", {25, 27, 100, 100}, [&]() {
+    settings_button("assets/images/setting.png", {25, 27, 100, 100}, [&]() {
         popup_menu.toggle();
     }),
-    settings_button_state(LoadTexture("../assets/images/setting_red.png"))
+    settings_button_state(LoadTexture("assets/images/setting_red.png"))
 {
     isRunning = true;
 
-	Images::loadAllTextures("../assets/images/");
+	Images::loadAllTextures("assets/images/");
 
 
     character = new Player(CharacterType::MARIO, {  100, 100 });
     character->setGroundLevel(2.0f * GetScreenHeight());
 
-    maps.push_back(Map("../assets/maps/1-1/", Images::textures["mapobject.png"]));
+    maps.push_back(Map("assets/maps/1-1/", Images::textures["mapobject.png"]));
     maps[currentMap].SetUp(cm, character);
 
     myCam = new MyCamera2D(1.0f * GetScreenWidth(), 1.0f * GetScreenHeight()); 

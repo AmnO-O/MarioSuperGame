@@ -11,7 +11,7 @@ SubMenu::SubMenu(StateManager& stateManager, SoundManager& soundManager, bool ch
         stateManager.pushState(std::make_unique<LevelMenu>(stateManager, soundManager, isMario));
     }),
     load_game_button("LOAD GAME", {598, 399, 330, 60}, WHITE, RED, []() {}),
-    return_button("../assets/images/turn_back.png", {25, 27, 100, 100}, [&]() {
+    return_button("assets/images/turn_back.png", {25, 27, 100, 100}, [&]() {
         //stateManager.popState();
         stateManager.pushState(std::make_unique<MainMenu>(stateManager, soundManager));
     }) 
@@ -21,9 +21,9 @@ SubMenu::SubMenu(StateManager& stateManager, SoundManager& soundManager, bool ch
     else
         title = "LUIGI GAME";
     
-    sub_background = LoadTexture("../assets/images/sub_menu_background.png");
-    return_button_state = LoadTexture("../assets/images/turn_back_red.png");
-    titleFont = LoadFont("../assets/fonts/SuperMarioBros.ttf");
+    sub_background = LoadTexture("assets/images/sub_menu_background.png");
+    return_button_state = LoadTexture("assets/images/turn_back_red.png");
+    titleFont = LoadFont("assets/fonts/SuperMarioBros.ttf");
 }
 
 SubMenu::~SubMenu()

@@ -29,7 +29,7 @@ public:
         velocity.x = facingRight ? 170.0f : -170.0f;
         velocity.y = 0; 
         hitbox = { position.x, position.y, 16, 16 };
-        readRectAnimation("../assets/animation/fireball.txt"); 
+        readRectAnimation("assets/animation/fireball.txt"); 
         activeAnimation->setTimeSwitch(0.08f);
     }
 

@@ -10,7 +10,7 @@ class SoundManager
     private:
 
         float current_volume = 1.0f; //Current volume = default volume when first init
-        const std::string menu_filePath = "../assets/sounds/SuperMarioBros_theme_song.mp3";
+        const std::string menu_filePath = "assets/sounds/SuperMarioBros_theme_song.mp3";
         Music menuSound;
     
     public:
