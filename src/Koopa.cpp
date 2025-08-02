@@ -10,7 +10,7 @@ void Koopa::update(float deltaTime) {
 }
 
 void Koopa::updateAnimationType() {
-    if (dead) {
+    if (state == KoopaState::SHELL) {
         position.y += 10.0f;
         activeAnimation = animations["SHELL"].get();
     } 
@@ -24,7 +24,16 @@ void Koopa::adaptCollision(ICollidable* other) {
         Rectangle playerHitbox = player->getHitbox();
 
         if (playerHitbox.y + playerHitbox.height <= hitbox.y + 5) {
-            setDead();
+            if (state == KoopaState::RUNNING) {
+                state = KoopaState::SHELL;
+                velocity.x = 0;
+                updateAnimationType();
+            } 
+            // else if (state == KoopaState::SHELL) {
+            //     state = KoopaState::SPINNING;
+            //     updateAnimationType();
+            // } 
+            // Handle other states if necessary
         } 
         else {
             // Nếu va chạm ngang => player mất mạng (handle ở Player)
