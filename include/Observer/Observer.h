@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include "vector"
+#include "algorithm"
 #include "ICollidable.h"
 #include "Character/Character.h"
 
@@ -58,6 +59,13 @@ public:
 
     void Clear() {
         collidables.clear();
+    }
+    
+    void Unregister(ICollidable* obj) {
+        auto it = std::find(collidables.begin(), collidables.end(), obj);
+        if (it != collidables.end()) {
+            collidables.erase(it);
+        }
     }
 };
 
