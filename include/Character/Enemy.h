@@ -6,6 +6,7 @@ class Enemy : public Character, public ICollidable {
 protected:
     CharacterType type;
     std::map<std::string, std::unique_ptr<AnimationManager>> animations;
+    float delayDead = 0.0f; 
 
     void readRectAnimation(const std::string& filePath, Texture2D& sheet) ;
 
@@ -24,6 +25,7 @@ public:
 
     void setDead();
     bool isDead() const { return dead; }
+    bool IsActive() const override { return !dead; }
 
     void adaptCollision(ICollidable* other) override;
 

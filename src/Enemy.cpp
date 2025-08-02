@@ -43,6 +43,8 @@ void Enemy::update(float deltaTime) {
 }
 
 void Enemy::render() {
+    if (dead) return;
+    
     if (activeAnimation)
         activeAnimation->render(position, false);
 }
@@ -61,7 +63,6 @@ void Enemy::setOnGround() {
 void Enemy::setDead() {
     if (dead) return;
     dead = 1;
-    updateAnimationType();
 }
 
 void Enemy::adaptCollision(ICollidable* other) {
