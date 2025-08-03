@@ -57,13 +57,10 @@ void Map::Update(float delta, CollisionManager &cm) {
     for (int i = 0; i < blocks.size(); i++)
         blocks[i]->Update(delta);
 
-    // Update enemies and remove dead ones
     for (int i = enemies.size() - 1; i >= 0; i--) {
         enemies[i]->update(delta);
         
-        // Remove enemy if dead
         if (enemies[i]->isDead()) {
-            // Unregister from collision manager before deleting
             cm.Unregister(enemies[i]);
             delete enemies[i];
             enemies.erase(enemies.begin() + i);
