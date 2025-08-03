@@ -46,6 +46,7 @@ void Koopa::adaptCollision(ICollidable* other) {
                 enterShell();
             } 
             else if (state == KoopaState::SHELL) {
+                velocity.x = (playerHitbox.x < hitbox.x) ? 1 : -1;
                 startSpinning();
             }
             else if (state == KoopaState::SPINNING) {
