@@ -348,7 +348,7 @@ void Player::adapt_collision_with_enimies(){
 }
 
 void Player::adaptCollision(ICollidable* other){
-	if (dynamic_cast<Coin*>(other) || dynamic_cast<PowerUp*>(other))
+	if (dynamic_cast<Coin*>(other) || dynamic_cast<GameObject*>(other))
 		return;
 	if(0 && shrinkOnHit == false){
 		adapt_collision_with_enimies(); 

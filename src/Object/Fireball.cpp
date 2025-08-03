@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cassert>
 #include "Exceptions.h"
+#include "Blocks/Block.h"
 #include <iostream>
 #include <cmath>
 
@@ -96,7 +97,8 @@ void Fireball::adaptCollision(const Rectangle &rect) {
 
 
 void Fireball::adaptCollision(ICollidable *other){
-    adaptCollision(other->getHitbox()); 
+    if (dynamic_cast<Block*>(other))
+        adaptCollision(other->getHitbox()); 
 
 }
 

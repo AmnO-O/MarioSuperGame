@@ -39,7 +39,7 @@ void PlayerMovement::adaptCollision(ICollidable* other,
 	}
 	else {
 		position.y += penY; 
-		velocity.y = 0.0f; 
+		velocity.y = 100.0f; 
 		if (penY < 0) {
             if (Mstate->isJumping()) {
                 delete Mstate;

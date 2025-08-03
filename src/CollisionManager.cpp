@@ -108,7 +108,7 @@ void CollisionManager::NotifyAbove(ICollidable* base) {
 
         Rectangle objBox = obj->getHitbox();
         if (CheckCollisionRecs(aboveBox, objBox)) {
-            obj->isHitBelow();
+            obj->isHitBelow(base);
         }
     }
 }
