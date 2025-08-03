@@ -286,7 +286,7 @@ Fireball* Player::shootFireball(){
 		startPos.y += 5;
 
 		fireball = new Fireball(startPos, movement->isFacingRight()); 
-		fireball->setGroundLevel(2 * GetScreenHeight()); 
+		fireball->setGroundLevel(2.0f * GetScreenHeight()); 
         fireballs.emplace_back(fireball);
     }
 

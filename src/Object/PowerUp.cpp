@@ -7,8 +7,10 @@
 
 void PowerUp::update(float delta) {
 	if (!active) return;
-	if (hasSpawned) 
+	if (hasSpawned) {
 		GameObject::update(delta);
+		activeAnimation->update(delta);
+	}
 	else {
 		ani->Update(delta);
 		if (ani->ended()) {
@@ -72,7 +74,7 @@ void PowerUp::readRectAnimation(std::string filePath, Texture2D &sheet){
 		Rectangle rect = {x, y, w, h}; 
 		activeAnimation->addRect(rect); 
 		if (!ani)
-			ani = new AppearanceAnimation(sheet, {0, 0, 0, 0}, 0.8f, h, 1.0f);
+			ani = new AppearanceAnimation(sheet, {0, 0, 0, 0}, 0.8f, h, 0.2f);
 		ani->addRect(rect);
 	}
 

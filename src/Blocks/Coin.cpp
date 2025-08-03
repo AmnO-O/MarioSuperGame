@@ -1,24 +1,32 @@
 #include "Blocks/Coin.h"
+#include <fstream>
+#include <iostream>
 #include "Character/Character.h"
 
-ContainCoin::ContainCoin(Texture2D &tex, std::vector<Rectangle> recs, Rectangle block) : GameObject(), coinAni(tex, block , 1.0f, 40.0f, 0.1f) {
-    for (Rectangle &r : recs)
-        coinAni.addRect(r);
-    block.y -= recs[0].height;
-    coinAni.setBlockRec(block);
+ContainCoin::ContainCoin(Rectangle block) : GameObject(), coinAni(new BounceAnimation(Images::textures["mapobject.png"], block , 1.0f, 40.0f, 0.1f)) {
+    std::ifstream fin;
+    fin.open("assets/animation/ContainCoin.txt");
+    int x, y, w, h, n;
+    fin >> n;
+    for (int i = 0; i < n; i++) {
+        fin >> x >> y >> w >> h;
+        coinAni->addRect({1.0f * x, 1.0f * y, 1.0f * w, 1.0f * h});
+    }
+    block.y -= h;
+    coinAni->setBlockRec(block);
     hitbox = {-1, -1, 0, 0};
 }
 
 void ContainCoin::update(float delta) {
-    coinAni.Update(delta);
-    if (coinAni.ended()) {
+    coinAni->Update(delta);
+    if (coinAni->ended()) {
         active = false;
     }
     return;
 }
 
 void ContainCoin::render() {
-    coinAni.Draw();
+    coinAni->Draw();
 }
 
 Coin::Coin(Texture2D &tex, std::istream &is) : Block(tex), ani(tex, false, 0.2f), coinAni(tex, {0, 0, 0, 0}, 1.0f, 40.0f, 0.1f) {
@@ -74,7 +82,7 @@ void Coin::Draw(DrawStat ds) const {
 
 void Coin::adaptCollision(ICollidable* other) {
     if (stat == BlockStat::Normal) {
-        if (dynamic_cast<Character*>(other)) {
+        if (dynamic_cast<Player*>(other)) {
             Break();
         }
         else {

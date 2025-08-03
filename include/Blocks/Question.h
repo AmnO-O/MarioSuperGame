@@ -7,6 +7,12 @@
 #include "Animation/Animation.h"
 #include "Object/Creator.h"
 
+enum class QuestionType {
+    COIN,
+    POWER,
+    STAR
+};
+
 class Question : public Block {
 private:
     BounceAnimation bounceAni;
@@ -14,11 +20,12 @@ private:
 
     Rectangle BrokenRect;
     BlockStat stat = BlockStat::Normal;
+    QuestionType type;
     Creator* creator = nullptr;
     GameObject* object = nullptr;
     int num;
 
-    void Break(); 
+    void Break(Player* player); 
 
 public:
     Question(Texture2D &tex, std::istream &is);

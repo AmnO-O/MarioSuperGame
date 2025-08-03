@@ -11,10 +11,11 @@
 
 class ContainCoin : public GameObject {
 private:
-    BounceAnimation coinAni;
+    BounceAnimation *coinAni;
 public:
-    ContainCoin(Texture2D &tex, std::vector<Rectangle> recs, Rectangle block);    
-    Vector2 getPosition() const { return coinAni.getPosition(); }
+    ~ContainCoin() { if (coinAni) delete coinAni;}
+    ContainCoin(Rectangle block);    
+    Vector2 getPosition() const { return coinAni->getPosition(); }
     virtual void setGroundLevel(float groundLevel) {}
     void update(float deltaTime) override;
     void render() override;

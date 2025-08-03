@@ -17,22 +17,15 @@ Question::Question(Texture2D &tex, std::istream &is) : Block(tex), bounceAni(tex
     bounceAni.addRect(BrokenRect);
     bounceAni.setBlockRec({pos.x, pos.y, shape.x, shape.y});
 
-    is >> num;
     std::string s;
+    is >> num;
     is >> s;
-    std::vector<Rectangle> temp;
-    is >> n;
-    for (int i = 0; i < n; i++) {
-        int x, y, w, h;
-        is >> x >> y >> w >> h;
-        temp.push_back({1.0f * x, 1.0f * y, 1.0f * w, 1.0f * h});
-    }
     if (s == "COIN") 
-        creator = new CoinCreator(tex, temp, {pos.x, pos.y, shape.x, shape.y});
+        type = QuestionType::COIN;
     else if (s == "BIG") 
-        creator = new MushroomCreator(tex, temp, {pos.x, pos.y, shape.x, shape.y});
+        type = QuestionType::POWER;
     else if (s == "STAR") 
-        creator = new StarCreator(tex, temp, {pos.x, pos.y, shape.x, shape.y});
+        type = QuestionType::STAR;
 }
 
 Rectangle Question::getHitbox() const {
@@ -72,7 +65,7 @@ void Question::Draw(DrawStat ds) const {
 
 void Question::adaptCollision(ICollidable* other) {
     if (stat == BlockStat::Normal) {
-        Character* Char = dynamic_cast<Character*>(other);
+        Player* Char = dynamic_cast<Player*>(other);
         if (Char) {
             Rectangle body = Char->getHitbox(); // Use character's hitbox
             Rectangle hitbox = getHitbox();
@@ -92,16 +85,39 @@ void Question::adaptCollision(ICollidable* other) {
 
             if (dir == BOTTOM) { // Player hit Question from below
                 if (stat == BlockStat::Normal)
-                    Break();
+                    Break(Char);
             }
         }
     }
 }
 
-void Question::Break() {
+void Question::Break(Player* player) {
     CollisionManager::getInstance().NotifyAbove(this);
+
+    switch (type)
+    {
+        case QuestionType::COIN:
+            creator = new CoinCreator();
+            break;
+        
+        case QuestionType::POWER:
+            if (player->isBig())
+                creator = new FireFlowerCreator();
+            else
+                creator = new MushroomCreator();
+            break;
+
+        case QuestionType::STAR:
+            creator = new StarCreator();
+            break;
+
+        default:
+            break;
+    }
+
     if (creator) {
-        object = creator->create();
+        Vector2 shape = ani.getCurrentShape();
+        object = creator->create({pos.x, pos.y, shape.x, shape.y});
         ICollidable* item = dynamic_cast<ICollidable*>(object);
         if (item)
             CollisionManager::getInstance().Register(item);

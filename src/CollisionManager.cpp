@@ -29,7 +29,7 @@ void CollisionManager::RemoveInactive() {
 
 void CollisionManager::CheckCharObj() {
     if (!mainCharacter) return;
-    Character *player = dynamic_cast<Character*>(mainCharacter);
+    Player *player = dynamic_cast<Player*>(mainCharacter);
     bool isOnGround = false; 
 
     ICollidable* mostOverlapObj = nullptr;
