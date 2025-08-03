@@ -75,21 +75,21 @@ void Fireball::adaptCollision(const Rectangle &rect) {
 
     position.x += normal.x * minPen;
     position.y += normal.y * minPen;
+    
 	
     velocity = reflect(velocity, normal);
 
-    if (std::fabs(normal.y) > 0.5f) {
+    if (std::fabs(normal.y) > 0) {
         velocity.y = -std::sqrt(2.0f * 980.0f * h_bounce);
-    } else {
+    }else
         velocity = reflect(velocity, normal);
-    }
+
     
     if (std::fabs(penX) < std::fabs(penY)) {
         explode();
-        
     }
 	else if (penY < 0) 
-        setGroundLevel(rect.y);
+        Fireball::setGroundLevel(rect.y);
 
 
     updateHitbox(); 
@@ -109,7 +109,7 @@ void Fireball::update(float deltaTime){
 
         return; 
     }
-
+	
     activeAnimation -> update(deltaTime); 
 
     velocity.y += 980 * deltaTime;
@@ -117,12 +117,11 @@ void Fireball::update(float deltaTime){
     position.x += velocity.x * deltaTime;
     position.y += velocity.y * deltaTime;
 
-
-	if (position.y >= groundLevel - hitbox.height) {
+    if (position.y >= groundLevel - hitbox.height) {
         Rectangle groundRect = { -1e6f, groundLevel, 2e6f, 1.0f };
+
         adaptCollision(groundRect);
     }
-
 
     updateHitbox(); 
 }
@@ -132,8 +131,8 @@ void Fireball::updateHitbox(){
 
     hitbox.x = position.x; 
     hitbox.y = position.y; 
-    hitbox.height = 16.0f; 
-    hitbox.width = 16.0f;
+    hitbox.height = 9.0f; 
+    hitbox.width = 8.0f;
 
 }
 
@@ -141,6 +140,6 @@ void Fireball::updateHitbox(){
 void Fireball::render(){
     if(activeAnimation == nullptr)
         throw GameException("activeAnimation is null at Fireball::render"); 
-        
+
     activeAnimation -> render(position); 
 }

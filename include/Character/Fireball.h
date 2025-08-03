@@ -4,7 +4,7 @@
 #include <string>
 #include "Global.h"
 #include "GameObject.h"
-
+#include <iostream>
 #include "../Observer/ICollidable.h"
 
 class Fireball : public GameObject, public ICollidable{
@@ -42,6 +42,7 @@ public:
 
     void setGroundLevel(float groundLevel) override {
         this->groundLevel = groundLevel;
+    
         if(position.y >= groundLevel - 16){
             position.y = groundLevel - 16;    
         }

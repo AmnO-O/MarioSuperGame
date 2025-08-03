@@ -26,9 +26,9 @@ World1_1::World1_1(StateManager& stateManager, SoundManager& soundManager)
     myCam = new MyCamera2D(1.0f * GetScreenWidth(), 1.0f * GetScreenHeight()); 
     myCam->setMapSize(maps[currentMap].getSize());
     
-    powerUpCreator = new NormalMushroomCreator(); 
-    item = powerUpCreator->create({350, 100}); 
-    item -> setGroundLevel(205);
+    powerUpCreator = new StarCreator(); 
+    item = powerUpCreator->create({250, 100}); 
+    item -> setGroundLevel(203);
 }
 
 World1_1::~World1_1() 
