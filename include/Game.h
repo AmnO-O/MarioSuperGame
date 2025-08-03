@@ -7,6 +7,10 @@
 #include "Map.h"
 #include "Observer/Observer.h"
 #include "Object/Creator.h"
+#include <memory>
+#include "./Resources/StateManager.h"
+#include "./Resources/SoundManager.h"
+
 
 class Game {
 public:
@@ -17,14 +21,8 @@ public:
     Game& operator=(const Game&) = delete;
     Game(Game&&) = delete;
     Game& operator=(Game&&) = delete;
-private:
 
-    std::vector<Map> maps = {};
-    int currentMap = 0;
-    Player *character; 
-    MyCamera2D *myCam; 
-    
-private:
+    private:
     Game();
     ~Game();
 
@@ -32,6 +30,8 @@ private:
     void update(float deltaTime);
     void render();
     bool isRunning;
+    StateManager stateManager;
+    SoundManager soundManager;
 };
 
 #endif

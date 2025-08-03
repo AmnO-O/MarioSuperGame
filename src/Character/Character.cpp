@@ -1,4 +1,3 @@
-
 #include "Character/Character.h"
 #include "Blocks/Coin.h"
 #include <iostream>
@@ -10,6 +9,8 @@ void Player::setUp(){
 	Sstate = new SmallState();
 	Mstate = new StandState();
 	activeAnimation = nullptr;
+	shrinkOnHit = false; 
+	showPlayer = false; 
 }
 
 Player::Player(CharacterType t, Vector2 pos):
@@ -22,7 +23,9 @@ Player::Player(CharacterType t, Vector2 pos):
 		if(mario.id == 0)
 			throw GameException("Can't load image of mario.png");
 
+
 		readRectAnimation("assets/animation/mario.txt", mario);
+
 		updateShape();
 		groundLevel = pos.y + activeAnimation->getCurrentShape().y;
 
@@ -38,6 +41,7 @@ Player::Player(CharacterType t, Vector2 pos):
 			throw GameException("Can't load image of luigi.png");
 
 		readRectAnimation("assets/animation/luigi.txt", luigi);
+
 		updateShape();
 		groundLevel = pos.y + activeAnimation->getCurrentShape().y;
 
@@ -61,6 +65,7 @@ Player::Player(CharacterType t,  float cordX, float groundLevel):
 			throw GameException("Can't load image of mario.png");
 
 		readRectAnimation("assets/animation/mario.txt", mario);
+
 		updateShape();
 		Vector2 pos = {cordX, groundLevel - activeAnimation->getCurrentShape().y };
 
@@ -73,7 +78,9 @@ Player::Player(CharacterType t,  float cordX, float groundLevel):
 		if(luigi.id == 0)
 			throw GameException("Can't load image of luigi.png");
 
+
 		readRectAnimation("assets/animation/luigi.txt", luigi);
+
 		updateShape();
 		Vector2 pos = {cordX, groundLevel - activeAnimation->getCurrentShape().y };
 
@@ -96,7 +103,8 @@ void Player::updateShape(){
 
 	if ((int)animationKey.size() >= 7 && animationKey.substr(0, 8) == "MORPHING") {
 		animationKey = "SMALL_MORPHING";
-		animations[animationKey]->setTimeSwitch(0.4f);
+		animations[animationKey]->setTimeSwitch(0.05f);
+		
 	}else if ((int)animationKey.size() >= 15 && animationKey.substr(0, 15) == "INVINCIBLE_FIRE"){
         animationKey.replace(0, 15, "INVINCIBLE_BIG");
 	}
@@ -178,7 +186,9 @@ void Player::readRectAnimation(const std::string filename, Texture2D &sheet) {
 			shape += "_";
 			std::string action = "";
 
+
 			for (int i = 0; i < 10; i++) {
+
 				int numAnimation;
 				fin >> action >> numAnimation;
 
@@ -250,7 +260,9 @@ void Player::powerUp(PowerUpType t){
 			Sstate = new FireState();
 			delete tmp;
 		}
+
 		else if(Sstate->canShootFire() == false){
+
 			tmp = Sstate;
 			Sstate = new FireState();
 			delete tmp;
@@ -258,9 +270,11 @@ void Player::powerUp(PowerUpType t){
 
 		break;
 	case PowerUpType::STAR:
+
 		if(Sstate->isInvincible() == false){
 	    	Sstate = new InvincibleDecorator(Sstate);
 		}
+
 		break;
 	case PowerUpType::NORMAL_MUSHROOM:
 
@@ -271,8 +285,10 @@ void Player::powerUp(PowerUpType t){
 	}
 }
 
+
 Fireball* Player::shootFireball(){
 		Fireball *fireball = nullptr; 
+
 
 	if (IsKeyPressed(KEY_F) && Sstate->canShootFire()) {
 		delete Mstate;
@@ -280,10 +296,11 @@ Fireball* Player::shootFireball(){
 
 		updateShape();
 		updateHitbox();
-		
+
 		Vector2 startPos = movement->getPosition();
 		startPos.x += (movement->isFacingRight() ? 15 : -5);
 		startPos.y += 5;
+
 
 		fireball = new Fireball(startPos, movement->isFacingRight()); 
 		fireball->setGroundLevel(2.0f * GetScreenHeight()); 
@@ -291,6 +308,7 @@ Fireball* Player::shootFireball(){
     }
 
 	return fireball; 
+
 }
 
 void Player::cleanFireballs(){
@@ -300,9 +318,42 @@ void Player::cleanFireballs(){
     );
 }
 
+void Player::triggerDeath(){
+	IMoveState *tmp = Mstate; 
+	Mstate = new DeadState(); 
+	delete tmp; 
+	tmp = nullptr; 
+
+	movement->setDisableUpdate(); 
+	movement->setVelocityX(0.0f); 
+	movement->setVelocityY(6000.0f); 
+}
+
+
+void Player::adapt_collision_with_enimies(){
+	if(isInvincible()) return; 
+
+	if(isBig() == false){
+		triggerDeath(); 
+		return; 
+	}
+
+	shrinkOnHit = true; 
+
+	IMoveState *tmp = Mstate; 
+	Mstate = new HitState(); 
+	delete tmp; 
+	tmp = nullptr; 
+	showPlayer = false; 
+}
+
 void Player::adaptCollision(ICollidable* other){
 	if (dynamic_cast<Coin*>(other) || dynamic_cast<PowerUp*>(other))
 		return;
+	if(0 && shrinkOnHit == false){
+		adapt_collision_with_enimies(); 
+		return; 
+	}
 	movement->adaptCollision(other, Mstate, this); 
 	updateShape(); 
 	updateHitbox(); 
@@ -351,6 +402,7 @@ void Player::setPosition(const Vector2 &position){
 	adaptChangePosition();
 }
 
+
 void Player::animationTransform(){
 
 }
@@ -358,6 +410,7 @@ void Player::animationTransform(){
 void Player::update(float deltaTime){
 	if(movement == nullptr)
 		throw GameException("Movement is null in Player::update");
+
 
 	if(IsKeyPressed(KEY_Q)){
 		if (Sstate -> getShapeState() == "SMALL"){
@@ -384,6 +437,7 @@ void Player::update(float deltaTime){
 		}	
 	}
 
+
 	if (auto morph = dynamic_cast<MorphDecorator*>(Sstate)) {
 		IShapeState* next = morph->update(deltaTime);
 
@@ -406,14 +460,22 @@ void Player::update(float deltaTime){
 		}
 	}
 
-	movement->update(deltaTime, Sstate, Mstate);
-	Mstate->update(deltaTime);
-
-	// shootFireball();
 	cleanFireballs();
 
 	for (auto& fb : fireballs)
 		fb->update(deltaTime);
+
+	if(shrinkOnHit){
+		if(activeAnimation)
+			activeAnimation->update(deltaTime);
+		
+		adaptChangePosition();
+		return; 
+	}
+
+	movement->update(deltaTime, Sstate, Mstate);
+	Mstate->update(deltaTime);
+
 
 	if(activeAnimation)
 		activeAnimation->update(deltaTime);
@@ -429,8 +491,16 @@ void Player::update(float deltaTime){
 }
 
 void Player::render(){
-	if(activeAnimation)
-		activeAnimation->render(movement->getPosition(), movement->isFacingRight() == false);
+
+	if(activeAnimation){
+		if(shrinkOnHit){
+			if(showPlayer){
+				activeAnimation->render(movement->getPosition(), movement->isFacingRight() == false);
+				showPlayer ^= 1; 
+			}
+		}
+		else activeAnimation->render(movement->getPosition(), movement->isFacingRight() == false);
+	}
 
 	for (auto& fireball : fireballs)
 		fireball->render();

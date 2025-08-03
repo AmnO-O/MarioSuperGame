@@ -4,7 +4,7 @@
 #include "raylib.h"
 #include "vector"
 #include "ICollidable.h"
-#include "Character/Character.h"
+#include "../Character/Character.h"
 
 class CollisionManager {
 private:

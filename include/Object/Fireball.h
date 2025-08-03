@@ -5,6 +5,7 @@
 #include "Character/Global.h"
 #include "Object/GameObject.h"
 #include "Observer/ICollidable.h"
+#include <iostream>
 
 class Fireball : public GameObject, public ICollidable{
 private:
@@ -41,13 +42,16 @@ public:
 
     void setGroundLevel(float groundLevel) override {
         this->groundLevel = groundLevel;
+    
         if(position.y >= groundLevel - 16){
             position.y = groundLevel - 16;    
         }
     }
 
+
     void updateHitbox(); 
     void explode(); 
+
 
     void adaptCollision(ICollidable* other) override; 
     void adaptCollision(const Rectangle &rect); 

@@ -23,7 +23,12 @@ void Fireball::readRectAnimation(const std::string filePath){
 }
 
 void Fireball::explode(){
+    if(active == false){ 
+        return; 
+    }
+    
     delete activeAnimation; 
+
     active = false; 
     std::ifstream fin("assets/animation/fireball_explode.txt"); 
     activeAnimation = new AnimationManager(Images::textures["enemies_sprites.png"], 0, 0.2f);
@@ -38,6 +43,7 @@ void Fireball::explode(){
     }
 
     fin.close(); 
+
 }
 
 
@@ -68,21 +74,21 @@ void Fireball::adaptCollision(const Rectangle &rect) {
 
     position.x += normal.x * minPen;
     position.y += normal.y * minPen;
+    
 	
     velocity = reflect(velocity, normal);
 
-    if (std::fabs(normal.y) > 0.5f) {
+    if (std::fabs(normal.y) > 0) {
         velocity.y = -std::sqrt(2.0f * 980.0f * h_bounce);
-    } else {
+    }else
         velocity = reflect(velocity, normal);
-    }
+
     
     if (std::fabs(penX) < std::fabs(penY)) {
         explode();
-        
     }
 	else if (penY < 0) 
-        setGroundLevel(rect.y);
+        Fireball::setGroundLevel(rect.y);
 
 
     updateHitbox(); 
@@ -91,6 +97,7 @@ void Fireball::adaptCollision(const Rectangle &rect) {
 
 void Fireball::adaptCollision(ICollidable *other){
     adaptCollision(other->getHitbox()); 
+
 }
 
 void Fireball::update(float deltaTime){
@@ -101,7 +108,7 @@ void Fireball::update(float deltaTime){
 
         return; 
     }
-
+	
     activeAnimation -> update(deltaTime); 
 
     velocity.y += 980 * deltaTime;
@@ -109,8 +116,9 @@ void Fireball::update(float deltaTime){
     position.x += velocity.x * deltaTime;
     position.y += velocity.y * deltaTime;
 
-	if (position.y >= groundLevel - hitbox.height) {
+    if (position.y >= groundLevel - hitbox.height) {
         Rectangle groundRect = { -1e6f, groundLevel, 2e6f, 1.0f };
+
         adaptCollision(groundRect);
     }
 
@@ -119,16 +127,18 @@ void Fireball::update(float deltaTime){
 
 
 void Fireball::updateHitbox(){
+
     hitbox.x = position.x; 
     hitbox.y = position.y; 
-    hitbox.height = 16.0f; 
-    hitbox.width = 16.0f;
+    hitbox.height = 9.0f; 
+    hitbox.width = 8.0f;
+
 }
 
 
 void Fireball::render(){
     if(activeAnimation == nullptr)
         throw GameException("activeAnimation is null at Fireball::render"); 
-        
+
     activeAnimation -> render(position); 
 }

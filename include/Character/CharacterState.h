@@ -11,7 +11,6 @@ public:
 	virtual bool isInvincible() const {return false; }
 	virtual ~IShapeState() = default;
 };
-
 class SmallState: public IShapeState{
 public: 
 	std::string getShapeState() const override {return "SMALL";}
@@ -47,9 +46,11 @@ public:
         return wrapped->canShootFire();
     }	
 
+
 	virtual bool isInvincible() const{
 		return wrapped->isInvincible(); 
 	}
+
 
 	virtual ~ShapeStateDecorator() { delete wrapped; }
 };
@@ -58,7 +59,7 @@ public:
 class MorphDecorator : public ShapeStateDecorator{
 private: 
     float currentTime = 0.0f;
-    const float DURATION = 0.8f; 
+    const float DURATION = 0.7f; 
 public:
     MorphDecorator(IShapeState *base)
         : ShapeStateDecorator(base) {}
@@ -76,6 +77,7 @@ public:
         return "MORPHING(" + wrapped->getShapeState() + ")";
     }
 };
+
 
 class InvincibleDecorator : public ShapeStateDecorator{
 private:
@@ -95,6 +97,7 @@ public:
 		}
 		return nullptr;
     }
+
 
 	bool isInvincible() const override{
 		return true; 
@@ -178,4 +181,14 @@ class ShootState:public IMoveState{
 public: 
 	IMoveState *update(MoveContext *Data) override;
 	std::string getMoveState() const override {return "SHOOTING";}
+}; 
+
+class HitState:public IMoveState{
+public: 
+	std::string getMoveState() const override {return "HIT";}
+}; 
+
+
+class DeadState : public IMoveState{
+	std::string getMoveState() const override {return "DEAD";}
 }; 

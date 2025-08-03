@@ -77,6 +77,7 @@ private:
 public:
     StarPowerUp(Rectangle block) : PowerUp(PowerUpType::STAR, block) {
         velocity.x = 70.0f;
+
         readRectAnimation("assets/animation/star.txt", Images::textures["items.png"]);
         ani->setBlockRec(block);
     }

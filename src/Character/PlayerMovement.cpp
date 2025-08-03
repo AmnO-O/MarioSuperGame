@@ -56,7 +56,6 @@ void PlayerMovement::adaptCollision(ICollidable* other,
 }
 
 
-
 void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *&Mstate){
 	currentTime += deltaTime; 
 
@@ -68,6 +67,14 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 	bool pressingSpace = IsKeyDown(KEY_SPACE) || IsKeyDown(KEY_UP) || IsKeyDown(KEY_W);
 
 	bool pressingCrounch = IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN) || IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_DOWN); 
+
+	if(disableUpdate == true){
+		pressingLeft = pressingRight = isClickedSpace = pressingSpace = pressingCrounch = false; 
+		velocity.y += 980 * deltaTime;
+        position.y += velocity.y * deltaTime;
+
+		return ; 
+	}
 	
 	float forceX = 0;
 	float forceY = 980;
@@ -81,10 +88,12 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 		forceX += stats->runSpeed; 
 	}
 	else {
+
 		if (velocity.x < 0)
 			velocity.x = std::min(velocity.x + 150 * deltaTime, 0.0f);
 		else if (velocity.x > 0)
 			velocity.x = std::max(velocity.x - 150 * deltaTime, 0.0f);
+
 	}
 
 	if(isClickedSpace && Mstate->isJumping() == false){

@@ -151,16 +151,20 @@ void StarPowerUp::applyEffect(Player* &character) {
 	character->powerUp(this->type);
 }
 
-void StarPowerUp::adaptCollision(const Rectangle &other){
-    float penTop    = (hitbox.y + hitbox.height) - other.y;
-    float penBottom = (other.y + other.height) - hitbox.y;
-    float penLeft   = (hitbox.x + hitbox.width)  - other.x;
-    float penRight  = (other.x + other.width)    - hitbox.x;
+void StarPowerUp::adaptCollision(const Rectangle &rect){
+	float penLeft = (position.x + hitbox.width) - rect.x; 
+	float penRight = (rect.x + rect.width) - position.x;
+	float penX = penLeft < penRight ? -penLeft : penRight; 
+
+	float penTop = (position.y + hitbox.height) - rect.y;
+	float penBot = (rect.y + rect.height) - position.y;
+	float penY = penTop < penBot ? -penTop : penBot;
 
     float minPen = penTop;
     Vector2 normal = { 0, +1 };  
-    if (penBottom < minPen) {
-        minPen = penBottom;
+
+    if (penBot < minPen) {
+        minPen = penBot;
         normal = { 0, -1 };     
     }
     if (penLeft < minPen) {
@@ -174,16 +178,24 @@ void StarPowerUp::adaptCollision(const Rectangle &other){
 
     position.x += normal.x * minPen;
     position.y += normal.y * minPen;
+    
 	
-	hitbox = { position.x, position.y, hitbox.width, hitbox.height };
-
     velocity = reflect(velocity, normal);
 
-    if (std::fabs(normal.y) > 0.5f) {
+    if (std::fabs(normal.y) > 0) {
         velocity.y = -std::sqrt(2.0f * 980.0f * h_bounce);
-    } else {
+    }else
         velocity = reflect(velocity, normal);
-    }
+
+    
+    if (std::fabs(penX) < std::fabs(penY)) {
+
+	}
+	else if (penY < 0) 
+        setGroundLevel(rect.y);
+
+
+	hitbox = { position.x, position.y, hitbox.width, hitbox.height };
 }
 
 void StarPowerUp::update(float deltaTime){
