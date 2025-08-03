@@ -103,7 +103,7 @@ void Brick::DrawFragment() const {
 
 void Brick::adaptCollision(ICollidable* other) {
     if (stat == BlockStat::Normal) {
-        Character* Char = dynamic_cast<Character*>(other);
+        Player* Char = dynamic_cast<Player*>(other);
         if (Char) {
             Rectangle body = Char->getHitbox(); // Use character's hitbox
             Rectangle hitbox = getHitbox();

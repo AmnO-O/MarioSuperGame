@@ -25,7 +25,7 @@ void MyCamera2D::setZoom(float zoomLevel_) {
 	zoomLevel = zoomLevel_;
 }
 
-void MyCamera2D::update(Character* player){
+void MyCamera2D::update(Player* player){
     float screenW = (float)GetScreenWidth();
     float screenH = (float)GetScreenHeight();
 	

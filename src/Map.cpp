@@ -71,7 +71,7 @@ void Map::Unload() {
         delete blocks[i];
 }
 
-void Map::SetUp(Character* player) {
+void Map::SetUp(Player* player) {
     CollisionManager::getInstance().Clear();
     CollisionManager::getInstance().SetMainCharacter(player);
     for (int i = 0; i < blocks.size(); i++)

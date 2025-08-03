@@ -10,17 +10,17 @@ void PowerUp::update(float delta) {
 	if (hasSpawned) 
 		GameObject::update(delta);
 	else {
-		ani.Update(delta);
-		if (ani.ended()) {
+		ani->Update(delta);
+		if (ani->ended()) {
 			hasSpawned = true;
-			hitbox = ani.getHitBox(); 
+			hitbox = ani->getHitBox(); 
 			position = {hitbox.x, hitbox.y};
 		}
 	}
 }
 
 void PowerUp::adaptCollision(ICollidable *other) {
-	Character* player = dynamic_cast<Character*>(other);
+	Player* player = dynamic_cast<Player*>(other);
 	if (player) {
 		applyEffect(player);
 		active = false;
@@ -29,7 +29,10 @@ void PowerUp::adaptCollision(ICollidable *other) {
 	if (!hasSpawned || !dynamic_cast<Block*>(other) || dynamic_cast<Coin*>(other)) return;
 
 	Rectangle rect = other->getHitbox();
+	adaptCollision(rect); 
+}
 
+void PowerUp::adaptCollision(const Rectangle &rect){
 	float penLeft = (hitbox.x + hitbox.width) - rect.x;
 	float penRight = (rect.x + rect.width) - hitbox.x;
 	float penX = penLeft < penRight ? -penLeft : penRight;
@@ -51,30 +54,144 @@ void PowerUp::adaptCollision(ICollidable *other) {
 	hitbox.y = position.y; 
 }
 
-void PowerUp::render(){
-	if (!active) return; 
-	if (hasSpawned)
-		DrawTextureRec(tex, srcRect, position, WHITE);
-	else	
-		ani.Draw();
+
+void PowerUp::readRectAnimation(std::string filePath, Texture2D &sheet){
+	std::ifstream fin(filePath); 
+
+	if(!fin)
+		throw ResourceException("Can't load file " + filePath + " in PowerUp::readRect"); 
+
+	if(sheet.id == 0){
+		throw ResourceException("Can't load sheet in PowerUp::readRect"); 
+	}
+	
+	activeAnimation = new AnimationManager(sheet, 0, 0.2f); 
+
+	while(fin){
+		float x, y, w, h; fin >> x >> y >> w >> h; 
+		Rectangle rect = {x, y, w, h}; 
+		activeAnimation->addRect(rect); 
+		if (!ani)
+			ani = new AppearanceAnimation(sheet, {0, 0, 0, 0}, 0.8f, h, 1.0f);
+		ani->addRect(rect);
+	}
+
+	fin.close(); 
+	
 }
 
-void MushroomPowerUp::applyEffect(Character* &character) {
+void PowerUp::render(){
+	if (!active) return; 
+	if (hasSpawned) {
+		if(activeAnimation){
+			activeAnimation->render({hitbox.x, hitbox.y}); 
+			return; 
+		}
+	}
+	else	
+		ani->Draw();
+}
+
+void MushroomPowerUp::applyEffect(Player* &character) {
     if(active == false) return; 
 	active = false; 
 	character->powerUp(this->type); 
 }
 
-void FireFlowerPowerUp::applyEffect(Character* &character) {
+void MushroomPowerUp::update(float deltaTime){
+	PowerUp::update(deltaTime); 
+
+	if(position.y >= groundLevel - 16){
+		position.y = groundLevel - 16; 
+		velocity.y = 0; 
+	}
+	
+	hitbox = { position.x, position.y, hitbox.width, hitbox.height };
+}
+
+
+void NormalMushroomPowerUp::update(float deltaTime){
+	PowerUp::update(deltaTime); 
+
+	if(position.y >= groundLevel - 16){
+		position.y = groundLevel - 16; 
+		velocity.y = 0; 
+	}
+	hitbox = { position.x, position.y, hitbox.width, hitbox.height };
+}
+
+void NormalMushroomPowerUp::applyEffect(Player* &character){
+    if(active == false) return; 
+
+	active = false; 
+}
+
+void FireFlowerPowerUp::applyEffect(Player* &character) {
     if(active == false) return; 
 
 	active = false;
 	character->powerUp(this->type);
 }
 
-void StarPowerUp::applyEffect(Character* &character) {
+void FireFlowerPowerUp::update(float deltaTime) {
+	PowerUp::update(deltaTime); 
+
+	velocity.y = 0; 
+	position.y = groundLevel - 16.0f; 
+	hitbox = { position.x, position.y, hitbox.width, hitbox.height };
+}
+
+
+void StarPowerUp::applyEffect(Player* &character) {
     if(active == false) return; 
 
 	active = false;
 	character->powerUp(this->type);
+}
+
+void StarPowerUp::adaptCollision(const Rectangle &other){
+    float penTop    = (hitbox.y + hitbox.height) - other.y;
+    float penBottom = (other.y + other.height) - hitbox.y;
+    float penLeft   = (hitbox.x + hitbox.width)  - other.x;
+    float penRight  = (other.x + other.width)    - hitbox.x;
+
+    float minPen = penTop;
+    Vector2 normal = { 0, +1 };  
+    if (penBottom < minPen) {
+        minPen = penBottom;
+        normal = { 0, -1 };     
+    }
+    if (penLeft < minPen) {
+        minPen = penLeft;
+        normal = { +1, 0 };     
+    }
+    if (penRight < minPen) {
+        minPen = penRight;
+        normal = { -1, 0 };     
+    }
+
+    position.x += normal.x * minPen;
+    position.y += normal.y * minPen;
+	
+	hitbox = { position.x, position.y, hitbox.width, hitbox.height };
+
+    velocity = reflect(velocity, normal);
+
+    if (std::fabs(normal.y) > 0.5f) {
+        velocity.y = -std::sqrt(2.0f * 980.0f * h_bounce);
+    } else {
+        velocity = reflect(velocity, normal);
+    }
+}
+
+void StarPowerUp::update(float deltaTime){
+	PowerUp::update(deltaTime); 
+
+	if (position.y >= groundLevel) {
+        position.y = groundLevel;    
+		hitbox = { position.x, position.y, hitbox.width, hitbox.height };
+
+        Rectangle groundRect = { -1e6f, groundLevel, 2e6f, 1.0f };
+        adaptCollision(groundRect);
+    }
 }

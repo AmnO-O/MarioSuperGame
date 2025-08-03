@@ -21,7 +21,7 @@ private:
 
     std::vector<Map> maps = {};
     int currentMap = 0;
-    Character *character; 
+    Player *character; 
     MyCamera2D *myCam; 
     
 private:

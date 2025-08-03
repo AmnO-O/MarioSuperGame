@@ -14,7 +14,7 @@ Game::Game() {
     isRunning = true;
 	Images::loadAllTextures("assets/images/");
 
-    character = new Character(CharacterType::MARIO, {  100, 100 });
+    character = new Player(CharacterType::LUIGI, {  100, 100 });
     character->setGroundLevel(2.0f * GetScreenHeight());
 
     maps.push_back(Map("assets/maps/1-1/", Images::textures["mapobject.png"]));
@@ -54,7 +54,6 @@ void Game::update(float deltaTime) {
     maps[currentMap].Update(deltaTime);
 
     myCam -> update(character); 
-    
 }
 
 void Game::render() {

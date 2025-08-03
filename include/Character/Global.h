@@ -28,6 +28,7 @@ enum class CharacterType{
 }; 
 
 enum class PowerUpType {
+	NORMAL_MUSHROOM,
 	MUSHROOM,
 	FIRE_FLOWER,
 	STAR
