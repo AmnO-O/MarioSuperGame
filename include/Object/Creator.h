@@ -1,3 +1,6 @@
+#ifndef CREATOR_H
+#define CREATOR_H
+
 #include "Object/PowerUp.h"
 #include "Object/GameObject.h"
 #include "Blocks/Coin.h"
@@ -54,4 +57,4 @@ public:
     }
 };
 
-
+#endif

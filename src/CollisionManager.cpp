@@ -47,7 +47,7 @@ void CollisionManager::CheckCharObj() {
 
         if(obj != mainCharacter && obj -> IsActive()){
             Rectangle rect = obj->getHitbox();
-            rect.y -= 1.0f; 
+            rect.y -= 0.2f; 
             isOnGround |= CheckCollisionRecs(mainCharacter->getHitbox(), rect);
         }
     }

@@ -18,7 +18,6 @@ World1_1::World1_1(StateManager& stateManager, SoundManager& soundManager)
 
 
     character = new Player(CharacterType::MARIO, {  100, 100 });
-    character->setGroundLevel(2.0f * GetScreenHeight());
 
     maps.push_back(Map("assets/maps/1-1/", Images::textures["mapobject.png"]));
     maps[currentMap].SetUp(character);
@@ -51,14 +50,15 @@ void World1_1::update(float deltaTime)
 
     if (!popup_menu.isVisible)
     {
-        CollisionManager::getInstance().Register(character->shootFireball()); 
-        CollisionManager::getInstance().CheckAllCollisions();
-        maps[currentMap].Update(deltaTime);
+        if(deltaTime < 0.2) {
+            CollisionManager::getInstance().Register(character->shootFireball()); 
+            CollisionManager::getInstance().CheckAllCollisions();
+            maps[currentMap].Update(deltaTime);
 
-        if(deltaTime < 0.2) 
-                character->update(deltaTime); 
+            character->update(deltaTime); 
 
-        myCam -> update(character); 
+            myCam -> update(character); 
+        }
     }
         
     if (!popup_menu.isVisible)

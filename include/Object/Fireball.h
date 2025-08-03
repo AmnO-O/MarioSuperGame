@@ -34,7 +34,6 @@ public:
     }
 
     bool isActive() const {return (active || activeAnimation->isOnePeriodPassed() == false);}
-    bool IsActive() const override {return active;}
     
     Rectangle getHitbox() const override {
         return GameObject::getHitbox();
