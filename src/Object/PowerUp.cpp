@@ -201,8 +201,8 @@ void StarPowerUp::adaptCollision(const Rectangle &rect){
 void StarPowerUp::update(float deltaTime){
 	PowerUp::update(deltaTime); 
 
-	if (position.y >= groundLevel) {
-        position.y = groundLevel;    
+	if (position.y >= groundLevel - hitbox.height) {
+        position.y = groundLevel - hitbox.height;    
 		hitbox = { position.x, position.y, hitbox.width, hitbox.height };
 
         Rectangle groundRect = { -1e6f, groundLevel, 2e6f, 1.0f };

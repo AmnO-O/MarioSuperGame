@@ -55,8 +55,6 @@ void World1_1::update(float deltaTime)
             CollisionManager::getInstance().CheckAllCollisions();
             maps[currentMap].Update(deltaTime);
 
-            character->update(deltaTime); 
-
             myCam -> update(character); 
         }
     }
