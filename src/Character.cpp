@@ -8,6 +8,8 @@ void Player::setUp(){
 	Sstate = new SmallState();
 	Mstate = new StandState();
 	activeAnimation = nullptr;
+	shrinkOnHit = false; 
+	showPlayer = false; 
 }
 
 Player::Player(CharacterType t, Vector2 pos):
@@ -100,7 +102,8 @@ void Player::updateShape(){
 
 	if ((int)animationKey.size() >= 7 && animationKey.substr(0, 8) == "MORPHING") {
 		animationKey = "SMALL_MORPHING";
-		animations[animationKey]->setTimeSwitch(0.4f);
+		animations[animationKey]->setTimeSwitch(0.05f);
+		
 	}else if ((int)animationKey.size() >= 15 && animationKey.substr(0, 15) == "INVINCIBLE_FIRE"){
         animationKey.replace(0, 15, "INVINCIBLE_BIG");
 	}
@@ -315,7 +318,41 @@ void Player::cleanFireballs(){
     );
 }
 
+void Player::triggerDeath(){
+	IMoveState *tmp = Mstate; 
+	Mstate = new DeadState(); 
+	delete tmp; 
+	tmp = nullptr; 
+
+	movement->setDisableUpdate(); 
+	movement->setVelocityX(0.0f); 
+	movement->setVelocityY(6000.0f); 
+}
+
+
+void Player::adapt_collision_with_enimies(){
+	if(isInvincible()) return; 
+
+	if(isBig() == false){
+		triggerDeath(); 
+		return; 
+	}
+
+	shrinkOnHit = true; 
+
+	IMoveState *tmp = Mstate; 
+	Mstate = new HitState(); 
+	delete tmp; 
+	tmp = nullptr; 
+	showPlayer = false; 
+}
+
 void Player::adaptCollision(ICollidable* other){
+	if(0 && shrinkOnHit == false){
+		adapt_collision_with_enimies(); 
+		return; 
+	}
+
 	movement->adaptCollision(other, Mstate, this);
 	updateShape();
 	updateHitbox();
@@ -363,6 +400,7 @@ void Player::setPosition(const Vector2 &position){
 	movement->setPosition(position);
 	adaptChangePosition();
 }
+
 
 void Player::animationTransform(){
 
@@ -421,15 +459,22 @@ void Player::update(float deltaTime){
 		}
 	}
 
-	movement->update(deltaTime, Sstate, Mstate);
-	Mstate->update(deltaTime);
-
-	// shootFireball();
-
 	cleanFireballs();
 
 	for (auto& fb : fireballs)
 		fb->update(deltaTime);
+
+	if(shrinkOnHit){
+		if(activeAnimation)
+			activeAnimation->update(deltaTime);
+		
+		adaptChangePosition();
+		return; 
+	}
+
+	movement->update(deltaTime, Sstate, Mstate);
+	Mstate->update(deltaTime);
+
 
 	if(activeAnimation)
 		activeAnimation->update(deltaTime);
@@ -445,8 +490,16 @@ void Player::update(float deltaTime){
 }
 
 void Player::render(){
-	if(activeAnimation)
-		activeAnimation->render(movement->getPosition(), movement->isFacingRight() == false);
+
+	if(activeAnimation){
+		if(shrinkOnHit){
+			if(showPlayer){
+				activeAnimation->render(movement->getPosition(), movement->isFacingRight() == false);
+				showPlayer ^= 1; 
+			}
+		}
+		else activeAnimation->render(movement->getPosition(), movement->isFacingRight() == false);
+	}
 
 	for (auto& fireball : fireballs)
 		fireball->render();

@@ -66,7 +66,6 @@ public:
     virtual ~Character() {}; 
 }; 
 
-
 class Player : public ICollidable, public Character{
 private: 
     PlayerMovement* movement; 
@@ -78,6 +77,9 @@ private:
     std::vector<Fireball*> fireballs;
 	AnimationManager *activeAnimation;
 
+    bool shrinkOnHit = false; 
+    bool showPlayer = false; 
+
     void updateHitbox(); 
     void readRectAnimation(const std::string filePath, Texture2D &sheet); 
     std::string getShape_Action() const; 
@@ -87,32 +89,32 @@ private:
     void setUp(); 
     void adaptChangePosition(); 
     void animationTransform(); 
-
     void switchPlayer(); 
+    void adapt_collision_with_enimies(); 
 public: 
     Player(CharacterType type, Vector2 pos); 
     Player(CharacterType type, float cordX, float groundLevel); 
 
     Vector2 getPosition() const {return movement->getPosition(); }
     Rectangle getHitbox() const override {return hitbox; }
-    
+
     bool isBig() const { return Sstate->canBreakBrick();}
-
     bool isInvincible() const {return Sstate->isInvincible();}
-
+    bool isDeath() const {
+        Vector2 position = movement->getPosition(); 
+        return position.y >= 1000; 
+    }
 
     void setPosition(const Vector2 &pos); 
     void setOnGround(); 
-
+    void triggerDeath(); 
 
     Fireball* shootFireball();
-
-
     void adaptCollision(ICollidable* other) override;
     void powerUp(PowerUpType type); 
     void setGroundLevel(float groundLevel); 
     void update(float deltaTime); 
     void render(); 
-    
+
     ~Player(); 
 }; 

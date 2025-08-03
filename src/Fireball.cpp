@@ -23,6 +23,10 @@ void Fireball::readRectAnimation(const std::string filePath){
 }
 
 void Fireball::explode(){
+    if(active == false){ 
+        return; 
+    }
+    
     delete activeAnimation; 
 
     active = false; 
