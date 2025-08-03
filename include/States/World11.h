@@ -2,11 +2,11 @@
 #define WORLD_11_H
 
 #include "../Character/Character.h"
-#include "../Character/MyCamera2D.h"
+#include "../MyCamera2D.h"
 #include <vector>
 #include "../Resources/Map.h"
 #include "../Observer/Observer.h"
-#include "../Character/IPowerUpCreator.h"
+#include "../Object/Creator.h"
 #include "../Resources/StateManager.h"
 #include "../Resources/SoundManager.h"
 #include "../Widgets/Button.h"
@@ -44,14 +44,10 @@ class World1_1: public GameState
 
     private:
 
-        CollisionManager cm;
         std::vector<Map> maps = {};
         int currentMap = 0;
         Player *character; 
         MyCamera2D *myCam; 
-
-        IPowerUpCreator *powerUpCreator; 
-        PowerUp *item; 
         
         ImageButton settings_button;
         Texture2D settings_button_state;

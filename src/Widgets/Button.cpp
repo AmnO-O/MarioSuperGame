@@ -57,5 +57,5 @@ void ImageButton::update(float deltaTime)
 void ImageButton::render()
 {
     Vector2 pos = GetMousePosition();
-    DrawTexture(image, frame.x, frame.y, WHITE);
+    DrawTexture(image, (int)frame.x, (int)frame.y, WHITE);
 }

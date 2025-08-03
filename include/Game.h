@@ -1,12 +1,6 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "Character/Character.h"
-#include "MyCamera2D.h"
-#include <vector>
-#include "Map.h"
-#include "Observer/Observer.h"
-#include "Object/Creator.h"
 #include <memory>
 #include "./Resources/StateManager.h"
 #include "./Resources/SoundManager.h"
