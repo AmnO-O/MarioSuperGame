@@ -11,7 +11,7 @@ private:
     int num;
     
 public:
-    Floor(Texture2D tex, std::istream &is);
+    Floor(Texture2D &tex, std::istream &is);
     Rectangle getHitbox() const override;
     void Draw(DrawStat ds) const override;
     void adaptCollision(ICollidable* other) override {}

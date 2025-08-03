@@ -18,17 +18,12 @@ World1_1::World1_1(StateManager& stateManager, SoundManager& soundManager)
 
 
     character = new Player(CharacterType::MARIO, {  100, 100 });
-    character->setGroundLevel(2.0f * GetScreenHeight());
 
     maps.push_back(Map("assets/maps/1-1/", Images::textures["mapobject.png"]));
-    maps[currentMap].SetUp(cm, character);
+    maps[currentMap].SetUp(character);
 
     myCam = new MyCamera2D(1.0f * GetScreenWidth(), 1.0f * GetScreenHeight()); 
     myCam->setMapSize(maps[currentMap].getSize());
-    
-    powerUpCreator = new StarCreator(); 
-    item = powerUpCreator->create({250, 100}); 
-    item -> setGroundLevel(203);
 }
 
 World1_1::~World1_1() 
@@ -41,8 +36,6 @@ World1_1::~World1_1()
 
     delete character; 
     delete myCam; 
-    delete item; 
-    delete powerUpCreator; 
 }
 
 void World1_1::processInput()
@@ -57,18 +50,12 @@ void World1_1::update(float deltaTime)
 
     if (!popup_menu.isVisible)
     {
-        cm.addFireball(character->shootFireball()); 
-        cm.CheckAllCollisions();
-        maps[currentMap].Update(deltaTime);
+        if(deltaTime < 0.2) {
+            CollisionManager::getInstance().Register(character->shootFireball()); 
+            CollisionManager::getInstance().CheckAllCollisions();
+            maps[currentMap].Update(deltaTime);
 
-        if(deltaTime < 0.2) 
-                character->update(deltaTime); 
-
-        myCam -> update(character); 
-        item->update(deltaTime);
-
-        if(CheckCollisionRecs(character->getHitbox(), item->getHitbox())) {
-                item->applyEffect(character); 
+            myCam -> update(character); 
         }
     }
         
@@ -87,12 +74,9 @@ void World1_1::render()
 
     /// camera draw here
     BeginMode2D(camera); 
-    maps[currentMap].Draw();
-    if(character)
-        character->render(); 
-
-    if(item)
-        item->render(); 
+        maps[currentMap].Draw();
+        if(character)
+            character->render(); 
     EndMode2D(); 
 
     settings_button.render();

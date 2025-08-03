@@ -3,8 +3,8 @@
 #include <memory>
 #include <string>
 #include "Global.h"
-#include "PowerUp.h"
-#include "../Observer/ICollidable.h"
+#include "Object/PowerUp.h"
+#include "Observer/ICollidable.h"
 
 class IMoveState; 
 class IShapeState; 

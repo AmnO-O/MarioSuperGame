@@ -1,12 +1,37 @@
-#include "Character/PowerUp.h"
+#include "Object/PowerUp.h"
 #include "Character/Character.h"
+#include "Blocks/Coin.h"
+#include "Blocks/Block.h"
 #include <iostream>
 #include <cmath>
 
+void PowerUp::update(float delta) {
+	if (!active) return;
+	if (hasSpawned) {
+		GameObject::update(delta);
+		activeAnimation->update(delta);
+	}
+	else {
+		ani->Update(delta);
+		if (ani->ended()) {
+			hasSpawned = true;
+			hitbox = ani->getHitBox(); 
+			position = {hitbox.x, hitbox.y};
+		}
+	}
+}
 
-void PowerUp::adaptCollision(ICollidable* other){
-	Rectangle hitBox = other->getHitbox(); 
-	adaptCollision(hitBox); 
+void PowerUp::adaptCollision(ICollidable *other) {
+	Player* player = dynamic_cast<Player*>(other);
+	if (player) {
+		applyEffect(player);
+		active = false;
+		return;
+	}
+	if (!hasSpawned || !dynamic_cast<Block*>(other) || dynamic_cast<Coin*>(other)) return;
+
+	Rectangle rect = other->getHitbox();
+	adaptCollision(rect); 
 }
 
 void PowerUp::adaptCollision(const Rectangle &rect){
@@ -24,7 +49,7 @@ void PowerUp::adaptCollision(const Rectangle &rect){
 	}
 	else {
 		position.y += penY;
-		velocity.y = 0;
+		velocity.y = 0.0f;
 	}
 
 	hitbox.x = position.x; 
@@ -42,12 +67,15 @@ void PowerUp::readRectAnimation(std::string filePath, Texture2D &sheet){
 		throw ResourceException("Can't load sheet in PowerUp::readRect"); 
 	}
 	
-	activeAnimation = new AnimationManager(sheet, 0); 
+	activeAnimation = new AnimationManager(sheet, 0, 0.2f); 
 
 	while(fin){
 		float x, y, w, h; fin >> x >> y >> w >> h; 
 		Rectangle rect = {x, y, w, h}; 
 		activeAnimation->addRect(rect); 
+		if (!ani)
+			ani = new AppearanceAnimation(sheet, {0, 0, 0, 0}, 0.8f, h, 0.2f);
+		ani->addRect(rect);
 	}
 
 	fin.close(); 
@@ -56,24 +84,14 @@ void PowerUp::readRectAnimation(std::string filePath, Texture2D &sheet){
 
 void PowerUp::render(){
 	if (!active) return; 
-
-	if(activeAnimation){
-		activeAnimation->render({hitbox.x, hitbox.y}); 
-		return; 
+	if (hasSpawned) {
+		if(activeAnimation){
+			activeAnimation->render({hitbox.x, hitbox.y}); 
+			return; 
+		}
 	}
-
-	Texture2D power; 
-
-	switch (type) {
-		case PowerUpType::MUSHROOM: power = Images::textures["mushroom.png"];  break;
-		case PowerUpType::NORMAL_MUSHROOM: power = Images::textures["1upMushroom.png"]; break;
-	}
-
-	if(power.id == 0){
-		throw ResourceException("Can't load texture in powerup::render()\n");
-	}
-	
-	DrawTexture(power, (int) hitbox.x, (int) hitbox.y, WHITE);
+	else	
+		ani->Draw();
 }
 
 void MushroomPowerUp::applyEffect(Player* &character) {
@@ -183,8 +201,8 @@ void StarPowerUp::adaptCollision(const Rectangle &rect){
 void StarPowerUp::update(float deltaTime){
 	PowerUp::update(deltaTime); 
 
-	if (position.y >= groundLevel) {
-        position.y = groundLevel;    
+	if (position.y >= groundLevel - hitbox.height) {
+        position.y = groundLevel - hitbox.height;    
 		hitbox = { position.x, position.y, hitbox.width, hitbox.height };
 
         Rectangle groundRect = { -1e6f, groundLevel, 2e6f, 1.0f };

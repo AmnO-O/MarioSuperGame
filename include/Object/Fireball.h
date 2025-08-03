@@ -1,11 +1,11 @@
 #pragma once
 #include "raylib.h"
-#include "Animation.h"
+#include "Animation/Animation.h"
 #include <string>
-#include "Global.h"
-#include "GameObject.h"
+#include "Character/Global.h"
+#include "Object/GameObject.h"
+#include "Observer/ICollidable.h"
 #include <iostream>
-#include "../Observer/ICollidable.h"
 
 class Fireball : public GameObject, public ICollidable{
 private:
@@ -34,7 +34,6 @@ public:
     }
 
     bool isActive() const {return (active || activeAnimation->isOnePeriodPassed() == false);}
-    bool IsActive() const override {return active;}
     
     Rectangle getHitbox() const override {
         return GameObject::getHitbox();

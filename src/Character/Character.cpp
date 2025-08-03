@@ -1,4 +1,5 @@
 #include "Character/Character.h"
+#include "Blocks/Coin.h"
 #include <iostream>
 #include <cassert>
 #include <algorithm>
@@ -152,7 +153,7 @@ void Player::readRectAnimation(const std::string filename, Texture2D &sheet) {
 				fin >> action >> numAnimation;
 
 				std::string key = shape + action;
-				animations[key] = std::make_unique<AnimationManager>(sheet, 0);
+				animations[key] = std::make_unique<AnimationManager>(sheet, 0, 0.2f);
 
 				for (int j = 0; j < numAnimation; j++) {
 					float x, y, width, height;
@@ -171,7 +172,7 @@ void Player::readRectAnimation(const std::string filename, Texture2D &sheet) {
 				fin >> action >> numAnimation;
 
 				std::string key = shape + action;
-				animations[key] = std::make_unique<AnimationManager>(sheet, 0);
+				animations[key] = std::make_unique<AnimationManager>(sheet, 0, 0.2f);
 
 				for (int j = 0; j < numAnimation; j++) {
 					float x, y, width, height;
@@ -192,8 +193,7 @@ void Player::readRectAnimation(const std::string filename, Texture2D &sheet) {
 				fin >> action >> numAnimation;
 
 				std::string key = shape + action;
-
-				animations[key] = std::make_unique<AnimationManager>(sheet, 0);
+				animations[key] = std::make_unique<AnimationManager>(sheet, 0, 0.2f);
 
 				for (int j = 0; j < numAnimation; j++) {
 					float x, y, width, height;
@@ -212,7 +212,7 @@ void Player::readRectAnimation(const std::string filename, Texture2D &sheet) {
 				fin >> action >> numAnimation;
 
 				std::string key = shape + action;
-				animations[key] = std::make_unique<AnimationManager>(sheet, 0);
+				animations[key] = std::make_unique<AnimationManager>(sheet, 0, 0.2f);
 
 				for (int j = 0; j < numAnimation; j++) {
 					float x, y, width, height;
@@ -232,7 +232,7 @@ void Player::readRectAnimation(const std::string filename, Texture2D &sheet) {
 				fin >> action >> numAnimation;
 
 				std::string key = shape + action;
-				animations[key] = std::make_unique<AnimationManager>(sheet, 0);
+				animations[key] = std::make_unique<AnimationManager>(sheet, 0, 0.2f);
 
 				for (int j = 0; j < numAnimation; j++) {
 					float x, y, width, height;
@@ -303,7 +303,7 @@ Fireball* Player::shootFireball(){
 
 
 		fireball = new Fireball(startPos, movement->isFacingRight()); 
-		fireball->setGroundLevel(2 * GetScreenHeight()); 
+		fireball->setGroundLevel(2.0f * GetScreenHeight()); 
         fireballs.emplace_back(fireball);
     }
 
@@ -348,14 +348,15 @@ void Player::adapt_collision_with_enimies(){
 }
 
 void Player::adaptCollision(ICollidable* other){
+	if (dynamic_cast<Coin*>(other) || dynamic_cast<PowerUp*>(other))
+		return;
 	if(0 && shrinkOnHit == false){
 		adapt_collision_with_enimies(); 
 		return; 
 	}
-
-	movement->adaptCollision(other, Mstate, this);
-	updateShape();
-	updateHitbox();
+	movement->adaptCollision(other, Mstate, this); 
+	updateShape(); 
+	updateHitbox(); 
 }
 
 void Player::setOnGround(){

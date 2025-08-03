@@ -13,31 +13,23 @@ Game::Game() {
     InitWindow(1600, 900, "Mario Game");
     SetTargetFPS(60);
     isRunning = true;
-
-
     soundManager.loadMenuSound();
-
     stateManager.pushState(std::make_unique<MainMenu>(stateManager, soundManager));
- 
-
 }
 
 Game::~Game() {
     soundManager.unloadMenuSound();
-    
     while (stateManager.getCurrentState()) {
         stateManager.popState();
     }
     CloseWindow();
-
 }
 
 void Game::run() {
     soundManager.playMenuSound();
-    
+
     while (!WindowShouldClose() && isRunning) {
         float deltaTime = GetFrameTime();
-
         processInput();
         update(deltaTime);
         render();
@@ -51,20 +43,13 @@ void Game::processInput() {
 }
 
 void Game::update(float deltaTime) {
-
     soundManager.updateMenuSound();
     stateManager.update(deltaTime);
-
 }
 
 void Game::render() {
-     
     BeginDrawing();
     ClearBackground(RAYWHITE);
-
-
     stateManager.render();
-
-    
     EndDrawing();
 }

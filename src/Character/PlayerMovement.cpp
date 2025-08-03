@@ -39,7 +39,7 @@ void PlayerMovement::adaptCollision(ICollidable* other,
 	}
 	else {
 		position.y += penY; 
-		velocity.y = 0; 
+		velocity.y = 0.0f; 
 		if (penY < 0) {
             if (Mstate->isJumping()) {
                 delete Mstate;
@@ -129,10 +129,6 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 
 	position.x += velocity.x * deltaTime;
 	position.y += velocity.y * deltaTime;
-
-	if (position.x < 0.0f)
-		position.x = 0.0f;
-
 
 	Vector2 force = {forceX, forceY}; 
 	MoveContext currentContext = {position, velocity, force, shape, facingRight, groundLevel, currentTime, pressingCrounch, Sstate->canBreakBrick()}; 

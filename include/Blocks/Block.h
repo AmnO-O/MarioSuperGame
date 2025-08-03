@@ -21,11 +21,11 @@ enum class DrawStat {
 class Block : public ICollidable {
 protected:
     DrawStat drawStat = DrawStat::First;
-    Texture2D tex;
+    Texture2D &tex;
     Vector2 pos;
 
 public:
-    Block(Texture2D tex) : tex(tex) {}
+    Block(Texture2D &tex) : tex(tex) {}
     virtual void Update(float delta) = 0;
     virtual void Draw(DrawStat ds) const = 0;
     virtual ~Block() {}

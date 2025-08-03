@@ -1,13 +1,13 @@
 #pragma once 
 #include <fstream>
 #include "raylib.h"
-#include "Animation.h"
+#include "Animation/Animation.h"
 #include "Global.h"
 #include "../Exceptions.h"
 #include "CharacterState.h"
 #include "PlayerMovement.h"
-#include "Fireball.h"
-#include "../Observer/ICollidable.h"
+#include "Object/Fireball.h"
+#include "Observer/ICollidable.h"
 
 
 class Character{

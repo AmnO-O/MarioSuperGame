@@ -1,18 +1,21 @@
 #pragma once
 #include "raylib.h"
+#include "Animation/Appearance.h"
 
 class GameObject{
 protected: 
     Vector2 position; 
     Vector2 velocity; 
-    Rectangle hitbox; 
+    Rectangle hitbox;
     float groundLevel; 
     bool active; 
 public: 
-    GameObject(Vector2 pos, Vector2 vel): position(pos), velocity(vel), groundLevel(0.0f), active(true){} 
+    GameObject(): position({0, 0}), velocity({0, 0}), groundLevel(0.0f), active(true) {} 
+    GameObject(Vector2 pos, Vector2 vel): position(pos), velocity(vel), groundLevel(0.0f), active(true) {} 
 
-    Rectangle getHitbox() const {return hitbox;}
+    virtual Rectangle getHitbox() const { return hitbox; }
     Vector2 getPosition() const {return position;}
+    virtual bool IsActive() const { return active; } 
 
     virtual void setGroundLevel(float groundLevel) {this->groundLevel = groundLevel;}
 

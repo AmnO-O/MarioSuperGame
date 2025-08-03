@@ -1,5 +1,5 @@
 #pragma once
-#include "Character/Animation.h"
+#include "Animation/Animation.h"
 #include <cassert>
 #include "Exceptions.h"
 
@@ -41,6 +41,18 @@ void AnimationManager::render(Vector2 position, bool flip){
 
 	if (flip) 
 		frameRec.width *= -1;
+
+	DrawTextureRec(sheet, frameRec, position, WHITE);
+}
+
+void AnimationManager::Draw(Vector2 position) const {
+    if(currentIndex < 0 || currentIndex >= frames.size()){
+        throw GameException("Current index out of bounds in SpriteAnimated::render"); 
+    }
+
+	Rectangle frameRec = frames[currentIndex];
+
+    assert(sheet.id != 0); 
 
 	DrawTextureRec(sheet, frameRec, position, WHITE);
 }
