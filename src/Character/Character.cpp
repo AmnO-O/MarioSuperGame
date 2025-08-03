@@ -292,7 +292,7 @@ void Character::cleanFireballs(){
 }
 
 void Character::adaptCollision(ICollidable* other){
-	if (dynamic_cast<Coin*>(other))
+	if (dynamic_cast<Coin*>(other) || dynamic_cast<PowerUp*>(other))
 		return;
 	movement->adaptCollision(other, Mstate, this); 
 	updateShape(); 

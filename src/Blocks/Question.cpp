@@ -100,7 +100,11 @@ void Question::adaptCollision(ICollidable* other) {
 
 void Question::Break() {
     CollisionManager::getInstance().NotifyAbove(this);
-    if (creator)
+    if (creator) {
         object = creator->create();
+        ICollidable* item = dynamic_cast<ICollidable*>(object);
+        if (item)
+            CollisionManager::getInstance().Register(item);
+    }
     stat = BlockStat::Bouncing;
 }

@@ -16,13 +16,10 @@ protected:
 public: 
     PowerUp(PowerUpType t, Texture2D &tex, Rectangle src, Rectangle block): srcRect(src), type(t), GameObject(), tex(tex), ani(tex, block, 0.8f, src.height, 1.0f) {
         ani.addRect(src);
-        Vector2 pos = ani.getPosition();
-        hitbox = {pos.x, pos.y, srcRect.width, srcRect.height}; 
-        position = {pos.x, pos.y - srcRect.height};
-        setGroundLevel(block.y);
+		setGroundLevel(block.y);
     }
 
-    Rectangle getHitbox() const override { return hitbox; }
+    Rectangle getHitbox() const override { return hasSpawned ? hitbox : ani.getHitBox(); }
     bool IsActive() const override { return active; } 
 
     virtual void applyEffect(Character* &character) = 0;
@@ -34,7 +31,7 @@ public:
 
 class MushroomPowerUp : public PowerUp {
 public: 
-    MushroomPowerUp(Texture2D &tex, Rectangle src, Rectangle block) : PowerUp(PowerUpType::MUSHROOM, tex, src, block) {velocity.x = -30.0f;};
+    MushroomPowerUp(Texture2D &tex, Rectangle src, Rectangle block) : PowerUp(PowerUpType::MUSHROOM, tex, src, block) {velocity.x = +30.0f;};
     void applyEffect(Character* &character) override; 
 };
 
@@ -48,7 +45,7 @@ public:
 
 class StarPowerUp :public PowerUp {
 public: 
-    StarPowerUp(Texture2D &tex, Rectangle src, Rectangle block) : PowerUp(PowerUpType::STAR, tex, src, block) {velocity.x = -50.0f;}; 
+    StarPowerUp(Texture2D &tex, Rectangle src, Rectangle block) : PowerUp(PowerUpType::STAR, tex, src, block) {velocity.x = +50.0f;}; 
     void applyEffect(Character* &character) override; 
 };
 

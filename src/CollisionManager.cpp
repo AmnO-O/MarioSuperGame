@@ -1,4 +1,6 @@
 #include "Observer/Observer.h"
+#include "Blocks/Block.h"
+#include "Blocks/Coin.h"
 
 float CollisionManager::overlap(Rectangle charBox, Rectangle objBox) {
     // Compute intersection rectangle
@@ -25,9 +27,7 @@ void CollisionManager::RemoveInactive() {
     );
 }
 
-void CollisionManager::CheckAllCollisions() {
-    RemoveInactive();
-
+void CollisionManager::CheckCharObj() {
     if (!mainCharacter) return;
     Character *player = dynamic_cast<Character*>(mainCharacter);
     bool isOnGround = false; 
@@ -41,13 +41,13 @@ void CollisionManager::CheckAllCollisions() {
             float curOverlap = overlap(mainCharacter->getHitbox(), obj->getHitbox());
             if (curOverlap > maxOverlap) {
                 mostOverlapObj = obj;
-                maxOverlap = curOverlap;
+                maxOverlap = curOverlap;    
             }
         }
 
         if(obj != mainCharacter && obj -> IsActive()){
             Rectangle rect = obj->getHitbox();
-            rect.y -= 0.2f; 
+            rect.y -= 1.0f; 
             isOnGround |= CheckCollisionRecs(mainCharacter->getHitbox(), rect);
         }
     }
@@ -60,7 +60,9 @@ void CollisionManager::CheckAllCollisions() {
     if(isOnGround == false){
         player->setGroundLevel(2.0f * GetScreenHeight());
     }
+}
 
+void CollisionManager::CheckObjObj() {
     // Check object vs object
     for (int i = 0; i < collidables.size(); ++i) {
         for (int j = i + 1; j < collidables.size(); ++j) {
@@ -71,7 +73,25 @@ void CollisionManager::CheckAllCollisions() {
                 b->adaptCollision(a);
             }
         }
+        GameObject* p = dynamic_cast<GameObject*>(collidables[i]);
+        if (p) {
+            bool isOnGround = false;
+            for (auto* obj : collidables) 
+                if (obj != collidables[i] && dynamic_cast<Block*>(obj) && !dynamic_cast<Coin*>(obj)) {
+                    Rectangle rect = obj->getHitbox();
+                    rect.y -= 1.0f; 
+                    isOnGround |= CheckCollisionRecs(p->getHitbox(), rect);
+                }
+            if (!isOnGround)
+                p->setGroundLevel(2.0f * GetScreenHeight());
+        }
     }
+}
+
+void CollisionManager::CheckAllCollisions() {
+    RemoveInactive();
+    CheckCharObj();
+    CheckObjObj();
 }
 
 void CollisionManager::NotifyAbove(ICollidable* base) {

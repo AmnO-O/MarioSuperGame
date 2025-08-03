@@ -1,5 +1,7 @@
 #include "Object/PowerUp.h"
 #include "Character/Character.h"
+#include "Blocks/Coin.h"
+#include "Blocks/Block.h"
 #include <iostream>
 #include <cmath>
 
@@ -9,8 +11,11 @@ void PowerUp::update(float delta) {
 		GameObject::update(delta);
 	else {
 		ani.Update(delta);
-		if (ani.ended())
+		if (ani.ended()) {
 			hasSpawned = true;
+			hitbox = ani.getHitBox(); 
+			position = {hitbox.x, hitbox.y};
+		}
 	}
 }
 
@@ -21,6 +26,7 @@ void PowerUp::adaptCollision(ICollidable *other) {
 		active = false;
 		return;
 	}
+	if (!hasSpawned || !dynamic_cast<Block*>(other) || dynamic_cast<Coin*>(other)) return;
 
 	Rectangle rect = other->getHitbox();
 
@@ -38,7 +44,7 @@ void PowerUp::adaptCollision(ICollidable *other) {
 	}
 	else {
 		position.y += penY;
-		velocity.y = 0;
+		velocity.y = 0.0f;
 	}
 
 	hitbox.x = position.x; 

@@ -12,6 +12,8 @@ private:
     ICollidable* mainCharacter = nullptr; // e.g., Mario
     float overlap(Rectangle charBox, Rectangle objBox);
     void RemoveInactive();
+    void CheckCharObj();
+    void CheckObjObj();
     CollisionManager() = default;
 
 public:
