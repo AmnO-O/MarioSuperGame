@@ -86,7 +86,7 @@ void PowerUp::render(){
 	if (!active) return; 
 	if (hasSpawned) {
 		if(activeAnimation){
-			activeAnimation->render({hitbox.x, hitbox.y}); 
+			activeAnimation->render({hitbox.x, hitbox.y}, (velocity.x < 0)); 
 			return; 
 		}
 	}

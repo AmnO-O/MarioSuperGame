@@ -29,7 +29,14 @@ public:
         return hasSpawned ? hitbox : ani->getHitBox();
     }
 
-    void isHitBelow(ICollidable* block) override {}
+    void isHitBelow(ICollidable* block) override {
+        Rectangle rect = block->getHitbox(); 
+
+        hitbox.y = rect.y - hitbox.width; 
+        velocity.y = -200.0f; 
+        velocity.x = velocity.x * (GetRandomValue(0, 1) == 0 ? 1 : -1);
+    }
+
     void readRectAnimation(const std::string filePath, Texture2D &sheet);
     void adaptCollision(ICollidable* other) override;
     virtual bool isSpecial() const {return true;}

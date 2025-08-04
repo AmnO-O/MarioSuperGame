@@ -103,7 +103,7 @@ void Player::updateShape(){
 
 	if ((int)animationKey.size() >= 7 && animationKey.substr(0, 8) == "MORPHING") {
 		animationKey = "SMALL_MORPHING";
-		animations[animationKey]->setTimeSwitch(0.05f);
+		animations[animationKey]->setTimeSwitch(0.1f);
 		
 	}else if ((int)animationKey.size() >= 15 && animationKey.substr(0, 15) == "INVINCIBLE_FIRE"){
         animationKey.replace(0, 15, "INVINCIBLE_BIG");
