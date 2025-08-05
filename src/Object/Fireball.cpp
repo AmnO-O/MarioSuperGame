@@ -49,6 +49,10 @@ void Fireball::explode(){
 
 
 void Fireball::adaptCollision(const Rectangle &rect) {
+    if(active == false){
+        return; 
+    }
+    
 	float penLeft = (position.x + hitbox.width) - rect.x; 
 	float penRight = (rect.x + rect.width) - position.x;
 	float penX = penLeft < penRight ? -penLeft : penRight; 
@@ -72,6 +76,13 @@ void Fireball::adaptCollision(const Rectangle &rect) {
         minPen = penRight;
         normal = { -1, 0 };     
     }
+
+    if (std::fabs(penX) < std::fabs(penY)) {
+        explode();
+    }
+	else if (penY < 0) 
+        Fireball::setGroundLevel(rect.y);
+
 
     position.x += normal.x * minPen;
     position.y += normal.y * minPen;

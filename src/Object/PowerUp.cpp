@@ -50,6 +50,9 @@ void PowerUp::adaptCollision(const Rectangle &rect){
 	else {
 		position.y += penY;
 		velocity.y = 0.0f;
+		if(penY < 0){
+			setGroundLevel(rect.y); 
+		}
 	}
 
 	hitbox.x = position.x; 

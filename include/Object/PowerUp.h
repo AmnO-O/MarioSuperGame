@@ -30,12 +30,23 @@ public:
     }
 
     void isHitBelow(ICollidable* block) override {
-        Rectangle rect = block->getHitbox(); 
+        Rectangle rect = block->getHitbox();
 
-        hitbox.y = rect.y - hitbox.width; 
-        velocity.y = -200.0f; 
-        velocity.x = velocity.x * (GetRandomValue(0, 1) == 0 ? 1 : -1);
+        hitbox.y = rect.y - hitbox.height;
+
+        velocity.y = -200.0f;
+
+        float playerCenterX = hitbox.x + hitbox.width  * 0.5f;
+        float  blockCenterX = rect.x    + rect.width * 0.5f;
+
+
+        if (playerCenterX > blockCenterX) {
+            velocity.x = fabs(velocity.x);
+        } else {
+            velocity.x = - fabs(velocity.x); 
+        }
     }
+
 
     void readRectAnimation(const std::string filePath, Texture2D &sheet);
     void adaptCollision(ICollidable* other) override;
