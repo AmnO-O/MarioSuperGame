@@ -64,27 +64,35 @@ void CollisionManager::CheckCharObj() {
 
 void CollisionManager::CheckObjObj() {
     // Check object vs object
-    for (int i = 0; i < collidables.size(); ++i) {
-        for (int j = i + 1; j < collidables.size(); ++j) {
+    for (int i = (int)collidables.size() - 1; i >= 0; i--) {
+        ICollidable* mostOverlapObj = nullptr;
+        float maxOverlap = 0.0f;
+        GameObject* p = dynamic_cast<GameObject*>(collidables[i]);
+        bool isOnGround = false;
+
+        for (auto* b : collidables) {
             auto* a = collidables[i];
-            auto* b = collidables[j];
-            if (a->IsActive() && b->IsActive() && CheckCollisionRecs(a->getHitbox(), b->getHitbox())) {
-                a->adaptCollision(b);
-                b->adaptCollision(a);
+            if (a != b && a->IsActive() && b->IsActive() && CheckCollisionRecs(a->getHitbox(), b->getHitbox())) {
+                float curOverlap = overlap(a->getHitbox(), b->getHitbox());
+                if (curOverlap > maxOverlap) {
+                    mostOverlapObj = b;
+                    maxOverlap = curOverlap;    
+                }
+            }
+            if (p && b != collidables[i] && dynamic_cast<Block*>(b) && !dynamic_cast<Coin*>(b)) {
+                Rectangle rect = b->getHitbox();
+                rect.y -= 1.0f; 
+                isOnGround |= CheckCollisionRecs(p->getHitbox(), rect);
             }
         }
-        GameObject* p = dynamic_cast<GameObject*>(collidables[i]);
-        if (p) {
-            bool isOnGround = false;
-            for (auto* obj : collidables) 
-                if (obj != collidables[i] && dynamic_cast<Block*>(obj) && !dynamic_cast<Coin*>(obj)) {
-                    Rectangle rect = obj->getHitbox();
-                    rect.y -= 1.0f; 
-                    isOnGround |= CheckCollisionRecs(p->getHitbox(), rect);
-                }
-            if (!isOnGround)
-                p->setGroundLevel(2.0f * GetScreenHeight());
+        
+        if (mostOverlapObj) {
+            collidables[i]->adaptCollision(mostOverlapObj);
+            mostOverlapObj->adaptCollision(collidables[i]);
         }
+
+        if (p && !isOnGround)
+            p->setGroundLevel(2.0f * GetScreenHeight());
     }
 }
 
