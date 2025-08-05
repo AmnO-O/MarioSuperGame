@@ -51,7 +51,7 @@ void PowerUp::adaptCollision(const Rectangle &rect){
 		position.y += penY;
 		velocity.y = 0.0f;
 		if(penY < 0){
-			setGroundLevel(rect.y); 
+			setGroundLevel(rect.y);
 		}
 	}
 
