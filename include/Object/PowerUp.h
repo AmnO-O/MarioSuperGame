@@ -84,7 +84,7 @@ class StarPowerUp :public PowerUp {
 private:
     const float bounceDamp = 0.4f;
     const float e = 1.0f;
-    const float h_bounce = 50.0f;
+    const float h_bounce = 35.0f;
 
     Vector2 reflect(const Vector2& v, const Vector2& n) {
         float dot = v.x*n.x + v.y*n.y;

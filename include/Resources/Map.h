@@ -15,7 +15,7 @@ private:
     int curspace = 0;
     Texture2D background;
     std::vector<Block*> blocks;
-    Character *character;
+    Player *character;
 
     void input(std::istream &is, Texture2D &objectTex);
 public:

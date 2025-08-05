@@ -480,7 +480,6 @@ void Player::update(float deltaTime){
 	if(activeAnimation)
 		activeAnimation->update(deltaTime);
 
-
 	// if(Mstate->isJumping()){
 	// 	movement->setFootHeightFactor(0.2f);
 	// }else movement->setFootHeightFactor(0.1f);
@@ -517,4 +516,26 @@ Player::~Player() {
 	}
 
 	Images::unloadAllTextures();
+}
+
+
+
+void Player::run_from_a_to_b(float startX, float endX){
+	if(movement->isDoneLerpMoving() == false){
+		return;
+	}
+
+	if(startX > endX){
+		std::cout << "Can't go from " << startX << " to " << endX << '\n';
+		return; 
+	}
+
+	if(dynamic_cast<RunState*>(Mstate) == nullptr){
+		delete Mstate; 
+		Mstate = new RunState(); 
+		updateShape();
+		updateHitbox();
+	}
+
+	movement->run_from_a_to_b(startX, endX);
 }

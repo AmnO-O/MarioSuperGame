@@ -179,6 +179,8 @@ void StarPowerUp::adaptCollision(const Rectangle &rect){
         normal = { -1, 0 };     
     }
 
+
+
     position.x += normal.x * minPen;
     position.y += normal.y * minPen;
     
@@ -192,12 +194,11 @@ void StarPowerUp::adaptCollision(const Rectangle &rect){
 
     
     if (std::fabs(penX) < std::fabs(penY)) {
-
+		velocity.x *= -1; 
 	}
 	else if (penY < 0) 
         setGroundLevel(rect.y);
-
-
+	
 	hitbox = { position.x, position.y, hitbox.width, hitbox.height };
 }
 

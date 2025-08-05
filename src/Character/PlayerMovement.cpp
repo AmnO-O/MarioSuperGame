@@ -39,10 +39,12 @@ void PlayerMovement::adaptCollision(ICollidable* other,
 	}
 	else {
 		position.y += penY; 
-		velocity.y = 100.0f; 
+		if(penY > 0) 
+			velocity.y = 100.0f; 
+
 		if (penY < 0) {
             if (Mstate->isJumping()) {
-                delete Mstate;
+				delete Mstate;
                 if(velocity.x != 0) 
 					Mstate = new RunState();
 				else
@@ -57,8 +59,13 @@ void PlayerMovement::adaptCollision(ICollidable* other,
 
 
 void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *&Mstate){
-	currentTime += deltaTime; 
+	if(lerpMover.isDone() == false){
+		position.x = lerpMover.update(deltaTime).x; 
 
+		return; 
+	}
+
+	currentTime += deltaTime; 
 
 	bool pressingLeft = IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT);
 	bool pressingRight = IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT) ;
