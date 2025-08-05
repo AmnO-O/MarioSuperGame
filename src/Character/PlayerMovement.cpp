@@ -75,6 +75,9 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 
 	bool pressingCrounch = IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN) || IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_DOWN); 
 
+	if(pressingLeft && pressingRight) pressingRight = pressingLeft = false; 
+	if(pressingCrounch) pressingRight = pressingLeft = false; 
+	
 	if(disableUpdate == true){
 		pressingLeft = pressingRight = isClickedSpace = pressingSpace = pressingCrounch = false; 
 		velocity.y += 980 * deltaTime;
