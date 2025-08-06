@@ -32,7 +32,7 @@ class PopUpMenu1_1
 
         bool isVisible;
         void restart(StateManager& stateManager, SoundManager& soundManager);
-        void exitGame(StateManager& stateManager);
+        void exitGame(StateManager& stateManager, SoundManager& soundManager);
         void toggle();
         void update(float deltaTime);
         void render();
