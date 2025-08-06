@@ -3,6 +3,8 @@
 #include <cassert>
 #include "Exceptions.h"
 #include "Blocks/Block.h"
+#include "Blocks/Coin.h"
+#include "Character/Enemy.h"
 #include <iostream>
 #include <cmath>
 
@@ -108,7 +110,8 @@ void Fireball::adaptCollision(const Rectangle &rect) {
 
 
 void Fireball::adaptCollision(ICollidable *other){
-    if (dynamic_cast<Block*>(other))
+    if (dynamic_cast<Enemy*>(other)) explode();
+    if (dynamic_cast<Block*>(other) && !dynamic_cast<Coin*>(other))
         adaptCollision(other->getHitbox()); 
 
 }

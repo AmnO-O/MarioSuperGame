@@ -74,8 +74,6 @@ void World1_1::render()
     /// camera draw here
     BeginMode2D(camera); 
         maps[currentMap].Draw();
-        if(character)
-            character->render(); 
     EndMode2D(); 
 
     settings_button.render();

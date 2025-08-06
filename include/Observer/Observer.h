@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include "vector"
+#include "algorithm"
 #include "ICollidable.h"
 #include "../Character/Character.h"
 

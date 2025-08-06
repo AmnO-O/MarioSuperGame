@@ -5,9 +5,12 @@
 #include <string>
 #include "../Blocks/Block.h"
 #include <vector>
-#include "../Exceptions.h"
-#include "../Observer/Observer.h"
-#include "../Character/Character.h"
+#include "Exceptions.h"
+#include "Observer/Observer.h"
+#include "Character/Character.h"
+#include "Character/Enemy.h"
+#include "Character/Goomba.h"
+#include "Character/Koopa.h"
 
 class Map {
 private:
@@ -16,6 +19,7 @@ private:
     Texture2D background;
     std::vector<Block*> blocks;
     Player *character;
+    std::vector<Enemy*> enemies;
 
     void input(std::istream &is, Texture2D &objectTex);
 public:
