@@ -17,7 +17,7 @@ void Enemy::readRectAnimation(const std::string& filePath, Texture2D& sheet) {
         int frameCount;
         fin >> frameCount;
 
-        animations[key] = std::make_unique<AnimationManager>(sheet, 0);
+        animations[key] = std::make_unique<AnimationManager>(sheet, 0, 0.2f);
         for (int i = 0; i < frameCount; ++i) {
             int x, y, w, h;
             fin >> x >> y >> w >> h;

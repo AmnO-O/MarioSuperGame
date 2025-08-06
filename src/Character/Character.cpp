@@ -356,6 +356,8 @@ void Player::adaptCollision(ICollidable* other){
 		return;
 	if (!isInvincible() && dynamic_cast<StarPowerUp*>(other))
 		return;
+	if (dynamic_cast<Fireball*>(other))
+		return;
 	if(0 && shrinkOnHit == false){
 		adapt_collision_with_enimies(); 
 		return; 

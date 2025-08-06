@@ -8,7 +8,9 @@
 void Map::input(std::istream &is, Texture2D &objectTex) {
     is >> space;
     std::string s;
-    for (int j = 0; j < space; j++) {
+    int nBlock;
+    is >> nBlock;
+    for (int j = 0; j < nBlock; j++) {
         is >> s;
         int n; is >> n;
         if (s == "BRICK") {
@@ -69,7 +71,7 @@ void Map::Update(float delta) {
     if(character)
         character->update(delta); 
 
-    for (int i = enemies.size() - 1; i >= 0; i--) {
+    for (int i = (int)enemies.size() - 1; i >= 0; i--) {
         enemies[i]->update(delta);
     }
 }
