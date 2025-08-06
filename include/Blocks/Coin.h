@@ -36,7 +36,7 @@ public:
     void adaptCollision(ICollidable* other) override;
     void Update(float delta) override;
     bool IsActive() const override;
-    void isHitBelow() override { Bounce(); }
+    void isHitBelow(ICollidable* block) override { Bounce(); }
     ~Coin() override {}
 };
 

@@ -54,7 +54,6 @@ void World1_1::update(float deltaTime)
             CollisionManager::getInstance().Register(character->shootFireball()); 
             CollisionManager::getInstance().CheckAllCollisions();
             maps[currentMap].Update(deltaTime);
-
             myCam -> update(character); 
         }
     }

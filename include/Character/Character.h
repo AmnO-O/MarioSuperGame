@@ -91,6 +91,7 @@ private:
     void animationTransform(); 
     void switchPlayer(); 
     void adapt_collision_with_enimies(); 
+    void triggerDeath(); 
 public: 
     Player(CharacterType type, Vector2 pos); 
     Player(CharacterType type, float cordX, float groundLevel); 
@@ -105,9 +106,11 @@ public:
         return position.y >= 1000; 
     }
 
+    void run_to_b(float end_x) {run_from_a_to_b(hitbox.x, end_x);}
+    void run_from_a_to_b(float start_x, float end_x);
+
     void setPosition(const Vector2 &pos); 
     void setOnGround(); 
-    void triggerDeath(); 
 
     Fireball* shootFireball();
     void adaptCollision(ICollidable* other) override;

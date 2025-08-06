@@ -192,3 +192,4 @@ public:
 class DeadState : public IMoveState{
 	std::string getMoveState() const override {return "DEAD";}
 }; 
+

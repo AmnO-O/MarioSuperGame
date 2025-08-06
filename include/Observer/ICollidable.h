@@ -4,12 +4,13 @@
 #include "raylib.h"
 #include <vector>
 
+
 class ICollidable {
 public:
     virtual Rectangle getHitbox() const = 0;
     virtual void adaptCollision(ICollidable* other) = 0;
     virtual bool IsActive() const { return true; } 
-    virtual void isHitBelow() { return; }
+    virtual void isHitBelow(ICollidable* block) { return; }
     virtual ~ICollidable() = default;
 };
 

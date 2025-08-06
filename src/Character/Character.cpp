@@ -103,7 +103,7 @@ void Player::updateShape(){
 
 	if ((int)animationKey.size() >= 7 && animationKey.substr(0, 8) == "MORPHING") {
 		animationKey = "SMALL_MORPHING";
-		animations[animationKey]->setTimeSwitch(0.05f);
+		animations[animationKey]->setTimeSwitch(0.1f);
 		
 	}else if ((int)animationKey.size() >= 15 && animationKey.substr(0, 15) == "INVINCIBLE_FIRE"){
         animationKey.replace(0, 15, "INVINCIBLE_BIG");
@@ -348,7 +348,7 @@ void Player::adapt_collision_with_enimies(){
 }
 
 void Player::adaptCollision(ICollidable* other){
-	if (dynamic_cast<Coin*>(other) || dynamic_cast<PowerUp*>(other))
+	if (dynamic_cast<Coin*>(other) || dynamic_cast<GameObject*>(other))
 		return;
 	if(0 && shrinkOnHit == false){
 		adapt_collision_with_enimies(); 
@@ -480,7 +480,6 @@ void Player::update(float deltaTime){
 	if(activeAnimation)
 		activeAnimation->update(deltaTime);
 
-
 	// if(Mstate->isJumping()){
 	// 	movement->setFootHeightFactor(0.2f);
 	// }else movement->setFootHeightFactor(0.1f);
@@ -517,4 +516,26 @@ Player::~Player() {
 	}
 
 	Images::unloadAllTextures();
+}
+
+
+
+void Player::run_from_a_to_b(float startX, float endX){
+	if(movement->isDoneLerpMoving() == false){
+		return;
+	}
+
+	if(startX > endX){
+		std::cout << "Can't go from " << startX << " to " << endX << '\n';
+		return; 
+	}
+
+	if(dynamic_cast<RunState*>(Mstate) == nullptr){
+		delete Mstate; 
+		Mstate = new RunState(); 
+		updateShape();
+		updateHitbox();
+	}
+
+	movement->run_from_a_to_b(startX, endX);
 }

@@ -39,10 +39,12 @@ void PlayerMovement::adaptCollision(ICollidable* other,
 	}
 	else {
 		position.y += penY; 
-		velocity.y = 0.0f; 
+		if(penY > 0) 
+			velocity.y = 100.0f; 
+
 		if (penY < 0) {
             if (Mstate->isJumping()) {
-                delete Mstate;
+				delete Mstate;
                 if(velocity.x != 0) 
 					Mstate = new RunState();
 				else
@@ -57,8 +59,13 @@ void PlayerMovement::adaptCollision(ICollidable* other,
 
 
 void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *&Mstate){
-	currentTime += deltaTime; 
+	if(lerpMover.isDone() == false){
+		position.x = lerpMover.update(deltaTime).x; 
 
+		return; 
+	}
+
+	currentTime += deltaTime; 
 
 	bool pressingLeft = IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT);
 	bool pressingRight = IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT) ;
@@ -68,6 +75,9 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 
 	bool pressingCrounch = IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN) || IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_DOWN); 
 
+	if(pressingLeft && pressingRight) pressingRight = pressingLeft = false; 
+	if(pressingCrounch) pressingRight = pressingLeft = false; 
+	
 	if(disableUpdate == true){
 		pressingLeft = pressingRight = isClickedSpace = pressingSpace = pressingCrounch = false; 
 		velocity.y += 980 * deltaTime;
@@ -124,8 +134,8 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 	velocity.x += forceX * deltaTime;
 	velocity.y += forceY * deltaTime;
 
-	velocity.x = std::min(velocity.x, 200.0f);
-	velocity.x = std::max(velocity.x, -200.0f);
+	velocity.x = std::min(velocity.x, 150.0f);
+	velocity.x = std::max(velocity.x, -150.0f);
 
 	position.x += velocity.x * deltaTime;
 	position.y += velocity.y * deltaTime;
