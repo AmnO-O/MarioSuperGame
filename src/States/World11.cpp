@@ -101,7 +101,7 @@ PopUpMenu1_1::PopUpMenu1_1(StateManager& stateManager, SoundManager& soundManage
         restart(stateManager, soundManager);
     }),
     exit_button("EXIT", {710, 488, 330, 50}, WHITE, RED, [&]() {
-        exitGame(stateManager);
+        exitGame(stateManager, soundManager);
     }),
     save_button("SAVE GAME", {594, 584, 330, 50}, WHITE, RED, []() {
 
@@ -118,7 +118,7 @@ void PopUpMenu1_1::restart(StateManager& stateManager, SoundManager& soundManage
     soundManager.resumeMenuSound();
 }
 
-void PopUpMenu1_1::exitGame(StateManager& stateManager)
+void PopUpMenu1_1::exitGame(StateManager& stateManager, SoundManager &soundManager)
 {
     stateManager.popState();
     soundManager.resumeMenuSound();

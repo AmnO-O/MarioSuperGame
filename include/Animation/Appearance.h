@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include "iostream"
+#include <cmath>
 #include <vector>
 #include "Exceptions.h"
 

@@ -1,6 +1,7 @@
 #include "Observer/Observer.h"
 #include "Blocks/Block.h"
 #include "Blocks/Coin.h"
+#include <algorithm>
 
 float CollisionManager::overlap(Rectangle charBox, Rectangle objBox) {
     // Compute intersection rectangle
