@@ -2,6 +2,7 @@
 #include "Blocks/Brick.h"
 #include "Blocks/Floor.h"
 #include "Blocks/Coin.h"
+#include "Blocks/Sewer.h"
 #include "Blocks/Question.h"
 #include <fstream>
 
@@ -28,6 +29,10 @@ void Map::input(std::istream &is, Texture2D &objectTex) {
         else if (s == "QUESTION") {
             for (int i = 0; i < n; i++)
                 blocks.push_back(new Question(objectTex, is));
+        }
+        else if (s == "SEWER") {
+            for (int i = 0; i < n; i++)
+                blocks.push_back(new Sewer(objectTex, is));
         }
     }
 
