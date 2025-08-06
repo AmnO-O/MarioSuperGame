@@ -348,7 +348,13 @@ void Player::adapt_collision_with_enimies(){
 }
 
 void Player::adaptCollision(ICollidable* other){
-	if (dynamic_cast<Coin*>(other) || dynamic_cast<GameObject*>(other))
+	if (dynamic_cast<Coin*>(other))
+		return;
+	if (!isBig() && dynamic_cast<MushroomPowerUp*>(other))
+		return;
+	if (!Sstate->canShootFire() && dynamic_cast<FireFlowerPowerUp*>(other))
+		return;
+	if (!isInvincible() && dynamic_cast<StarPowerUp*>(other))
 		return;
 	if(0 && shrinkOnHit == false){
 		adapt_collision_with_enimies(); 

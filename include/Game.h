@@ -6,6 +6,12 @@
 #include "./Resources/SoundManager.h"
 
 
+#include "Character/Character.h"
+#include "MyCamera2D.h"
+#include <vector>
+#include "Map.h"
+#include "Observer/Observer.h"
+#include "Object/Creator.h"
 class Game {
 public:
     static Game& getInstance();
@@ -16,7 +22,7 @@ public:
     Game(Game&&) = delete;
     Game& operator=(Game&&) = delete;
 
-    private:
+private:
     Game();
     ~Game();
 

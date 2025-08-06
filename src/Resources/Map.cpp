@@ -8,9 +8,9 @@
 void Map::input(std::istream &is, Texture2D &objectTex) {
     is >> space;
     std::string s;
-    while (is >> s) {
-        int n;
-        is >> n;
+    for (int j = 0; j < space; j++) {
+        is >> s;
+        int n; is >> n;
         if (s == "BRICK") {
             for (int i = 0; i < n; i++)
                 blocks.push_back(new Brick(objectTex, is));
@@ -26,6 +26,26 @@ void Map::input(std::istream &is, Texture2D &objectTex) {
         else if (s == "QUESTION") {
             for (int i = 0; i < n; i++)
                 blocks.push_back(new Question(objectTex, is));
+        }
+    }
+
+    int nEnemy;
+    is >> nEnemy;
+    while (is >> s) {
+        int n; is >> n;
+        if (s == "GOOMBA") {
+            for (int i = 0; i < n; i++) {
+                int x, y;
+                is >> x >> y;
+                enemies.push_back(new Goomba({x * 1.0f, y * 1.0f}));
+            }
+        }
+        else if (s == "KOOPA") {
+            for (int i = 0; i < n; i++) {
+                int x, y;
+                is >> x >> y;
+                enemies.push_back(new Koopa({x * 1.0f, y * 1.0f}));
+            }
         }
     }
 }
@@ -48,6 +68,10 @@ void Map::Update(float delta) {
         
     if(character)
         character->update(delta); 
+
+    for (int i = enemies.size() - 1; i >= 0; i--) {
+        enemies[i]->update(delta);
+    }
 }
 
 void Map::Draw() const {    
@@ -63,12 +87,22 @@ void Map::Draw() const {
 
     if(character)
         character->render(); 
+
+    for (int i = 0; i < enemies.size(); i++) {
+        enemies[i]->render();
+        // DrawRectangleLines(enemies[i]->getHitbox().x, enemies[i]->getHitbox().y, 
+        //                     enemies[i]->getHitbox().width, enemies[i]->getHitbox().height, GREEN);
+    }
 }
 
 void Map::Unload() {
     UnloadTexture(background);
     for (int i = 0; i < blocks.size(); i++)
         delete blocks[i];
+
+    for (int i = 0; i < enemies.size(); i++) {
+        delete enemies[i];
+    }
 }
 
 void Map::SetUp(Player* player) {
@@ -77,4 +111,7 @@ void Map::SetUp(Player* player) {
     for (int i = 0; i < blocks.size(); i++)
         CollisionManager::getInstance().Register(blocks[i]);
     character = player;
+
+    for (int i = 0; i < enemies.size(); i++) 
+        CollisionManager::getInstance().Register(enemies[i]);
 }
