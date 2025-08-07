@@ -20,7 +20,7 @@ void PlayerMovement::setGroundLevel(float groundLevel_){
 	 }
 }
 
-bool PlayerMovement::adapt_collision_with_enimies(ICollidable* other){
+bool PlayerMovement::adapt_collision_with_enimies(ICollidable* other, Player* player){
 	Rectangle rect = other->getHitbox();
 
 	float penLeft = (position.x + shape.x) - rect.x; 
@@ -36,10 +36,9 @@ bool PlayerMovement::adapt_collision_with_enimies(ICollidable* other){
 	}else{
 		position.y += penY; 
 
-		if (penY < 0 && velocity.y > 0) {
-			velocity.y = -150;
+		if (penY < 0) {
 			//enemy->die();    
-
+			player->setGroundLevel(rect.y); 
 			return true;
 		} else {
 			//takeDamage();

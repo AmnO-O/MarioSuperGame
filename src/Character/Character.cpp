@@ -346,7 +346,7 @@ void Player::triggerDeath(){
 void Player::adapt_collision_with_enimies(ICollidable* other){
 	if(isInvincible() || blink.isActive()) return; 
 
-	if(movement->adapt_collision_with_enimies(other)) return;
+	if(movement->adapt_collision_with_enimies(other, this)) return;
 
 
 	if(isBig() == false){
