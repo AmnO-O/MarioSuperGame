@@ -32,12 +32,14 @@ bool PlayerMovement::adapt_collision_with_enimies(ICollidable* other, Player* pl
 	float penY = penTop < penBot ? -penTop : penBot;
 
 	if (std::fabs(penX) < std::fabs(penY)){
+		if(std::fabs(penX) < 1) return true; 
 		return false;
 	}else{
 		position.y += penY; 
 
 		if (penY < 0) {
 			//enemy->die();    
+			velocity.y = -100.0f;
 			player->setGroundLevel(rect.y); 
 			return true;
 		} else {
