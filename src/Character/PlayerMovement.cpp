@@ -20,6 +20,38 @@ void PlayerMovement::setGroundLevel(float groundLevel_){
 	 }
 }
 
+bool PlayerMovement::adapt_collision_with_enimies(ICollidable* other){
+	Rectangle rect = other->getHitbox();
+
+	float penLeft = (position.x + shape.x) - rect.x; 
+	float penRight = (rect.x + rect.width) - position.x;
+	float penX = penLeft < penRight ? -penLeft : penRight; 
+
+	float penTop = (position.y + shape.y) - rect.y;
+	float penBot = (rect.y + rect.height) - position.y;
+	float penY = penTop < penBot ? -penTop : penBot;
+
+	if (std::fabs(penX) < std::fabs(penY)){
+		return false;
+	}else{
+		position.y += penY; 
+
+		if (penY < 0 && velocity.y > 0) {
+			velocity.y = -150;
+			//enemy->die();    
+
+			return true;
+		} else {
+			//takeDamage();
+			return false;
+		}
+	}
+
+	
+	return true; 
+}
+
+
 void PlayerMovement::adaptCollision(ICollidable* other,
                                     IMoveState*& Mstate,
                                     Player* player) {
@@ -61,7 +93,6 @@ void PlayerMovement::adaptCollision(ICollidable* other,
 void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *&Mstate){
 	if(lerpMover.isDone() == false){
 		position.x = lerpMover.update(deltaTime).x; 
-
 		return; 
 	}
 
@@ -80,9 +111,9 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 	
 	if(disableUpdate == true){
 		pressingLeft = pressingRight = isClickedSpace = pressingSpace = pressingCrounch = false; 
-		velocity.y += 980 * deltaTime;
+		velocity.y += 450 * deltaTime;
         position.y += velocity.y * deltaTime;
-
+		
 		return ; 
 	}
 	

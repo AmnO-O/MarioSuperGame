@@ -66,6 +66,39 @@ public:
     virtual ~Character() {}; 
 }; 
 
+class BlinkCounter {
+private:
+    float currentTime    = 0.0f;  
+    float interval       = 0.1f;  
+    float totalDuration  = 3.0f;  
+    bool  active         = false; 
+
+public:
+    BlinkCounter(float interval = 0.1f, float totalDuration = 3.0f)
+      : interval(interval), totalDuration(totalDuration) {}
+
+    void reset() {
+        currentTime = 0.0f;
+        active = true;
+    }
+
+    bool update(float deltaTime) {
+        if (!active) return true; 
+
+        currentTime += deltaTime;
+        if (currentTime >= totalDuration) {
+            active = false;
+            return true;
+        }
+
+        int phase = static_cast<int>(currentTime / interval);
+        return (phase % 2) == 0; 
+    }
+
+    bool isActive() const { return active; }
+};
+
+
 class Player : public ICollidable, public Character{
 private: 
     PlayerMovement* movement; 
@@ -80,6 +113,8 @@ private:
     bool shrinkOnHit = false; 
     bool showPlayer = false; 
 
+    BlinkCounter blink; 
+
     void updateHitbox(); 
     void readRectAnimation(const std::string filePath, Texture2D &sheet); 
     std::string getShape_Action() const; 
@@ -90,7 +125,7 @@ private:
     void adaptChangePosition(); 
     void animationTransform(); 
     void switchPlayer(); 
-    void adapt_collision_with_enimies(); 
+    void adapt_collision_with_enimies(ICollidable* other); 
     void triggerDeath(); 
 public: 
     Player(CharacterType type, Vector2 pos); 
@@ -101,9 +136,10 @@ public:
 
     bool isBig() const { return Sstate->canBreakBrick();}
     bool isInvincible() const {return Sstate->isInvincible();}
-    bool isDeath() const {
+    bool canShootFire() const {return Sstate->canShootFire();}
+    bool isDead() const {
         Vector2 position = movement->getPosition(); 
-        return position.y >= 1000; 
+        return Mstate->isDead() && (position.y >= 800); 
     }
 
     void run_to_b(float end_x) {run_from_a_to_b(hitbox.x, end_x);}

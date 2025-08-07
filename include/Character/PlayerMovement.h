@@ -98,6 +98,7 @@ public:
     void setShape(const Vector2 &shape_) {position.y = position.y + shape.y - shape_.y; shape = {shape_.x, shape_.y};}
 
     void adaptCollision(ICollidable* other, IMoveState *&Mstate, Player *player); 
+    bool adapt_collision_with_enimies(ICollidable* other); 
     void update(float deltaTime, IShapeState *&Sstate, IMoveState  *&Mstate);
 
     void run_from_a_to_b(float startX, float endX){
