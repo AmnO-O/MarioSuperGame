@@ -23,10 +23,9 @@ void PlayerMovement::setGroundLevel(float groundLevel_){
 bool PlayerMovement::adapt_collision_with_enimies(ICollidable* other, Player* player){
 	Rectangle rect = other->getHitbox();
 
-	if(velocity.y <= 0 && position.y + shape.y > rect.y){
+	if(velocity.y < 0 && position.y + shape.y > rect.y){
 		return false; 
 	}
-	
 
 	velocity.y = -150.0f; 
 	return true; 
