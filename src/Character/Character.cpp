@@ -1,5 +1,6 @@
 #include "Character/Character.h"
 #include "Blocks/Coin.h"
+#include "Character/Enemy.h"
 #include <iostream>
 #include <cassert>
 #include <algorithm>
@@ -250,8 +251,13 @@ void Player::powerUp(PowerUpType t){
 	IShapeState *tmp = nullptr;
 	switch (t) {
 	case PowerUpType::MUSHROOM:
-		if (Sstate -> getShapeState() == "SMALL"){
-			Sstate = new MorphDecorator(Sstate);
+		if (Sstate -> canBreakBrick() == false){
+			if(Sstate->isInvincible() == false)
+			 	Sstate = new MorphDecorator(Sstate);
+			else{
+				delete Sstate; 
+				Sstate = new InvincibleDecorator(new BigState()); 
+			}
 		}
 		break;
 	case PowerUpType::FIRE_FLOWER:
@@ -260,17 +266,19 @@ void Player::powerUp(PowerUpType t){
 			Sstate = new FireState();
 			delete tmp;
 		}
-
 		else if(Sstate->canShootFire() == false){
-
-			tmp = Sstate;
-			Sstate = new FireState();
-			delete tmp;
+			if(Sstate->isInvincible()){
+				delete Sstate; 
+				Sstate = new InvincibleDecorator(new FireState()); 
+			}else{
+				tmp = Sstate;
+				Sstate = new FireState();
+				delete tmp;
+			}
 		}
 
 		break;
 	case PowerUpType::STAR:
-
 		if(Sstate->isInvincible() == false){
 	    	Sstate = new InvincibleDecorator(Sstate);
 		}
@@ -319,6 +327,10 @@ void Player::cleanFireballs(){
 }
 
 void Player::triggerDeath(){
+	if(Mstate->isDead()){
+		return; 
+	}
+
 	IMoveState *tmp = Mstate; 
 	Mstate = new DeadState(); 
 	delete tmp; 
@@ -326,19 +338,26 @@ void Player::triggerDeath(){
 
 	movement->setDisableUpdate(); 
 	movement->setVelocityX(0.0f); 
-	movement->setVelocityY(6000.0f); 
+	movement->setVelocityY(-200.0f); 
+	movement->setGroundLevel(1000.0f); 
 }
 
 
-void Player::adapt_collision_with_enimies(){
-	if(isInvincible()) return; 
+void Player::adapt_collision_with_enimies(ICollidable* other){
+	if(isInvincible() || blink.isActive()) return; 
+
+	if(movement->adapt_collision_with_enimies(other)) return;
+
 
 	if(isBig() == false){
 		triggerDeath(); 
 		return; 
 	}
 
+	if(shrinkOnHit) return; 
+
 	shrinkOnHit = true; 
+	blink.reset(); 
 
 	IMoveState *tmp = Mstate; 
 	Mstate = new HitState(); 
@@ -348,20 +367,34 @@ void Player::adapt_collision_with_enimies(){
 }
 
 void Player::adaptCollision(ICollidable* other){
-	if (dynamic_cast<Coin*>(other))
-		return;
-	if (!isBig() && dynamic_cast<MushroomPowerUp*>(other))
-		return;
-	if (!Sstate->canShootFire() && dynamic_cast<FireFlowerPowerUp*>(other))
-		return;
-	if (!isInvincible() && dynamic_cast<StarPowerUp*>(other))
-		return;
-	if (dynamic_cast<Fireball*>(other))
-		return;
-	if(0 && shrinkOnHit == false){
-		adapt_collision_with_enimies(); 
+	if(Mstate->isDead()){
 		return; 
 	}
+
+	if (dynamic_cast<Coin*>(other))
+		return;
+	if (dynamic_cast<MushroomPowerUp*>(other))
+
+	if (!isBig() && dynamic_cast<MushroomPowerUp*>(other))
+		return;
+	if (dynamic_cast<FireFlowerPowerUp*>(other))
+
+	if (!canShootFire() && dynamic_cast<FireFlowerPowerUp*>(other))
+		return;
+	if (dynamic_cast<StarPowerUp*>(other))
+
+	if (!isInvincible() && dynamic_cast<StarPowerUp*>(other))
+		return;
+
+	if (dynamic_cast<Fireball*>(other))
+		return;
+
+	if(dynamic_cast<Enemy*>(other)){
+		adapt_collision_with_enimies(other); 
+		return; 
+	}
+
+
 	movement->adaptCollision(other, Mstate, this); 
 	updateShape(); 
 	updateHitbox(); 
@@ -382,8 +415,10 @@ void Player::setOnGround(){
 
 void Player::adaptChangePosition(){
 	if(groundLevel - hitbox.height > hitbox.y){
-		delete Mstate;
-		Mstate = new JumpState();
+		if(!Mstate->isDead()){
+			delete Mstate;
+			Mstate = new JumpState();
+		}
 	}else{
 		delete Mstate;
 		Mstate = new StandState();
@@ -472,18 +507,36 @@ void Player::update(float deltaTime){
 
 	for (auto& fb : fireballs)
 		fb->update(deltaTime);
+	
+	showPlayer = blink.update(deltaTime); 
+	Mstate->update(deltaTime);
 
 	if(shrinkOnHit){
 		if(activeAnimation)
 			activeAnimation->update(deltaTime);
 		
-		adaptChangePosition();
+		updateShape();
+		movement->setShape(activeAnimation->getCurrentShape());
+		movement->setGroundLevel(groundLevel);
+		updateHitbox();		
+
+		if(activeAnimation->isOnePeriodPassed()){
+			delete Sstate;
+			delete Mstate;  
+			Sstate = new SmallState(); 
+			Mstate = new StandState(); 
+			
+			updateShape();
+			movement->setShape(activeAnimation->getCurrentShape());
+			movement->setGroundLevel(groundLevel);
+			updateHitbox();		
+			shrinkOnHit = false; 
+		}
 		return; 
 	}
 
 	movement->update(deltaTime, Sstate, Mstate);
-	Mstate->update(deltaTime);
-
+ 
 
 	if(activeAnimation)
 		activeAnimation->update(deltaTime);
@@ -500,13 +553,9 @@ void Player::update(float deltaTime){
 void Player::render(){
 
 	if(activeAnimation){
-		if(shrinkOnHit){
-			if(showPlayer){
-				activeAnimation->render(movement->getPosition(), movement->isFacingRight() == false);
-				showPlayer ^= 1; 
-			}
+		if(showPlayer){
+			activeAnimation->render(movement->getPosition(), movement->isFacingRight() == false);
 		}
-		else activeAnimation->render(movement->getPosition(), movement->isFacingRight() == false);
 	}
 
 	for (auto& fireball : fireballs)

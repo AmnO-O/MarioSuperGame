@@ -154,52 +154,36 @@ void StarPowerUp::applyEffect(Player* &character) {
 	character->powerUp(this->type);
 }
 
-void StarPowerUp::adaptCollision(const Rectangle &rect){
-	float penLeft = (position.x + hitbox.width) - rect.x; 
-	float penRight = (rect.x + rect.width) - position.x;
-	float penX = penLeft < penRight ? -penLeft : penRight; 
+void StarPowerUp::adaptCollision(const Rectangle &rect) {
+    float penLeft = (position.x + hitbox.width) - rect.x; 
+    float penRight = (rect.x + rect.width) - position.x;
+    float penTop = (position.y + hitbox.height) - rect.y;
+    float penBot = (rect.y + rect.height) - position.y;
 
-	float penTop = (position.y + hitbox.height) - rect.y;
-	float penBot = (rect.y + rect.height) - position.y;
-	float penY = penTop < penBot ? -penTop : penBot;
+    float minPen = std::min({penLeft, penRight, penTop, penBot});
 
-    float minPen = penTop;
-    Vector2 normal = { 0, +1 };  
-
-    if (penBot < minPen) {
-        minPen = penBot;
-        normal = { 0, -1 };     
-    }
-    if (penLeft < minPen) {
-        minPen = penLeft;
-        normal = { +1, 0 };     
-    }
-    if (penRight < minPen) {
-        minPen = penRight;
-        normal = { -1, 0 };     
-    }
-
-
-
+    Vector2 normal = {0, 0};
+    if (minPen == penLeft) {
+        normal = {-1, 0};
+    } else if (minPen == penRight) {
+        normal = {1, 0}; 
+    } else if (minPen == penTop) {
+        normal = {0, -1};
+    } else if (minPen == penBot) {
+        normal = {0, 1}; 
+	}
+	
     position.x += normal.x * minPen;
     position.y += normal.y * minPen;
-    
-	
-    velocity = reflect(velocity, normal);
 
-    if (std::fabs(normal.y) > 0) {
-        velocity.y = -std::sqrt(2.0f * 980.0f * h_bounce);
-    }else
-        velocity = reflect(velocity, normal);
+    if (normal.y != 0) {
+        if(normal.y < 0) velocity.y = -std::sqrt(2.0f * 980.0f * h_bounce);
+		if(normal.y < 0) setGroundLevel(rect.y);
+    } else if (normal.x != 0) {
+        velocity.x *= -1;
+    }
 
-    
-    if (std::fabs(penX) < std::fabs(penY)) {
-		velocity.x *= -1; 
-	}
-	else if (penY < 0) 
-        setGroundLevel(rect.y);
-	
-	hitbox = { position.x, position.y, hitbox.width, hitbox.height };
+    hitbox = {position.x, position.y, hitbox.width, hitbox.height};
 }
 
 void StarPowerUp::update(float deltaTime){

@@ -118,7 +118,7 @@ void PopUpMenu1_1::restart(StateManager& stateManager, SoundManager& soundManage
     soundManager.resumeMenuSound();
 }
 
-void PopUpMenu1_1::exitGame(StateManager& stateManager, SoundManager &soundManager)
+void PopUpMenu1_1::exitGame(StateManager& stateManager, SoundManager& soundManager)
 {
     stateManager.popState();
     soundManager.resumeMenuSound();

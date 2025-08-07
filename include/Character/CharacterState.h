@@ -136,6 +136,7 @@ public:
 	void changeIsJump() {isJump ^= 1;}
 	virtual bool isJumping() const {return isJump; }
 	virtual bool isClimbing() const {return false; }
+	virtual bool isDead() const {return false;}
 	virtual ~IMoveState() = default;  
 };
 
@@ -191,5 +192,6 @@ public:
 
 class DeadState : public IMoveState{
 	std::string getMoveState() const override {return "DEAD";}
+	bool isDead() const override {return true;}
 }; 
 
