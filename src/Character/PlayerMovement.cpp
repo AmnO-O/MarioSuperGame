@@ -23,32 +23,11 @@ void PlayerMovement::setGroundLevel(float groundLevel_){
 bool PlayerMovement::adapt_collision_with_enimies(ICollidable* other, Player* player){
 	Rectangle rect = other->getHitbox();
 
-	float penLeft = (position.x + shape.x) - rect.x; 
-	float penRight = (rect.x + rect.width) - position.x;
-	float penX = penLeft < penRight ? -penLeft : penRight; 
-
-	float penTop = (position.y + shape.y) - rect.y;
-	float penBot = (rect.y + rect.height) - position.y;
-	float penY = penTop < penBot ? -penTop : penBot;
-
-	if (std::fabs(penX) < std::fabs(penY)){
-		if(std::fabs(penX) < 1) return true; 
-		return false;
-	}else{
-		position.y += penY; 
-
-		if (penY < 0) {
-			//enemy->die();    
-			velocity.y = -100.0f;
-			player->setGroundLevel(rect.y); 
-			return true;
-		} else {
-			//takeDamage();
-			return false;
-		}
+	if(velocity.y > 0 && position.y > rect.y){
+		return false; 
 	}
 
-	
+	velocity.y = -150.0f; 
 	return true; 
 }
 
