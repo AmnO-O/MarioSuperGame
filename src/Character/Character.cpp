@@ -373,12 +373,15 @@ void Player::adaptCollision(ICollidable* other){
 
 	if (dynamic_cast<Coin*>(other))
 		return;
+	if (dynamic_cast<MushroomPowerUp*>(other))
 
 	if (!isBig() && dynamic_cast<MushroomPowerUp*>(other))
 		return;
+	if (dynamic_cast<FireFlowerPowerUp*>(other))
 
-	if (!Sstate->canShootFire() && dynamic_cast<FireFlowerPowerUp*>(other))
+	if (!canShootFire() && dynamic_cast<FireFlowerPowerUp*>(other))
 		return;
+	if (dynamic_cast<StarPowerUp*>(other))
 
 	if (!isInvincible() && dynamic_cast<StarPowerUp*>(other))
 		return;
