@@ -27,6 +27,8 @@ bool PlayerMovement::adapt_collision_with_enimies(ICollidable* other, Player* pl
 		return false; 
 	}
 
+	
+
 	velocity.y = -150.0f; 
 	return true; 
 }
