@@ -3,7 +3,7 @@
 #include "Character/Character.h"
 
 void Goomba::update(float deltaTime) {
-    if (state == GoombaState::DIE) {
+    if (state == State::DIE) {
         velocity = { 0, 0 };
         delayDead += deltaTime;
         if (delayDead >= 0.5f) setDead();
@@ -13,7 +13,7 @@ void Goomba::update(float deltaTime) {
 }
 
 void Goomba::updateAnimationType() {
-    if (state == GoombaState::DIE) {
+    if (state == State::DIE) {
         position.y += hitbox.height * 0.5f;
         activeAnimation = animations["DIE"].get();
     } 
@@ -28,14 +28,17 @@ void Goomba::adaptCollision(ICollidable* other) {
         Rectangle playerHitbox = player->getHitbox();
 
         if (playerHitbox.y + playerHitbox.height <= hitbox.y + 5) {
-            if (state == GoombaState::RUNNING) {
-                state = GoombaState::DIE;
+            if (state == State::RUNNING) {
+                state = State::DIE;
                 updateAnimationType();
             }
-        } 
-        else {
-            // Nếu va chạm ngang => player mất mạng (handle ở Player)
-            // Có thể set 1 flag để Player xử lý khi va chạm với enemy
+        }
+    }
+
+    Enemy* enemy = dynamic_cast<Enemy*>(other);
+    if (enemy && enemy != this) {
+        if (state == State::RUNNING) {
+            velocity.x = -velocity.x;
         }
     }
 }

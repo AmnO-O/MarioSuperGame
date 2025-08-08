@@ -2,9 +2,17 @@
 #include "Character.h"
 #include "Observer/ICollidable.h"
 
+enum State {
+    RUNNING,
+    SHELL,
+    SPINNING,
+    DIE
+};
+
 class Enemy : public Character, public ICollidable {
 protected:
     CharacterType type;
+    State state = RUNNING;
     std::map<std::string, std::unique_ptr<AnimationManager>> animations;
     float delayDead = 0.0f; 
 
