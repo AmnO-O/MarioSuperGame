@@ -10,36 +10,40 @@
 enum class QuestionType {
     COIN,
     POWER,
-    STAR
+    STAR,
+    NORMAL
 };
 
 class Question : public Block {
 private:
     BounceAnimation bounceAni;
+    BounceAnimation brokenAni;
     AnimationManager ani;
 
     Rectangle BrokenRect;
     BlockStat stat = BlockStat::Normal;
     QuestionType type;
     Creator* creator = nullptr;
-    GameObject* object = nullptr;
+    std::vector<GameObject*> objects = {};
     int num;
 
+    void clearObj();
     void Break(Player* player); 
 
 public:
     Question(Texture2D &tex, std::istream &is);
 
     Rectangle getHitbox() const override;
-    void Update(float delta) override;
+    void Update(float delta, Player* player) override;
     void Draw(DrawStat ds) const override;
     void adaptCollision(ICollidable* other) override;
 
     ~Question() override {
         if (creator)
             delete creator;
-        if (object)
-            delete object;
+        for (auto obj : objects) 
+            if (obj)
+                delete obj;
     }
 };
 

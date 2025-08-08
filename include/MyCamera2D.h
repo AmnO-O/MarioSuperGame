@@ -15,6 +15,6 @@ public:
 	void setTarget(Vector2 newTarget);
 	void setTarget(float x, float y);
 	void setZoom(float zoomLevel_); 
-	void setMapSize(Vector2 mapSize) { this->mapSize = mapSize; }
+	void setMapSize(Vector2 mapSize);
 }; 
 

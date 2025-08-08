@@ -54,7 +54,7 @@ Rectangle Coin::getHitbox() const {
     return { pos.x, pos.y, srcRect.x, srcRect.y };
 }
 
-void Coin::Update(float delta) {
+void Coin::Update(float delta, Player* player) {
     if (stat == BlockStat::Broken) return; // Don't update if broken
     if (stat == BlockStat::Bouncing) {
         coinAni.Update(delta);
