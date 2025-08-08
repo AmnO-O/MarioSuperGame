@@ -142,6 +142,8 @@ public:
         return Mstate->isDead() && (position.y >= 800); 
     }
 
+    bool IsActive() const override{return Mstate->isDead() == false;}
+
     void run_to_b(float end_x) {run_from_a_to_b(hitbox.x, end_x);}
     void run_from_a_to_b(float start_x, float end_x);
 

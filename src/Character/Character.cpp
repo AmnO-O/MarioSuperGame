@@ -338,7 +338,7 @@ void Player::triggerDeath(){
 
 	movement->setDisableUpdate(); 
 	movement->setVelocityX(0.0f); 
-	movement->setVelocityY(-200.0f); 
+	movement->setVelocityY(-170.0f); 
 	movement->setGroundLevel(1000.0f); 
 }
 
