@@ -9,6 +9,8 @@
 #include "Object/FireballManager.h"
 #include "Observer/ICollidable.h"
 #include "PlayerAction.h"
+#include "Resources/SoundManager.h"
+
 
 class Character{
 protected:

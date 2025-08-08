@@ -1,4 +1,3 @@
-#pragma once
 #include "Character/Global.h"
 
 std::unordered_map<std::string, Texture2D> Images::textures{};

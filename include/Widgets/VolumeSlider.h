@@ -14,16 +14,14 @@ class VolumeSlider
         Color background_color; 
         Color fill_color;           
         Color knob_color;           
-        SoundManager& soundManager;
+        bool isEffect;
 
     public:
         
-        VolumeSlider(Rectangle frame, SoundManager& soundManager);
+        VolumeSlider(Rectangle frame, bool isEffectSlider);
 
         void update();
         void render(); 
-        float getCurrentVolume() const; 
-        void setCurrentVolume(float newVolume);
 };
 
 #endif

@@ -116,11 +116,14 @@ void Coin::Break() {
     std::cout << "Get Coin\n";
     stat = BlockStat::Broken;
     drawStat = DrawStat::None;
+
+    PlaySound(SoundManager::getInstance().coinSound);
 }
 
 void Coin::Bounce() {
     std::cout << "Bounce Coin\n";
     stat = BlockStat::Bouncing;
+    PlaySound(SoundManager::getInstance().coinSound);
 }
 
 bool Coin::IsActive() const {

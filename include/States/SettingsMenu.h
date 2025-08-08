@@ -4,7 +4,6 @@
 #include <raylib.h>
 #include "../Widgets/Button.h"
 #include "../Resources/StateManager.h"
-#include "../Resources/SoundManager.h"
 #include "../Widgets/VolumeSlider.h"
 #include <memory>
 #include <string>
@@ -19,13 +18,12 @@ class SettingsMenu : public GameState
         std::string music;
         std::string soundFX;
         Font font; 
-        StateManager& stateManager;
-        SoundManager& soundManager;
-        VolumeSlider slider;
+        VolumeSlider music_slider;
+        VolumeSlider effect_slider;
 
     public:
 
-        SettingsMenu(StateManager& stateManager, SoundManager& soundManager);
+        SettingsMenu();
         ~SettingsMenu();
         
         void processInput() override {};

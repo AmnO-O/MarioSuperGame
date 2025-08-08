@@ -128,16 +128,23 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 		forceY += stats->jumpInitialVelocity; 
 		currentTime = 0; 
 
+		PlaySound(SoundManager::getInstance().jumpSound);
+
 		if((pressingCrounch == false || Sstate->canBreakBrick() == false)){
 			delete Mstate; 
 			Mstate = new JumpState(); 
-		}else{
+		}
+		
+		else{
 			Mstate->changeIsJump(); 
 		}
 	}
-	else if(pressingSpace && Mstate->isJumping() && currentTime <= stats->maxJumpTime){
+	else if(pressingSpace && Mstate->isJumping() && currentTime <= stats->maxJumpTime)
+	{
 		forceY += stats->jumpHoldAcceleration; 
-	}else if(Mstate -> isJumping() == false){
+	}
+	
+	else if(Mstate -> isJumping() == false){
 		forceY -= 980;
 	}
 
