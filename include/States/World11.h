@@ -8,7 +8,6 @@
 #include "../Observer/Observer.h"
 #include "../Object/Creator.h"
 #include "../Resources/StateManager.h"
-#include "../Resources/SoundManager.h"
 #include "../Widgets/Button.h"
 #include <iostream>
 
@@ -22,17 +21,18 @@ class PopUpMenu1_1
         NormalButton save_button;
         Rectangle frame;
 
-        StateManager& stateManager;
-        SoundManager& soundManager;
 
     public:
 
-        PopUpMenu1_1(StateManager& stateManager, SoundManager& soundManager);
+        PopUpMenu1_1();
         ~PopUpMenu1_1() = default;
 
         bool isVisible;
-        void restart(StateManager& stateManager, SoundManager& soundManager);
-        void exitGame(StateManager& stateManager, SoundManager& soundManager);
+        bool isDeathMusicPlayed = false;
+        bool isGOMPlayed = false;
+
+        void restart();
+        void exitGame();
         void toggle();
         void update(float deltaTime);
         void render();
@@ -52,15 +52,19 @@ class World1_1: public GameState
         ImageButton settings_button;
         Texture2D settings_button_state;
         PopUpMenu1_1 popup_menu;
-
-        StateManager& stateManager;
-        SoundManager& soundManager;
+        
+        bool startdeath = false;
+        bool GOMshown = false;
+        bool GOMplayed = false;
+        
+        bool isMario;
 
     public:
 
-        World1_1(StateManager& stateManager, SoundManager& soundManager);
+        World1_1(bool checkMario);
         ~World1_1();
 
+        bool getIsMario() const;
         void processInput() override;
         void update(float deltaTime) override;
         void render() override;

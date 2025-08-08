@@ -1,37 +1,92 @@
 #include "Resources/SoundManager.h"
 
-void SoundManager::loadMenuSound()
+SoundManager& SoundManager::getInstance()
 {
-    InitAudioDevice();
-    menuSound = LoadMusicStream(menu_filePath.c_str());
-    SetMusicVolume(menuSound, current_volume);
+    static SoundManager instance;
+    return instance;
 }
 
-void SoundManager::playMenuSound()
+void SoundManager::loadPlayMusic()
 {
-    PlayMusicStream(menuSound);
+    playMusic = LoadMusicStream(music_path.c_str());
+    SetMusicVolume(playMusic, current_volume);
 }
 
-void SoundManager::pauseMenuSound()
+void SoundManager::playPlayMusic()
 {
-    PauseMusicStream(menuSound);
+    PlayMusicStream(playMusic);
 }
 
-void SoundManager::resumeMenuSound()
+void SoundManager::pausePlayMusic()
 {
-    ResumeMusicStream(menuSound);
+    PauseMusicStream(playMusic);
 }
 
-void SoundManager::unloadMenuSound()
+void SoundManager::resumePlayMusic()
 {
-    StopMusicStream(menuSound);
-    UnloadMusicStream(menuSound);
-    CloseAudioDevice();
+    ResumeMusicStream(playMusic);
 }
 
-void SoundManager::updateMenuSound()
+void SoundManager::stopPlayMusic()
 {
-    UpdateMusicStream(menuSound);
+    StopMusicStream(playMusic);
+}
+
+void SoundManager::unloadPlayMusic()
+{
+    UnloadMusicStream(playMusic);
+
+}
+
+void SoundManager::updatePlayMusic()
+{
+    UpdateMusicStream(playMusic);
+}
+
+void SoundManager::loadDeathSound()
+{
+    deathSound = LoadSound(death_path.c_str());
+    SetSoundVolume(deathSound, current_volume);
+}
+void SoundManager::playDeathSound()
+{
+    PlaySound(deathSound);
+}
+
+void SoundManager::stopDeathSound()
+{
+    StopSound(deathSound);
+}
+
+void SoundManager::unloadDeathSound()
+{
+    UnloadSound(deathSound);
+}
+
+void SoundManager::loadGameOverSound()
+{
+    gameOverSound = LoadSound(gameOver_path.c_str());
+    SetSoundVolume(gameOverSound, current_volume);
+}
+
+void SoundManager::playGameOverSound()
+{
+    PlaySound(gameOverSound);
+}
+
+void SoundManager::stopGameOverSound()
+{
+    StopSound(gameOverSound);
+}
+
+void SoundManager::unloadGameOverSound()
+{
+    UnloadSound(gameOverSound);
+}
+
+bool SoundManager::isPlayingDeathSound() const
+{
+    return IsSoundPlaying(deathSound);
 }
 
 float SoundManager::getVolume() const
@@ -42,5 +97,5 @@ float SoundManager::getVolume() const
 void SoundManager::setMusicVolume(float volume)
 {
     current_volume = volume;
-    SetMusicVolume(menuSound, volume);
+    SetMusicVolume(playMusic, volume);
 }

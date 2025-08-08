@@ -1,12 +1,14 @@
 #include "States/World11.h"
+#include "States/MainMenu.h"
+#include "States/GameOverMenu.h"
 #include "Game.h"
 #include "Resources/ResourceManager.h"
 #include <raylib.h>
+#include "Character/Character.h"
 
-World1_1::World1_1(StateManager& stateManager, SoundManager& soundManager)
-  : stateManager(stateManager),
-    soundManager(soundManager),
-    popup_menu(stateManager, soundManager),
+World1_1::World1_1(bool checkMario)
+  : popup_menu(),
+    isMario(checkMario),
     settings_button("assets/images/setting.png", {25, 27, 100, 100}, [&]() {
         popup_menu.toggle();
     }),
@@ -38,6 +40,11 @@ World1_1::~World1_1()
     delete myCam; 
 }
 
+bool World1_1::getIsMario() const
+{
+    return isMario;
+}
+
 void World1_1::processInput()
 {
     if (IsKeyPressed(KEY_P))
@@ -46,8 +53,16 @@ void World1_1::processInput()
 
 void World1_1::update(float deltaTime) 
 {
-    processInput();
+    if (!SoundManager::getInstance().death_played)
+        processInput();
 
+    if (SoundManager::getInstance().death_played && !IsSoundPlaying(SoundManager::getInstance().deathSound))
+	{
+		SoundManager::getInstance().playGameOverSound();
+		StateManager::getInstance().pushState(std::make_unique<GameOverMenu>());
+		SoundManager::getInstance().game_over_played = true;
+	}
+    
     if (!popup_menu.isVisible)
     {
         if(deltaTime < 0.2) {
@@ -68,13 +83,12 @@ void World1_1::update(float deltaTime)
 void World1_1::render() 
 {
     Camera2D camera = myCam ->getCamera(); 
-    //BeginDrawing();
-    //ClearBackground(RAYWHITE);
 
     /// camera draw here
     BeginMode2D(camera); 
         maps[currentMap].Draw();
     EndMode2D(); 
+
 
     settings_button.render();
 
@@ -87,21 +101,18 @@ void World1_1::render()
 
     if (popup_menu.isVisible)
         popup_menu.render();
-    //EndDrawing();
 }
 
-PopUpMenu1_1::PopUpMenu1_1(StateManager& stateManager, SoundManager& soundManager)
+PopUpMenu1_1::PopUpMenu1_1()
   : isVisible(false),
-    stateManager(stateManager),
-    soundManager(soundManager),
     resume_button("RESUME", {663, 296, 330, 50}, WHITE, RED, [&](){
         toggle();
     }),
     restart_button("RESTART", {639, 392, 330, 50}, WHITE, RED, [&]() {
-        restart(stateManager, soundManager);
+        restart();
     }),
     exit_button("EXIT", {710, 488, 330, 50}, WHITE, RED, [&]() {
-        exitGame(stateManager, soundManager);
+        exitGame();
     }),
     save_button("SAVE GAME", {594, 584, 330, 50}, WHITE, RED, []() {
 
@@ -111,17 +122,17 @@ PopUpMenu1_1::PopUpMenu1_1(StateManager& stateManager, SoundManager& soundManage
 
 }
 
-void PopUpMenu1_1::restart(StateManager& stateManager, SoundManager& soundManager)
+void PopUpMenu1_1::restart()
 {
-    stateManager.popState();
-    stateManager.pushState(std::make_unique<World1_1>(stateManager, soundManager));
-    soundManager.resumeMenuSound();
+    bool isMario = dynamic_cast<World1_1*>(StateManager::getInstance().getCurrentState())->getIsMario();
+    StateManager::getInstance().pushState(std::make_unique<World1_1>(isMario));
+    SoundManager::getInstance().resumePlayMusic();
 }
 
-void PopUpMenu1_1::exitGame(StateManager& stateManager, SoundManager& soundManager)
+void PopUpMenu1_1::exitGame()
 {
-    stateManager.popState();
-    soundManager.resumeMenuSound();
+    StateManager::getInstance().pushState(std::make_unique<MainMenu>());
+    SoundManager::getInstance().resumePlayMusic();
 }
 
 void PopUpMenu1_1::toggle()
@@ -129,9 +140,9 @@ void PopUpMenu1_1::toggle()
     isVisible = !isVisible;
 
     if (isVisible)
-        soundManager.pauseMenuSound();
+        SoundManager::getInstance().pausePlayMusic();
     else
-        soundManager.resumeMenuSound();
+        SoundManager::getInstance().resumePlayMusic();
 }
 
 void PopUpMenu1_1::update(float deltaTime)

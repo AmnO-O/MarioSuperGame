@@ -2,18 +2,16 @@
 #include "States/SubMenu.h"
 #include "States/World11.h"
 
-LevelMenu::LevelMenu(StateManager& stateManager, SoundManager& soundManager, bool checkMario)
-  : stateManager(stateManager),
-    soundManager(soundManager),
-    isMario(checkMario),
+LevelMenu::LevelMenu(bool checkMario)
+  : isMario(checkMario),
     title("CHOOSE YOUR LEVEL"), 
     high_score("TOP- 000000"),
     return_button("assets/images/turn_back.png", {25,27,100,100}, [&]() {
         //stateManager.popState();
-        stateManager.pushState(std::make_unique<SubMenu>(stateManager, soundManager, isMario));
+        StateManager::getInstance().pushState(std::make_unique<SubMenu>(isMario));
     }),
     world1_1("assets/images/World1-1.png", {73, 277, 532, 208}, [&]() {
-        stateManager.pushState(std::make_unique<World1_1>(stateManager, soundManager));
+        StateManager::getInstance().pushState(std::make_unique<World1_1>(isMario));
     }),
     world1_2("assets/images/World1-2.png", {977, 277, 532, 208}, []() {}),
     world1_3("assets/images/World1-3.png", {73, 635, 532, 208}, []() {}),

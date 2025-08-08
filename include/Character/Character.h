@@ -8,6 +8,7 @@
 #include "PlayerMovement.h"
 #include "Object/Fireball.h"
 #include "Observer/ICollidable.h"
+#include "Resources/SoundManager.h"
 
 
 class Character{

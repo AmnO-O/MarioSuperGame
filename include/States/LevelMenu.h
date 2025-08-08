@@ -2,7 +2,6 @@
 #define LEVEL_MENU_H
 
 #include <raylib.h>
-#include "../Resources/SoundManager.h"
 #include "../Resources/StateManager.h"
 #include "../Widgets/Button.h"
 #include <string>
@@ -24,13 +23,11 @@ class LevelMenu : public GameState
         std::string high_score;
         std::string title;
         Font font;
-        StateManager& stateManager;
-        SoundManager& soundManager;
         bool isMario; 
 
     public: 
 
-        LevelMenu(StateManager& stateManager, SoundManager& soundManager, bool isMario);
+        LevelMenu(bool isMario);
         ~LevelMenu(); 
 
         void drawBorder(Rectangle bounds);

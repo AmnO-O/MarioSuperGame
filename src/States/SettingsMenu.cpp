@@ -3,13 +3,11 @@
 #include "States/LevelMenu.h"
 #include "Resources/SoundManager.h"
 
-SettingsMenu::SettingsMenu(StateManager& stateManager, SoundManager& soundManager)
-  : stateManager(stateManager),
-    soundManager(soundManager),
-    slider({686, 245, 449, 35}, soundManager),
+SettingsMenu::SettingsMenu()
+  : slider({686, 245, 449, 35}, SoundManager::getInstance()),
     return_button("assets/images/turn_back.png", {25, 27, 100, 100}, [&]() {
         //stateManager.popState();
-        stateManager.pushState(std::make_unique<MainMenu>(stateManager, soundManager));
+        StateManager::getInstance().pushState(std::make_unique<MainMenu>());
     }),
     music("MUSIC:"),
     soundFX("SOUND FX:") 

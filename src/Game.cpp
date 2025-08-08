@@ -13,20 +13,31 @@ Game::Game() {
     InitWindow(1600, 900, "Mario Game");
     SetTargetFPS(60);
     isRunning = true;
-    soundManager.loadMenuSound();
-    stateManager.pushState(std::make_unique<MainMenu>(stateManager, soundManager));
+    
+    InitAudioDevice();
+    SoundManager::getInstance().loadPlayMusic();
+    SoundManager::getInstance().loadDeathSound();
+    SoundManager::getInstance().loadGameOverSound();
+
+    StateManager::getInstance().pushState(std::make_unique<MainMenu>());
 }
 
 Game::~Game() {
-    soundManager.unloadMenuSound();
-    while (stateManager.getCurrentState()) {
-        stateManager.popState();
+    SoundManager::getInstance().unloadPlayMusic();
+    SoundManager::getInstance().unloadDeathSound();
+    SoundManager::getInstance().unloadGameOverSound();
+    
+    while (StateManager::getInstance().getCurrentState()) {
+        StateManager::getInstance().popState();
     }
+
+    CloseAudioDevice();
     CloseWindow();
 }
 
 void Game::run() {
-    soundManager.playMenuSound();
+    SoundManager::getInstance().playMusic.looping = true;
+    SoundManager::getInstance().playPlayMusic();
 
     while (!WindowShouldClose() && isRunning) {
         float deltaTime = GetFrameTime();
@@ -43,13 +54,16 @@ void Game::processInput() {
 }
 
 void Game::update(float deltaTime) {
-    soundManager.updateMenuSound();
-    stateManager.update(deltaTime);
+
+    SoundManager::getInstance().updatePlayMusic();
+
+    StateManager::getInstance().update(deltaTime);
 }
 
 void Game::render() {
     BeginDrawing();
     ClearBackground(RAYWHITE);
-    stateManager.render();
+    
+    StateManager::getInstance().render();
     EndDrawing();
 }

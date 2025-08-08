@@ -1,6 +1,8 @@
 #include "Character/Character.h"
 #include "Blocks/Coin.h"
 #include "Character/Enemy.h"
+#include "Resources/StateManager.h"
+#include "States/GameOverMenu.h"
 #include <iostream>
 #include <cassert>
 #include <algorithm>
@@ -331,15 +333,23 @@ void Player::triggerDeath(){
 		return; 
 	}
 
-	IMoveState *tmp = Mstate; 
-	Mstate = new DeadState(); 
-	delete tmp; 
-	tmp = nullptr; 
+	if (!SoundManager::getInstance().death_played)
+	{
+		SoundManager::getInstance().stopPlayMusic();
+		SoundManager::getInstance().playDeathSound();
+		SoundManager::getInstance().death_played = true;
+	}
+
+	IMoveState *tmp = Mstate;
+	Mstate = new DeadState();
+	delete tmp;
+	tmp = nullptr;
 
 	movement->setDisableUpdate(); 
 	movement->setVelocityX(0.0f); 
 	movement->setVelocityY(-200.0f); 
 	movement->setGroundLevel(1000.0f); 
+
 }
 
 

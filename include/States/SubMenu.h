@@ -4,7 +4,6 @@
 #include <raylib.h>
 #include "../Widgets/Button.h"
 #include "../Resources/StateManager.h"
-#include "../Resources/SoundManager.h"
 #include <memory>
 #include <string>
 
@@ -19,13 +18,11 @@ class SubMenu : public GameState
         Texture2D sub_background;
         std::string title; 
         Font titleFont; 
-        StateManager& stateManager;
-        SoundManager& soundManager;
         bool isMario;
 
     public:
 
-        SubMenu(StateManager& stateManager, SoundManager& soundManager, bool isMario);
+        SubMenu(bool isMario);
         ~SubMenu();
 
         void processInput() override {};
