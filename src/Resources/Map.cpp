@@ -37,6 +37,10 @@ void Map::input(std::istream &is, Texture2D &objectTex) {
             for (int i = 0; i < n; i++)
                 blocks.push_back(new Sewer(objectTex, is));
         }
+        else if (s == "H_SEWER") {
+            for (int i = 0; i < n; i++)
+                blocks.push_back(new HorizontalSewer(objectTex, is));
+        }
     }
 
     int nEnemy;

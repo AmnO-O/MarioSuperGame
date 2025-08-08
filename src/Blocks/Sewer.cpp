@@ -38,6 +38,7 @@ void Sewer::Update(float deltaTime, Player* player) {
             animationEnterSewer.resetAll(); 
         }
         animationEnterSewer.update(deltaTime); 
+        return;
     }
 
 
@@ -58,8 +59,8 @@ void Sewer::Update(float deltaTime, Player* player) {
         if (top < minPen) { minPen = top; dir = TOP; }
         if (bottom < minPen) { minPen = bottom; dir = BOTTOM; }
 
-        if (dir == TOP && body.y + body.height >= hitbox.y - 0.2) { // Player hit Question from below
-            if( hitbox.x + 2 < body.x  && body.x + body.width < hitbox.x + hitbox.width - 2){
+        if (dir == TOP && body.y + body.height >= hitbox.y - 0.2) { 
+            if( hitbox.x + 4 < body.x  && body.x + body.width < hitbox.x + hitbox.width - 4){
                 if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)){
                     hasDowned = true;
                     animationEnterSewer.setPlayer(player); 
@@ -79,4 +80,59 @@ Vector2 Sewer::changePlayerPos() {
     if (hasDowned && animationEnterSewer.doneAction())
         return tp;
     return {-1.0f, -1.0f};
+}
+
+Rectangle HorizontalSewer::getHitbox() const {
+    return {pos.x, pos.y, 1.0f * height, head.height};
+}
+
+void HorizontalSewer::Draw(DrawStat ds) const {
+    if (drawStat != ds) return;
+    DrawTextureRec(tex, head, pos, WHITE);
+    for (int i = 0; i < ((int)height - (int)head.height) / (int)body.height; i++) {
+        DrawTextureRec(tex, body, {pos.x + head.width + body.width * i, pos.y}, WHITE);
+    }
+    Rectangle rec = body;
+    rec.width = height - head.width - body.width * (((int)height - (int)head.width) / (int)body.width);
+    DrawTextureRec(tex, rec, {pos.x + height - rec.width, pos.y}, WHITE);
+}
+void HorizontalSewer::Update(float delta, Player* player) {
+    if (!canDown) return;
+    if (hasDowned){
+        // if(animationEnterSewer.doneAction()){
+            hasDowned = false;
+        //     animationEnterSewer.resetAll(); 
+        // }
+        // animationEnterSewer.update(deltaTime); 
+        return;
+    }
+
+
+    if (player) {
+        Rectangle body = player->getHitbox(); 
+        Rectangle hitbox = getHitbox();
+        // Check overlap
+        float left = (body.x + body.width) - hitbox.x;
+        float right = (hitbox.x + hitbox.width) - body.x;
+        float top = (body.y + body.height) - hitbox.y;
+        float bottom = (hitbox.y + hitbox.height) - body.y;
+        //if (left <= 0 || right <= 0 || top <= 0 || bottom <= 0) return;
+
+        // Find minimal penetration
+        float minPen = left;
+        enum Dir { LEFT, RIGHT, TOP, BOTTOM } dir = LEFT;
+        if (right < minPen) { minPen = right; dir = RIGHT; }
+        if (top < minPen) { minPen = top; dir = TOP; }
+        if (bottom < minPen) { minPen = bottom; dir = BOTTOM; }
+
+        if (dir == LEFT && body.x + body.width >= hitbox.x - 0.2) { 
+            if( hitbox.y <= body.y  && body.y + body.height <= hitbox.y + hitbox.height){
+                if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)){
+                    hasDowned = true;
+                    // animationEnterSewer.setPlayer(player); 
+                    // animationEnterSewer.addAction(std::make_unique<EnterAction>());
+                }
+            }
+        }
+    }
 }

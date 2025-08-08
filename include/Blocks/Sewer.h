@@ -7,7 +7,7 @@
 #include "Character/PlayerAction.h"
 
 class Sewer : public Block {
-private:
+protected:
     bool canDown = false;
     bool hasDowned = false;
     Vector2 tp = {-1.0f, -1.0f};
@@ -25,7 +25,17 @@ public:
     void Draw(DrawStat ds) const override;
     void adaptCollision(ICollidable* other) override {}
     void Update(float delta, Player* player) override;
-    ~Sewer() override {}
+    ~Sewer() override = default;
+};
+
+class HorizontalSewer : public Sewer {
+private:
+public:
+    HorizontalSewer(Texture2D &tex, std::istream &is) : Sewer(tex, is) {}
+    Rectangle getHitbox() const override;
+    void Draw(DrawStat ds) const override;
+    void Update(float delta, Player* player) override;
+    ~HorizontalSewer() override = default;
 };
 
 #endif
