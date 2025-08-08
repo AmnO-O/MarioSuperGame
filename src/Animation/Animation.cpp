@@ -1,4 +1,3 @@
-#pragma once
 #include "Animation/Animation.h"
 #include <cassert>
 #include "Exceptions.h"
