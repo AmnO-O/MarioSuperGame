@@ -20,7 +20,6 @@ class World: public GameState
         Map* currentMap;
         int mapIndex;
         Player *character; 
-        MyCamera2D *myCam; 
         
         ImageButton settings_button;
         Texture2D settings_button_state;

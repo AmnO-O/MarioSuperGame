@@ -44,6 +44,6 @@ void VolumeSlider::render()
 
     float knobX = slider.x + volume * slider.width;
     float knobY = slider.y + slider.height / 2;    
-    DrawCircle(knobX, knobY, slider.height / 2, knob_color);
+    DrawCircle((int)knobX, (int)knobY, slider.height / 2, knob_color);
 }
 

@@ -27,8 +27,6 @@ World::World(bool checkMario, int index)
     if (mapIndex == 1)
     {
         currentMap = new Map("assets/maps/1-1/", Images::textures["mapobject.png"]);
-        myCam = new MyCamera2D(1.0f * GetScreenWidth(), 1.0f * GetScreenHeight()); 
-        myCam->setMapSize(currentMap->getSize());
     }
 
     currentMap->SetUp(character);
@@ -42,7 +40,6 @@ World::~World()
     UnloadTexture(settings_button_state);
 
     delete character; 
-    delete myCam; 
 }
 
 bool World::getIsMario() const
@@ -77,10 +74,7 @@ void World::update(float deltaTime)
     {
         if(deltaTime < 0.2) 
         {
-            CollisionManager::getInstance().Register(character->shootFireball()); 
-            CollisionManager::getInstance().CheckAllCollisions();
             currentMap->Update(deltaTime);
-            myCam->update(character); 
         }
     }
         
@@ -93,13 +87,7 @@ void World::update(float deltaTime)
 
 void World::render() 
 {
-    Camera2D camera = myCam ->getCamera(); 
-
-    /// camera draw here
-    BeginMode2D(camera); 
     currentMap->Draw();
-    EndMode2D(); 
-
 
     settings_button.render();
 
