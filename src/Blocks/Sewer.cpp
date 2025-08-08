@@ -31,13 +31,12 @@ void Sewer::Draw(DrawStat ds) const {
 }
 
 void Sewer::Update(float deltaTime, Player* player) { 
+    if (!canDown) return;
     if (hasDowned){
-        
         if(animationEnterSewer.doneAction()){
             hasDowned = false;
             animationEnterSewer.resetAll(); 
         }
-
         animationEnterSewer.update(deltaTime); 
     }
 
