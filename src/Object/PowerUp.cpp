@@ -100,7 +100,8 @@ void PowerUp::render(){
 void MushroomPowerUp::applyEffect(Player* &character) {
     if(active == false) return; 
 	active = false; 
-	character->powerUp(this->type); 
+	character->powerUp(this->type);
+	PlaySound(SoundManager::getInstance().mushroomSound); 
 }
 
 void MushroomPowerUp::update(float deltaTime){
@@ -136,6 +137,7 @@ void FireFlowerPowerUp::applyEffect(Player* &character) {
 
 	active = false;
 	character->powerUp(this->type);
+	PlaySound(SoundManager::getInstance().mushroomSound);
 }
 
 void FireFlowerPowerUp::update(float deltaTime) {
@@ -152,6 +154,7 @@ void StarPowerUp::applyEffect(Player* &character) {
 
 	active = false;
 	character->powerUp(this->type);
+	PlaySound(SoundManager::getInstance().mushroomSound);
 }
 
 void StarPowerUp::adaptCollision(const Rectangle &rect) {

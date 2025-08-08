@@ -98,17 +98,27 @@ void Question::Break(Player* player) {
     {
         case QuestionType::COIN:
             creator = new CoinCreator();
+            PlaySound(SoundManager::getInstance().coinSound);
             break;
         
         case QuestionType::POWER:
             if (player->isBig())
+            {
                 creator = new FireFlowerCreator();
+                PlaySound(SoundManager::getInstance().powerUpSound);
+            }
+
             else
+            {
                 creator = new MushroomCreator();
+                PlaySound(SoundManager::getInstance().powerUpSound);
+            }
+
             break;
 
         case QuestionType::STAR:
             creator = new StarCreator();
+            PlaySound(SoundManager::getInstance().powerUpSound);
             break;
 
         default:

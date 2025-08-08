@@ -22,11 +22,17 @@ class SoundManager
 
         static SoundManager& getInstance();
         
+        // Music
         Music playMusic;
         Sound deathSound;
         Sound gameOverSound;
         
+        // Effects
         Sound jumpSound;
+        Sound brickSound;
+        Sound coinSound;
+        Sound mushroomSound;
+        Sound powerUpSound;
         
         bool death_played = false;
         bool game_over_played = false;

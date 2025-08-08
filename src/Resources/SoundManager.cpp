@@ -19,6 +19,18 @@ void SoundManager::loadAll()
 
     jumpSound = LoadSound("assets/sounds/jump.wav");
 	SetSoundVolume(jumpSound, getEffectVolume());
+
+    brickSound = LoadSound("assets/sounds/block.wav");
+    SetSoundVolume(brickSound, getEffectVolume());
+
+    coinSound = LoadSound("assets/sounds/coin.wav");
+    SetSoundVolume(coinSound, getEffectVolume());
+
+    mushroomSound = LoadSound("assets/sounds/mushroom.wav");
+    SetSoundVolume(mushroomSound, getEffectVolume());
+
+    powerUpSound = LoadSound("assets/sounds/powerUpAppear.wav");
+    SetSoundVolume(powerUpSound, getEffectVolume() * 2.5f);
 }
 
 void SoundManager::unloadAll() 
@@ -27,6 +39,10 @@ void SoundManager::unloadAll()
     UnloadSound(deathSound);
     UnloadSound(gameOverSound);
     UnloadSound(jumpSound);
+    UnloadSound(brickSound);
+    UnloadSound(coinSound);
+    UnloadSound(mushroomSound);
+    UnloadSound(powerUpSound);
 }
 
 float SoundManager::getMusicVolume() const
@@ -51,4 +67,8 @@ void SoundManager::setEffectVolume(float volume)
 	SetSoundVolume(deathSound, volume);
 	SetSoundVolume(gameOverSound, volume);
 	SetSoundVolume(jumpSound, volume);
+    SetSoundVolume(brickSound, volume);
+    SetSoundVolume(coinSound, volume);
+    SetSoundVolume(mushroomSound, volume);
+    SetSoundVolume(powerUpSound, volume);
 }

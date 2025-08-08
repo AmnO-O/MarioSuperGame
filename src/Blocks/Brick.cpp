@@ -138,6 +138,8 @@ void Brick::Break() {
     drawStat = DrawStat::Second;
     fragmentVelocity = initVelocity;
     frameTime = 0.0f;
+
+    PlaySound(SoundManager::getInstance().brickSound);
 }
 
 void Brick::Bounce() {    
