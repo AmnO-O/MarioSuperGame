@@ -19,8 +19,10 @@ World::World(bool checkMario, int index)
 
 	Images::loadAllTextures("assets/images/");
 
-
-    character = new Player(CharacterType::MARIO, {  100, 100 });
+    if (checkMario)
+        character = new Player(CharacterType::MARIO, {  100, 100 });
+    else
+        character = new Player(CharacterType::LUIGI, { 100, 100 });
 
     if (mapIndex == 1)
     {
