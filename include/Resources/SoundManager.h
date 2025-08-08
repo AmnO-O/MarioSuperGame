@@ -15,25 +15,30 @@ class SoundManager
         SoundManager(const SoundManager&) = delete;
         SoundManager& operator=(const SoundManager&) = delete;
 
-        float current_volume = 1.0f; //Current volume = default volume when first init
+        float current_music_volume = 0.5f; 
+        float current_effect_volume = 0.5f;
 
     public:
 
         static SoundManager& getInstance();
-        static std::unordered_map<std::string, Sound> effects;
-
+        
         Music playMusic;
         Sound deathSound;
         Sound gameOverSound;
-
+        
+        Sound jumpSound;
+        
         bool death_played = false;
         bool game_over_played = false;
 
-        static void loadAllSounds(const std::string& folderPath);
-	    static void unloadAllSounds();
+        void loadAll();
+	    void unloadAll();
 
-        float getVolume() const;
+        float getMusicVolume() const;
+        float getEffectVolume() const;
         void setMusicVolume(float volume);
+        void setEffectVolume(float volume);
+
    
 };
 

@@ -1,39 +1,54 @@
 #include "Resources/SoundManager.h"
 
-std::unordered_map<std::string, Sound> SoundManager::effects;
-
 SoundManager& SoundManager::getInstance()
 {
     static SoundManager instance;
     return instance;
 }
 
-void SoundManager::loadAllSounds(const std::string& path) {
-	for (auto& file : std::filesystem::directory_iterator(path)) {
-		if (file.is_regular_file()) {
-			auto ext = file.path().extension().string();
-			if (ext == ".wav") 
-            {
-				std::string name = file.path().filename().string();
-				effects[name] = LoadSound(file.path().string().c_str());
-			}
-		}
-	}
+void SoundManager::loadAll() 
+{
+	playMusic = LoadMusicStream("assets/sounds/SuperMarioBros_theme_song.mp3");
+    SetMusicVolume(playMusic, getMusicVolume());
+	
+	deathSound = LoadSound("assets/sounds/death.wav");
+	SetSoundVolume(deathSound, getEffectVolume());
+
+    gameOverSound = LoadSound("assets/sounds/gameOver.wav");
+	SetSoundVolume(gameOverSound, getEffectVolume());
+
+    jumpSound = LoadSound("assets/sounds/jump.wav");
+	SetSoundVolume(jumpSound, getEffectVolume());
 }
 
-void SoundManager::unloadAllSounds() 
+void SoundManager::unloadAll() 
 {
-	for (auto [key, sounds] : effects) UnloadSound(sounds); 
-	effects.clear(); 
+    UnloadMusicStream(playMusic);
+    UnloadSound(deathSound);
+    UnloadSound(gameOverSound);
+    UnloadSound(jumpSound);
 }
 
-float SoundManager::getVolume() const
+float SoundManager::getMusicVolume() const
 {
-    return current_volume;
+    return current_music_volume;
+}
+
+float SoundManager::getEffectVolume() const
+{
+    return current_effect_volume;
 }
 
 void SoundManager::setMusicVolume(float volume)
 {
-    current_volume = volume;
+    current_music_volume = volume;
     SetMusicVolume(playMusic, volume);
+}
+
+void SoundManager::setEffectVolume(float volume)
+{
+    current_effect_volume = volume;
+	SetSoundVolume(deathSound, volume);
+	SetSoundVolume(gameOverSound, volume);
+	SetSoundVolume(jumpSound, volume);
 }

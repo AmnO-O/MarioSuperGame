@@ -18,7 +18,8 @@ class SettingsMenu : public GameState
         std::string music;
         std::string soundFX;
         Font font; 
-        VolumeSlider slider;
+        VolumeSlider music_slider;
+        VolumeSlider effect_slider;
 
     public:
 

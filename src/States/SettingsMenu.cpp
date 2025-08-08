@@ -4,7 +4,8 @@
 #include "Resources/SoundManager.h"
 
 SettingsMenu::SettingsMenu()
-  : slider({686, 245, 449, 35}, SoundManager::getInstance()),
+  : music_slider({686, 245, 449, 35}, false),
+    effect_slider({686, 359, 449, 35}, true),
     return_button("assets/images/turn_back.png", {25, 27, 100, 100}, [&]() {
         StateManager::getInstance().pushState(std::make_unique<MainMenu>());
     }),
@@ -26,7 +27,8 @@ SettingsMenu::~SettingsMenu()
 void SettingsMenu::update(float deltaTime) 
 {
     return_button.update(deltaTime);
-    slider.update();
+    music_slider.update();
+    effect_slider.update();
 }
 
 void SettingsMenu::render() 
@@ -34,7 +36,8 @@ void SettingsMenu::render()
     DrawTexture(settings_background, 0, 0, WHITE);
     
     return_button.render();
-    slider.render();
+    music_slider.render();
+    effect_slider.render();
 
     bool isHovered = CheckCollisionPointRec(GetMousePosition(), return_button.getBounds());
     if (isHovered)  

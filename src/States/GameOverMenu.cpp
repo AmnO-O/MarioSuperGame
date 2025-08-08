@@ -8,13 +8,15 @@ GameOverMenu::GameOverMenu()
         StateManager::getInstance().popState();
         bool isMario = dynamic_cast<World1_1*>(StateManager::getInstance().getCurrentState())->getIsMario();
         StateManager::getInstance().pushState(std::make_unique<World1_1>(isMario)); // needs changing
-        StopSound(SoundManager::getInstance().deathSound);
+        
+        StopSound(SoundManager::getInstance().gameOverSound);
         PlayMusicStream(SoundManager::getInstance().playMusic);
         SoundManager::getInstance().death_played = false;
         SoundManager::getInstance().game_over_played = false;
     }),
     exit_button("EXIT", {707, 620, 330, 50}, WHITE, RED, [&]() {
         StateManager::getInstance().pushState(std::make_unique<MainMenu>());
+        
         StopSound(SoundManager::getInstance().gameOverSound);
         PlayMusicStream(SoundManager::getInstance().playMusic);
         SoundManager::getInstance().death_played = false;
