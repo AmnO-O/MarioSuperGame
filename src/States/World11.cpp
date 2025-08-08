@@ -21,9 +21,6 @@ World1_1::World1_1(StateManager& stateManager, SoundManager& soundManager)
 
     maps.push_back(Map("assets/maps/1-1/", Images::textures["mapobject.png"]));
     maps[currentMap].SetUp(character);
-
-    myCam = new MyCamera2D(1.0f * GetScreenWidth(), 1.0f * GetScreenHeight()); 
-    myCam->setMapSize(maps[currentMap].getSize());
 }
 
 World1_1::~World1_1() 
@@ -35,7 +32,6 @@ World1_1::~World1_1()
     UnloadTexture(settings_button_state);
 
     delete character; 
-    delete myCam; 
 }
 
 void World1_1::processInput()
@@ -51,10 +47,7 @@ void World1_1::update(float deltaTime)
     if (!popup_menu.isVisible)
     {
         if(deltaTime < 0.2) {
-            CollisionManager::getInstance().Register(character->shootFireball()); 
-            CollisionManager::getInstance().CheckAllCollisions();
             maps[currentMap].Update(deltaTime);
-            myCam -> update(character); 
         }
     }
         
@@ -67,14 +60,7 @@ void World1_1::update(float deltaTime)
 
 void World1_1::render() 
 {
-    Camera2D camera = myCam ->getCamera(); 
-    //BeginDrawing();
-    //ClearBackground(RAYWHITE);
-
-    /// camera draw here
-    BeginMode2D(camera); 
-        maps[currentMap].Draw();
-    EndMode2D(); 
+    maps[currentMap].Draw();
 
     settings_button.render();
 

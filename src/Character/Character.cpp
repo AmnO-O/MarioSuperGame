@@ -347,7 +347,7 @@ void Player::adapt_collision_with_enimies(ICollidable* other){
 	if(isInvincible() || blink.isActive()) return; 
 
 	if(movement->adapt_collision_with_enimies(other, this)){
-		movement->adaptCollision(other, Mstate, this); 
+		// movement->adaptCollision(other, Mstate, this); 
 		return; 
 	}
 
@@ -440,11 +440,11 @@ void Player::setGroundLevel(float groundLevel_){
 	adaptChangePosition();
 }
 
-void Player::setPosition(const Vector2 &position){
-	hitbox.x = position.x;
-	hitbox.y = position.y;
+void Player::setPosition(const Vector2 &pos){
+	hitbox.x = pos.x;
+	hitbox.y = pos.y;
 
-	movement->setPosition(position);
+	movement->setPosition(pos);
 	adaptChangePosition();
 }
 

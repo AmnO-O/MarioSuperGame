@@ -47,7 +47,6 @@ class World1_1: public GameState
         std::vector<Map> maps = {};
         int currentMap = 0;
         Player *character; 
-        MyCamera2D *myCam; 
         
         ImageButton settings_button;
         Texture2D settings_button_state;
