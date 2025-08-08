@@ -1,5 +1,11 @@
 #include "Resources/StateManager.h"
 
+StateManager& StateManager::getInstance()
+{
+    static StateManager instance;
+    return instance;
+}
+
 void StateManager::pushState(std::unique_ptr<GameState> newState)
 {
     stateStack.push(std::move(newState));

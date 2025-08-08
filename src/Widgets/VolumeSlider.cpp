@@ -1,14 +1,16 @@
 #include "Widgets/VolumeSlider.h"
 
-VolumeSlider::VolumeSlider(Rectangle frame, SoundManager& soundManager)
+VolumeSlider::VolumeSlider(Rectangle frame, bool isEffectSlider)
     : slider(frame),
-      volume(soundManager.getVolume()),
+      isEffect(isEffectSlider),
       background_color(LIGHTGRAY),
       fill_color(GREEN),
-      knob_color(RED), 
-      soundManager(soundManager) 
+      knob_color(RED) 
 {
-
+    if (isEffect)
+        volume = SoundManager::getInstance().getEffectVolume();
+    else
+        volume = SoundManager::getInstance().getMusicVolume();
 }
 
 void VolumeSlider::update() 
@@ -19,8 +21,12 @@ void VolumeSlider::update()
         if (CheckCollisionPointRec(mousePos, slider)) 
         {
             volume = (mousePos.x - slider.x) / slider.width; 
-            volume = Clamp(volume, 0.0f, 1.0f); 
-            soundManager.setMusicVolume(volume);
+            volume = Clamp(volume, 0.0f, 2.0f); 
+
+            if (isEffect)
+                SoundManager::getInstance().setEffectVolume(volume);
+            else
+                SoundManager::getInstance().setMusicVolume(volume);
         }
     }
 }
@@ -31,20 +37,13 @@ void VolumeSlider::render()
     const int segments = 16;
     DrawRectangleRounded(slider, roundness, segments, background_color);
 
-    Rectangle filled_slider = {slider.x, slider.y, slider.width * volume, slider.height};
+    float fillWidth = volume * slider.width;
+
+    Rectangle filled_slider = {slider.x, slider.y, fillWidth, slider.height};
     DrawRectangleRounded(filled_slider, roundness, segments, fill_color);
 
-    float knobX = slider.x + slider.width * volume; 
+    float knobX = slider.x + volume * slider.width;
     float knobY = slider.y + slider.height / 2;    
-    DrawCircle(knobX, knobY, slider.height / 2, knob_color);
+    DrawCircle((int)knobX, (int)knobY, slider.height / 2, knob_color);
 }
 
-float VolumeSlider::getCurrentVolume() const 
-{
-    return volume;
-}
-
-void VolumeSlider::setCurrentVolume(float newVolume)
-{
-    volume = Clamp(newVolume, 0.0f, 1.0f);
-}

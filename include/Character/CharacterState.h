@@ -195,3 +195,7 @@ class DeadState : public IMoveState{
 	bool isDead() const override {return true;}
 }; 
 
+
+class EnterState : public IMoveState{
+	std::string getMoveState() const override {return "ENTERING";}
+}; 

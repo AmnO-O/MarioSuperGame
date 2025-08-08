@@ -6,8 +6,10 @@
 #include "../Exceptions.h"
 #include "CharacterState.h"
 #include "PlayerMovement.h"
-#include "Object/Fireball.h"
+#include "Object/FireballManager.h"
 #include "Observer/ICollidable.h"
+#include "PlayerAction.h"
+#include "Resources/SoundManager.h"
 
 
 class Character{
@@ -99,27 +101,31 @@ public:
 };
 
 
+
 class Player : public ICollidable, public Character{
 private: 
+    friend class PlayerActionManager; 
+
+private: 
+
     PlayerMovement* movement; 
     IShapeState *Sstate; 
     IMoveState *Mstate; 
-
-    CharacterType type; 
 	std::map<std::string, std::unique_ptr<AnimationManager>> animations; 
-    std::vector<Fireball*> fireballs;
+    FireballManager fireballs;
 	AnimationManager *activeAnimation;
+
+    BlinkCounter blink; 
+    CharacterType type; 
 
     bool shrinkOnHit = false; 
     bool showPlayer = false; 
 
-    BlinkCounter blink; 
 
     void updateHitbox(); 
     void readRectAnimation(const std::string filePath, Texture2D &sheet); 
     std::string getShape_Action() const; 
 
-    void cleanFireballs(); 
     void updateShape(); 
     void setUp(); 
     void adaptChangePosition(); 
@@ -130,6 +136,18 @@ private:
 public: 
     Player(CharacterType type, Vector2 pos); 
     Player(CharacterType type, float cordX, float groundLevel); 
+
+    void changeMstate(IMoveState *Mstate_){
+        if(Mstate->getMoveState() != Mstate_->getMoveState()){
+            delete Mstate; 
+            Mstate = Mstate_;    
+            updateShape(); 
+            updateHitbox(); 
+            return; 
+        }
+
+        delete Mstate_; 
+    }
 
     Vector2 getPosition() const {return movement->getPosition(); }
     Rectangle getHitbox() const override {return hitbox; }
@@ -142,9 +160,23 @@ public:
         return Mstate->isDead() && (position.y >= 800); 
     }
 
-    void run_to_b(float end_x) {run_from_a_to_b(hitbox.x, end_x);}
-    void run_from_a_to_b(float start_x, float end_x);
+    bool IsActive() const override{return Mstate->isDead() == false;}
 
+    bool hidePlayer() const{
+        return movement->isLocked(); 
+    }
+
+    bool isLocked() const{
+        return movement->isLocked(); 
+    }
+    
+    // action
+    void run_to(float end_x) {run_from_a_to_b(hitbox.x, end_x);}
+    void run_from_a_to_b(float start_x, float end_x);
+    void climb_to(float destinationY);
+    void jump_to(float destinationY);
+
+    // setter 
     void setPosition(const Vector2 &pos); 
     void setOnGround(); 
 

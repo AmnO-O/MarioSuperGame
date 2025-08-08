@@ -11,10 +11,12 @@
 #include "Character/Enemy.h"
 #include "Character/Goomba.h"
 #include "Character/Koopa.h"
+#include "MyCamera2D.h"
 
 class Map {
 private:
     int space;
+    MyCamera2D* cam;
     int curspace = 0;
     Texture2D background;
     std::vector<Block*> blocks;

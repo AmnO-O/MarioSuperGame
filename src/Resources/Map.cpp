@@ -8,6 +8,9 @@
 
 void Map::input(std::istream &is, Texture2D &objectTex) {
     is >> space;
+    cam = new MyCamera2D(1.0f * GetScreenWidth(), 1.0f * GetScreenHeight()); 
+    cam->setMapSize(getSize());
+
     std::string s;
     int nBlock;
     is >> nBlock;
@@ -70,8 +73,19 @@ Map::Map(const std::string& folderPath, Texture2D &objectTex) {
 }
 
 void Map::Update(float delta) {
-    for (int i = 0; i < blocks.size(); i++)
-        blocks[i]->Update(delta);
+    CollisionManager::getInstance().Register(character->shootFireball()); 
+    CollisionManager::getInstance().CheckAllCollisions();
+    for (int i = 0; i < blocks.size(); i++) {
+        blocks[i]->Update(delta, character);
+        Vector2 tmpCam = blocks[i]->changeCam();
+        Vector2 tmpPos = blocks[i]->changePlayerPos();
+        if (tmpPos.x >= 0 && tmpPos.y >= 0 && tmpCam.x >= 0 && tmpCam.y >= 0) {
+            character->setGroundLevel(2.0f * GetScreenHeight());
+            character->setPosition(tmpPos);
+            cam->setTarget(tmpCam);
+        }
+
+    }
         
     if(character)
         character->update(delta); 
@@ -79,27 +93,42 @@ void Map::Update(float delta) {
     for (int i = (int)enemies.size() - 1; i >= 0; i--) {
         enemies[i]->update(delta);
     }
+    
+    cam -> update(character); 
 }
 
 void Map::Draw() const {    
-    DrawTexture(background, 0, 0, WHITE);
-
-    for (int i = 0; i < blocks.size(); i++) {
-        blocks[i]->Draw(DrawStat::First);
-    }
     
-    for (int i = 0; i < blocks.size(); i++) {
-        blocks[i]->Draw(DrawStat::Second);
-    }
+    Camera2D camera = cam ->getCamera(); 
+    BeginMode2D(camera); 
 
-    if(character)
-        character->render(); 
+        DrawTexture(background, 0, 0, WHITE);
 
-    for (int i = 0; i < enemies.size(); i++) {
-        enemies[i]->render();
-        // DrawRectangleLines(enemies[i]->getHitbox().x, enemies[i]->getHitbox().y, 
-        //                     enemies[i]->getHitbox().width, enemies[i]->getHitbox().height, GREEN);
-    }
+    
+        if( dynamic_cast<Player*> (character) &&  dynamic_cast<Player*> (character)->hidePlayer()){
+            character->render(); 
+        }
+
+        for (int i = 0; i < blocks.size(); i++) {
+            blocks[i]->Draw(DrawStat::First);
+        }
+        
+        for (int i = 0; i < blocks.size(); i++) {
+            blocks[i]->Draw(DrawStat::Second);
+        }
+
+        if( dynamic_cast<Player*> (character) &&  !dynamic_cast<Player*> (character)->hidePlayer()){
+            character->render(); 
+        }
+
+
+        for (int i = 0; i < enemies.size(); i++) {
+            enemies[i]->render();
+            // DrawRectangleLines(enemies[i]->getHitbox().x, enemies[i]->getHitbox().y, 
+            //                     enemies[i]->getHitbox().width, enemies[i]->getHitbox().height, GREEN);
+        }
+    
+    EndMode2D(); 
 }
 
 void Map::Unload() {
@@ -110,6 +139,8 @@ void Map::Unload() {
     for (int i = 0; i < enemies.size(); i++) {
         delete enemies[i];
     }
+
+    delete cam;
 }
 
 void Map::SetUp(Player* player) {

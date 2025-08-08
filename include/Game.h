@@ -29,8 +29,7 @@ private:
     void update(float deltaTime);
     void render();
     bool isRunning;
-    StateManager stateManager;
-    SoundManager soundManager;
+    
 };
 
 #endif
