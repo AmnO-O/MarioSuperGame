@@ -76,6 +76,21 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 		return; 
 	}
 
+	if(Mstate->isDead()){
+		float forceY = 430; 
+
+		if(position.y + shape.y >= groundLevel) forceY = 0; 
+
+		velocity.y += forceY * deltaTime;
+        position.y += velocity.y * deltaTime;
+		
+		return ; 
+	}
+
+	if(disableUpdate == true) 
+		return ; 
+
+
 	currentTime += deltaTime; 
 
 	bool pressingLeft = IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT);
@@ -88,18 +103,6 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 
 	if(pressingLeft && pressingRight) pressingRight = pressingLeft = false; 
 	if(pressingCrounch) pressingRight = pressingLeft = false; 
-	
-	if(disableUpdate == true){
-		pressingLeft = pressingRight = isClickedSpace = pressingSpace = pressingCrounch = false;
-		float forceY = 430; 
-
-		if(position.y + shape.y >= groundLevel) forceY = 0; 
-
-		velocity.y += forceY * deltaTime;
-        position.y += velocity.y * deltaTime;
-		
-		return ; 
-	}
 	
 	float forceX = 0;
 	float forceY = 980;

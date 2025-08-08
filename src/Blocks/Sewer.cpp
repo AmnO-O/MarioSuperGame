@@ -12,6 +12,7 @@ Sewer::Sewer(Texture2D &tex, std::istream &is) : Block(tex) {
     }
     if (height < head.height)
         throw ResourceException("Sewer height < Sewer Head!");
+    
 }
 
 Rectangle Sewer::getHitbox() const {   
@@ -29,8 +30,18 @@ void Sewer::Draw(DrawStat ds) const {
     DrawTextureRec(tex, rec, {pos.x, pos.y + height - rec.height}, WHITE);
 }
 
-void Sewer::Update(float delta, Player* player) { 
-    if (hasDowned) hasDowned = false;
+void Sewer::Update(float deltaTime, Player* player) { 
+    if (hasDowned){
+        
+        if(animationEnterSewer.doneAction()){
+            hasDowned = false;
+            animationEnterSewer.resetAll(); 
+        }
+
+        animationEnterSewer.update(deltaTime); 
+    }
+
+
     if (player) {
         Rectangle body = player->getHitbox(); 
         Rectangle hitbox = getHitbox();
@@ -48,20 +59,25 @@ void Sewer::Update(float delta, Player* player) {
         if (top < minPen) { minPen = top; dir = TOP; }
         if (bottom < minPen) { minPen = bottom; dir = BOTTOM; }
 
-        if (dir == TOP) { // Player hit Question from below
-            if (IsKeyPressed(KEY_DOWN))
-                hasDowned = true;
+        if (dir == TOP && body.y + body.height >= hitbox.y - 0.2) { // Player hit Question from below
+            if( hitbox.x + 2 < body.x  && body.x + body.width < hitbox.x + hitbox.width - 2){
+                if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)){
+                    hasDowned = true;
+                    animationEnterSewer.setPlayer(player); 
+                    animationEnterSewer.addAction(std::make_unique<EnterAction>());
+                }
+            }
         }
     }
 }
 
 Vector2 Sewer::changeCam() {
-    if (hasDowned)
+    if (hasDowned && animationEnterSewer.doneAction())
         return cam;
     return {-1.0f, -1.0f};
 }
 Vector2 Sewer::changePlayerPos() {
-    if (hasDowned)
+    if (hasDowned && animationEnterSewer.doneAction())
         return tp;
     return {-1.0f, -1.0f};
 }

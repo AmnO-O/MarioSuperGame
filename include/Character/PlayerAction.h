@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <queue>
+#include "Animation/LerpMover.h"
 
 class Player; 
 class PlayerMovement; 
@@ -31,6 +32,7 @@ public:
 
 class EnterAction : public IAction{
     float currentTime = 0; 
+    LerpMover lerpMover; 
 public: 
     EnterAction(){}; 
     void execute(Player *player, PlayerMovement* movement, float deltaTime) override; 
@@ -42,10 +44,13 @@ class PlayerActionManager {
 private:
     std::queue<std::unique_ptr<IAction>> actionQueue;
     Player* player;
-
 public:
+    PlayerActionManager(){player = nullptr;}
     PlayerActionManager(Player* player_); 
+    void setPlayer(Player *player_) {this->player = player_;}
+    bool doneAction() {return actionQueue.empty();}
     void addAction(std::unique_ptr<IAction> action);
     void skipCurrentAction();
     void update(float deltaTime);
+    void resetAll(); 
 };

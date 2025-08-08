@@ -13,7 +13,9 @@ void PlayerActionManager::skipCurrentAction(){
 }
 
 void PlayerActionManager::update(float deltaTime) {
-    if (actionQueue.empty()) return;
+    if(player == nullptr)
+        throw GameException("Player is null at  PlayerActionManager::update");
+    if (actionQueue.empty() || player == nullptr) return;
 
     auto& currentAction = actionQueue.front();
     currentAction->execute(player, player->movement, deltaTime);
@@ -21,6 +23,11 @@ void PlayerActionManager::update(float deltaTime) {
     if (currentAction->isFinished(player, player->movement)) {
         actionQueue.pop();
     }
+}
+
+void PlayerActionManager::resetAll(){
+    player->movement->unlockMovement(); 
+    while(actionQueue.size()) actionQueue.pop();
 }
 
 RunAction::RunAction(float target) : targetX(target) {}
@@ -48,10 +55,16 @@ void EnterAction::execute(Player *player, PlayerMovement* movement, float deltaT
     if(currentTime == 0){
         player->changeMstate(new EnterState()); 
         movement->lockMovement(); 
+        Vector2 startPos = movement->getPosition(); 
+        Vector2 endPos = {startPos.x, startPos.y + 30.0f};
+        lerpMover.start(startPos, endPos, 2.0f); 
     }
+
     currentTime += deltaTime; 
+    Vector2 nextPos = lerpMover.update(deltaTime); 
+    movement->setPosition(nextPos); 
 }
 
 bool EnterAction::isFinished(Player *player, PlayerMovement* movement) const {
-    return true; 
+    return lerpMover.isDone(); 
 }

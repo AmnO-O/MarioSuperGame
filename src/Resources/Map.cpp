@@ -104,6 +104,11 @@ void Map::Draw() const {
 
         DrawTexture(background, 0, 0, WHITE);
 
+    
+        if( dynamic_cast<Player*> (character) &&  dynamic_cast<Player*> (character)->hidePlayer()){
+            character->render(); 
+        }
+
         for (int i = 0; i < blocks.size(); i++) {
             blocks[i]->Draw(DrawStat::First);
         }
@@ -112,8 +117,10 @@ void Map::Draw() const {
             blocks[i]->Draw(DrawStat::Second);
         }
 
-        if(character)
+        if( dynamic_cast<Player*> (character) &&  !dynamic_cast<Player*> (character)->hidePlayer()){
             character->render(); 
+        }
+
 
         for (int i = 0; i < enemies.size(); i++) {
             enemies[i]->render();

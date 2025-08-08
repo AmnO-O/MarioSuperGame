@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include "Block.h"
 #include "iostream"
+#include "Character/PlayerAction.h"
 
 class Sewer : public Block {
 private:
@@ -15,6 +16,7 @@ private:
     Rectangle body;
     int height;
     
+    PlayerActionManager animationEnterSewer; 
 public:
     Sewer(Texture2D &tex, std::istream &is);
     Rectangle getHitbox() const override;

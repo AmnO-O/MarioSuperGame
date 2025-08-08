@@ -139,8 +139,11 @@ public:
         if(Mstate->getMoveState() != Mstate_->getMoveState()){
             delete Mstate; 
             Mstate = Mstate_;    
+            updateShape(); 
+            updateHitbox(); 
             return; 
         }
+
         delete Mstate_; 
     }
 
@@ -157,6 +160,14 @@ public:
 
     bool IsActive() const override{return Mstate->isDead() == false;}
 
+    bool hidePlayer() const{
+        return movement->isLocked(); 
+    }
+
+    bool isLocked() const{
+        return movement->isLocked(); 
+    }
+    
     // action
     void run_to(float end_x) {run_from_a_to_b(hitbox.x, end_x);}
     void run_from_a_to_b(float start_x, float end_x);

@@ -321,7 +321,6 @@ void Player::triggerDeath(){
 	delete tmp; 
 	tmp = nullptr; 
 
-	movement->lockMovement(); 
 	movement->setVelocityX(0.0f); 
 	movement->setVelocityY(-170.0f); 
 	movement->setGroundLevel(1000.0f); 
@@ -355,7 +354,11 @@ void Player::adapt_collision_with_enimies(ICollidable* other){
 }
 
 void Player::adaptCollision(ICollidable* other){
-	if(Mstate->isDead()){
+	if(isDead()){
+		return; 
+	}
+
+	if(isLocked()){
 		return; 
 	}
 
@@ -402,6 +405,8 @@ void Player::setOnGround(){
 }
 
 void Player::adaptChangePosition(){
+	if(isLocked()) return; 
+	
 	if(groundLevel - hitbox.height > hitbox.y){
 		if(!Mstate->isDead()){
 			delete Mstate;
