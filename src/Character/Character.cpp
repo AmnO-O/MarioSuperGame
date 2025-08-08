@@ -295,8 +295,7 @@ void Player::powerUp(PowerUpType t){
 
 
 Fireball* Player::shootFireball(){
-		Fireball *fireball = nullptr; 
-
+	Fireball *fireball = nullptr; 
 
 	if (IsKeyPressed(KEY_F) && Sstate->canShootFire()) {
 		delete Mstate;
@@ -305,25 +304,11 @@ Fireball* Player::shootFireball(){
 		updateShape();
 		updateHitbox();
 
-		Vector2 startPos = movement->getPosition();
-		startPos.x += (movement->isFacingRight() ? 15 : -5);
-		startPos.y += 5;
-
-
-		fireball = new Fireball(startPos, movement->isFacingRight()); 
-		fireball->setGroundLevel(2.0f * GetScreenHeight()); 
-        fireballs.emplace_back(fireball);
+		fireball = fireballs.shootFireball(movement->getPosition(), movement->isFacingRight()); 
     }
 
 	return fireball; 
 
-}
-
-void Player::cleanFireballs(){
-    fireballs.erase(
-        std::remove_if(fireballs.begin(), fireballs.end(), [](const auto &fb) { return !fb->isActive(); }),
-        fireballs.end()
-    );
 }
 
 void Player::triggerDeath(){
@@ -336,7 +321,7 @@ void Player::triggerDeath(){
 	delete tmp; 
 	tmp = nullptr; 
 
-	movement->setDisableUpdate(); 
+	movement->lockMovement(); 
 	movement->setVelocityX(0.0f); 
 	movement->setVelocityY(-170.0f); 
 	movement->setGroundLevel(1000.0f); 
@@ -505,11 +490,6 @@ void Player::update(float deltaTime){
 			Sstate = next;
 		}
 	}
-
-	cleanFireballs();
-
-	for (auto& fb : fireballs)
-		fb->update(deltaTime);
 	
 	showPlayer = blink.update(deltaTime); 
 	Mstate->update(deltaTime);
@@ -539,7 +519,7 @@ void Player::update(float deltaTime){
 	}
 
 	movement->update(deltaTime, Sstate, Mstate);
- 
+	fireballs.update(deltaTime); 
 
 	if(activeAnimation)
 		activeAnimation->update(deltaTime);
@@ -554,15 +534,13 @@ void Player::update(float deltaTime){
 }
 
 void Player::render(){
-
 	if(activeAnimation){
 		if(showPlayer){
 			activeAnimation->render(movement->getPosition(), movement->isFacingRight() == false);
 		}
 	}
 
-	for (auto& fireball : fireballs)
-		fireball->render();
+	fireballs.render(); 
 }
 
 Player::~Player() {
@@ -570,15 +548,10 @@ Player::~Player() {
 	delete Mstate;
 	delete movement;
 
-	for(auto &fireball : fireballs){
-		delete fireball;
-		fireball = nullptr;
-	}
-
 	Images::unloadAllTextures();
 }
 
-
+// Action implement. 
 
 void Player::run_from_a_to_b(float startX, float endX){
 	if(movement->isDoneLerpMoving() == false){

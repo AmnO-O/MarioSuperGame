@@ -2,21 +2,23 @@
 #include "Character/Character.h"
 
 
-/// @brief 
 class LevelTransition{
 public: 
     virtual void activate() = 0; 
-    virtual void update(float deltaTime) = 0; 
-    virtual void render() = 0; 
+
 }; 
 
 class CastleTransition : public LevelTransition{
 public: 
-    
+    void activate() override{
+
+    }
 }; 
 
 class PipeTransition : public LevelTransition{
 public:
+    void activate() override{
 
+    }
 }; 
 

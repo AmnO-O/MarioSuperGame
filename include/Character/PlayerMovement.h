@@ -84,9 +84,13 @@ public:
         return *this;
     } 
 
+    void lockMovement(){disableUpdate  = true;}
+    void unlockMovement() {disableUpdate = false;}
+    bool isLocked() const { return disableUpdate; }
+
+
     bool isDoneLerpMoving() const {return lerpMover.isDone();}
 
-    void setDisableUpdate() {disableUpdate = true;}
     void setVelocityY(float velocityY) {velocity.y = velocityY;}
     void setVelocityX(float velocityX) {velocity.x = velocityX;}
     void setOnGround(); 
@@ -100,6 +104,7 @@ public:
     void adaptCollision(ICollidable* other, IMoveState *&Mstate, Player *player); 
     bool adapt_collision_with_enimies(ICollidable* other, Player *player); 
     void update(float deltaTime, IShapeState *&Sstate, IMoveState  *&Mstate);
+
 
     void run_from_a_to_b(float startX, float endX){
         if(lerpMover.isDone()){

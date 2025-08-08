@@ -90,8 +90,12 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 	if(pressingCrounch) pressingRight = pressingLeft = false; 
 	
 	if(disableUpdate == true){
-		pressingLeft = pressingRight = isClickedSpace = pressingSpace = pressingCrounch = false; 
-		velocity.y += 450 * deltaTime;
+		pressingLeft = pressingRight = isClickedSpace = pressingSpace = pressingCrounch = false;
+		float forceY = 430; 
+
+		if(position.y + shape.y >= groundLevel) forceY = 0; 
+
+		velocity.y += forceY * deltaTime;
         position.y += velocity.y * deltaTime;
 		
 		return ; 
