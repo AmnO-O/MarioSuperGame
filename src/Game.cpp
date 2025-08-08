@@ -15,17 +15,22 @@ Game::Game() {
     isRunning = true;
     
     InitAudioDevice();
-    SoundManager::getInstance().loadPlayMusic();
-    SoundManager::getInstance().loadDeathSound();
-    SoundManager::getInstance().loadGameOverSound();
+    SoundManager::getInstance().loadAllSounds("assets/sounds/");
+    
+    SoundManager::getInstance().playMusic = LoadMusicStream("assets/sounds/SuperMarioBros_theme_song.mp3");
+    SetMusicVolume(SoundManager::getInstance().playMusic, SoundManager::getInstance().getVolume());
+
+    SoundManager::getInstance().deathSound = LoadSound("assets/sounds/death.wav");
+    SoundManager::getInstance().gameOverSound = LoadSound("assets/sounds/gameOver.wav");
 
     StateManager::getInstance().pushState(std::make_unique<MainMenu>());
 }
 
 Game::~Game() {
-    SoundManager::getInstance().unloadPlayMusic();
-    SoundManager::getInstance().unloadDeathSound();
-    SoundManager::getInstance().unloadGameOverSound();
+    SoundManager::getInstance().unloadAllSounds();
+    UnloadMusicStream(SoundManager::getInstance().playMusic);
+    UnloadSound(SoundManager::getInstance().deathSound);
+    UnloadSound(SoundManager::getInstance().gameOverSound);
     
     while (StateManager::getInstance().getCurrentState()) {
         StateManager::getInstance().popState();
@@ -37,7 +42,7 @@ Game::~Game() {
 
 void Game::run() {
     SoundManager::getInstance().playMusic.looping = true;
-    SoundManager::getInstance().playPlayMusic();
+    PlayMusicStream(SoundManager::getInstance().playMusic);
 
     while (!WindowShouldClose() && isRunning) {
         float deltaTime = GetFrameTime();
@@ -54,9 +59,8 @@ void Game::processInput() {
 }
 
 void Game::update(float deltaTime) {
-
-    SoundManager::getInstance().updatePlayMusic();
-
+ 
+    UpdateMusicStream(SoundManager::getInstance().playMusic);
     StateManager::getInstance().update(deltaTime);
 }
 

@@ -58,7 +58,7 @@ void World1_1::update(float deltaTime)
 
     if (SoundManager::getInstance().death_played && !IsSoundPlaying(SoundManager::getInstance().deathSound))
 	{
-		SoundManager::getInstance().playGameOverSound();
+        PlaySound(SoundManager::getInstance().gameOverSound);
 		StateManager::getInstance().pushState(std::make_unique<GameOverMenu>());
 		SoundManager::getInstance().game_over_played = true;
 	}
@@ -126,13 +126,13 @@ void PopUpMenu1_1::restart()
 {
     bool isMario = dynamic_cast<World1_1*>(StateManager::getInstance().getCurrentState())->getIsMario();
     StateManager::getInstance().pushState(std::make_unique<World1_1>(isMario));
-    SoundManager::getInstance().resumePlayMusic();
+    ResumeMusicStream(SoundManager::getInstance().playMusic);
 }
 
 void PopUpMenu1_1::exitGame()
 {
     StateManager::getInstance().pushState(std::make_unique<MainMenu>());
-    SoundManager::getInstance().resumePlayMusic();
+    ResumeMusicStream(SoundManager::getInstance().playMusic);
 }
 
 void PopUpMenu1_1::toggle()
@@ -140,9 +140,9 @@ void PopUpMenu1_1::toggle()
     isVisible = !isVisible;
 
     if (isVisible)
-        SoundManager::getInstance().pausePlayMusic();
+        PauseMusicStream(SoundManager::getInstance().playMusic);
     else
-        SoundManager::getInstance().resumePlayMusic();
+        ResumeMusicStream(SoundManager::getInstance().playMusic);
 }
 
 void PopUpMenu1_1::update(float deltaTime)

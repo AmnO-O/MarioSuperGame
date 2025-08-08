@@ -1,92 +1,30 @@
 #include "Resources/SoundManager.h"
 
+std::unordered_map<std::string, Sound> SoundManager::effects;
+
 SoundManager& SoundManager::getInstance()
 {
     static SoundManager instance;
     return instance;
 }
 
-void SoundManager::loadPlayMusic()
-{
-    playMusic = LoadMusicStream(music_path.c_str());
-    SetMusicVolume(playMusic, current_volume);
+void SoundManager::loadAllSounds(const std::string& path) {
+	for (auto& file : std::filesystem::directory_iterator(path)) {
+		if (file.is_regular_file()) {
+			auto ext = file.path().extension().string();
+			if (ext == ".wav") 
+            {
+				std::string name = file.path().filename().string();
+				effects[name] = LoadSound(file.path().string().c_str());
+			}
+		}
+	}
 }
 
-void SoundManager::playPlayMusic()
+void SoundManager::unloadAllSounds() 
 {
-    PlayMusicStream(playMusic);
-}
-
-void SoundManager::pausePlayMusic()
-{
-    PauseMusicStream(playMusic);
-}
-
-void SoundManager::resumePlayMusic()
-{
-    ResumeMusicStream(playMusic);
-}
-
-void SoundManager::stopPlayMusic()
-{
-    StopMusicStream(playMusic);
-}
-
-void SoundManager::unloadPlayMusic()
-{
-    UnloadMusicStream(playMusic);
-
-}
-
-void SoundManager::updatePlayMusic()
-{
-    UpdateMusicStream(playMusic);
-}
-
-void SoundManager::loadDeathSound()
-{
-    deathSound = LoadSound(death_path.c_str());
-    SetSoundVolume(deathSound, current_volume);
-}
-void SoundManager::playDeathSound()
-{
-    PlaySound(deathSound);
-}
-
-void SoundManager::stopDeathSound()
-{
-    StopSound(deathSound);
-}
-
-void SoundManager::unloadDeathSound()
-{
-    UnloadSound(deathSound);
-}
-
-void SoundManager::loadGameOverSound()
-{
-    gameOverSound = LoadSound(gameOver_path.c_str());
-    SetSoundVolume(gameOverSound, current_volume);
-}
-
-void SoundManager::playGameOverSound()
-{
-    PlaySound(gameOverSound);
-}
-
-void SoundManager::stopGameOverSound()
-{
-    StopSound(gameOverSound);
-}
-
-void SoundManager::unloadGameOverSound()
-{
-    UnloadSound(gameOverSound);
-}
-
-bool SoundManager::isPlayingDeathSound() const
-{
-    return IsSoundPlaying(deathSound);
+	for (auto [key, sounds] : effects) UnloadSound(sounds); 
+	effects.clear(); 
 }
 
 float SoundManager::getVolume() const

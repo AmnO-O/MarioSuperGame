@@ -4,15 +4,12 @@
 
 MainMenu::MainMenu()  
   : mario_button("MARIO GAME", {570, 450, 330, 60}, WHITE, RED, [&]() { 
-        //stateManager.popState();
         StateManager::getInstance().pushState(std::make_unique<SubMenu>(true));  
     }),
     luigi_button("LUIGI GAME", {570, 533, 330, 60}, WHITE, RED, [&]() { 
-        //stateManager.popState();
         StateManager::getInstance().pushState(std::make_unique<SubMenu>(false));
     }), 
     settings_button("assets/images/setting.png", {25, 27, 100, 100}, [&]() {
-        //stateManager.popState();       
         StateManager::getInstance().pushState(std::make_unique<SettingsMenu>());
     })
 {

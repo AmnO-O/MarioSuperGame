@@ -5,12 +5,10 @@
 SubMenu::SubMenu(bool checkMario)
   : isMario(checkMario),
     new_game_button("NEW GAME", {625, 294, 330, 60}, WHITE, RED, [&]() {
-        //stateManager.popState();
         StateManager::getInstance().pushState(std::make_unique<LevelMenu>(isMario));
     }),
     load_game_button("LOAD GAME", {598, 399, 330, 60}, WHITE, RED, []() {}),
     return_button("assets/images/turn_back.png", {25, 27, 100, 100}, [&]() {
-        //stateManager.popState();
         StateManager::getInstance().pushState(std::make_unique<MainMenu>());
     }) 
 {

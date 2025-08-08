@@ -6,7 +6,6 @@
 SettingsMenu::SettingsMenu()
   : slider({686, 245, 449, 35}, SoundManager::getInstance()),
     return_button("assets/images/turn_back.png", {25, 27, 100, 100}, [&]() {
-        //stateManager.popState();
         StateManager::getInstance().pushState(std::make_unique<MainMenu>());
     }),
     music("MUSIC:"),

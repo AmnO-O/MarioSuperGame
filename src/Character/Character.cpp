@@ -335,8 +335,8 @@ void Player::triggerDeath(){
 
 	if (!SoundManager::getInstance().death_played)
 	{
-		SoundManager::getInstance().stopPlayMusic();
-		SoundManager::getInstance().playDeathSound();
+		StopMusicStream(SoundManager::getInstance().playMusic);
+		PlaySound(SoundManager::getInstance().deathSound);
 		SoundManager::getInstance().death_played = true;
 	}
 
