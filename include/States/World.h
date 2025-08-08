@@ -1,5 +1,5 @@
-#ifndef WORLD_11_H
-#define WORLD_11_H
+#ifndef WORLD_H
+#define WORLD_H
 
 #include "../Character/Character.h"
 #include "../MyCamera2D.h"
@@ -9,49 +9,22 @@
 #include "../Object/Creator.h"
 #include "../Resources/StateManager.h"
 #include "../Widgets/Button.h"
+#include "../Widgets/PopUpMenu.h"
 #include <iostream>
 
-class PopUpMenu1_1
-{
-    private:
-
-        NormalButton resume_button;
-        NormalButton restart_button;
-        NormalButton exit_button;
-        NormalButton save_button;
-        Rectangle frame;
-
-
-    public:
-
-        PopUpMenu1_1();
-        ~PopUpMenu1_1() = default;
-
-        bool isVisible;
-        bool isDeathMusicPlayed = false;
-        bool isGOMPlayed = false;
-
-        void restart();
-        void exitGame();
-        void toggle();
-        void update(float deltaTime);
-        void render();
-};
-
-
-class World1_1: public GameState
+class World: public GameState
 {
 
     private:
 
-        std::vector<Map> maps = {};
-        int currentMap = 0;
+        Map* currentMap;
+        int mapIndex;
         Player *character; 
         MyCamera2D *myCam; 
         
         ImageButton settings_button;
         Texture2D settings_button_state;
-        PopUpMenu1_1 popup_menu;
+        PopUpMenu popup_menu;
         
         bool startdeath = false;
         bool GOMshown = false;
@@ -59,12 +32,14 @@ class World1_1: public GameState
         
         bool isMario;
 
+
     public:
 
-        World1_1(bool checkMario);
-        ~World1_1();
+        World(bool checkMario, int index);
+        ~World();
 
         bool getIsMario() const;
+        int getMapIndex() const;
         void processInput() override;
         void update(float deltaTime) override;
         void render() override;

@@ -1,14 +1,15 @@
 #include "States/GameOverMenu.h"
 #include "States/MainMenu.h"
-#include "States/World11.h"
+#include "States/World.h"
 
 GameOverMenu::GameOverMenu()
   : title("GAME OVER"),
     restart_button("RESTART", {641, 509, 330, 50}, WHITE, RED, [&]() {
         StateManager::getInstance().popState();
-        bool isMario = dynamic_cast<World1_1*>(StateManager::getInstance().getCurrentState())->getIsMario();
-        StateManager::getInstance().pushState(std::make_unique<World1_1>(isMario)); // needs changing
-        
+        bool isMario = dynamic_cast<World*>(StateManager::getInstance().getCurrentState())->getIsMario();
+        int mapIndex = dynamic_cast<World*>(StateManager::getInstance().getCurrentState())->getMapIndex();
+        StateManager::getInstance().pushState(std::make_unique<World>(isMario, mapIndex));
+
         StopSound(SoundManager::getInstance().gameOverSound);
         PlayMusicStream(SoundManager::getInstance().playMusic);
         SoundManager::getInstance().death_played = false;
