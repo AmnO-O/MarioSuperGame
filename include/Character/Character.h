@@ -151,6 +151,9 @@ public:
 
     Vector2 getPosition() const {return movement->getPosition(); }
     Rectangle getHitbox() const override {return hitbox; }
+    Vector2 getShape() const{
+        return Vector2({hitbox.width, hitbox.height});
+    }
 
     bool isBig() const { return Sstate->canBreakBrick();}
     bool isInvincible() const {return Sstate->isInvincible();}

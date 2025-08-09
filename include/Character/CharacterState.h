@@ -173,7 +173,7 @@ public:
 
 class ClimbState:public IMoveState{
 public: 
-	IMoveState *update(MoveContext *Data) override;
+	IMoveState *update(MoveContext *Data) override{return new StandState();}
 	bool isClimbing() const override {return true;}
 	std::string getMoveState() const override {return "CLIMBING";}
 }; 

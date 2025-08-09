@@ -104,6 +104,10 @@ std::string Player::getShape_Action() const{
 void Player::updateShape(){
 	std::string animationKey = getShape_Action();
 
+	if(Mstate->getMoveState() == "CLIMBING"){
+		animations[animationKey]->setTimeSwitch(0.15f);
+	}
+
 	if ((int)animationKey.size() >= 7 && animationKey.substr(0, 8) == "MORPHING") {
 		animationKey = "SMALL_MORPHING";
 		animations[animationKey]->setTimeSwitch(0.1f);

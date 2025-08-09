@@ -22,13 +22,37 @@ void PlayerActionManager::update(float deltaTime) {
 
     if (currentAction->isFinished(player, player->movement)) {
         actionQueue.pop();
+        player->movement->unlockMovement(); 
+        player->movement->unlockKeyboardInput();
     }
 }
 
 void PlayerActionManager::resetAll(){
     player->movement->unlockMovement(); 
+    player->movement->unlockKeyboardInput(); 
     while(actionQueue.size()) actionQueue.pop();
 }
+
+
+SetPositionAction::SetPositionAction(Vector2 pos, bool facingRight_, float timeShow_) : 
+    position(pos), facingRight(facingRight_), timeShow(timeShow_) {}
+
+void SetPositionAction::execute(Player *player, PlayerMovement* movement, float deltaTime) {
+    if(currentTime == 0){
+        player->changeMstate(new ClimbState()); 
+        movement->lockMovement(); 
+        movement->setPosition(position);
+        movement->setFacingRight(facingRight);
+    }
+
+    currentTime += deltaTime; 
+}
+
+bool SetPositionAction::isFinished(Player *player, PlayerMovement* movement) const {
+    return currentTime >= timeShow; 
+}
+
+
 
 RunAction::RunAction(float target) : targetX(target) {}
 
@@ -51,12 +75,39 @@ bool RunAction::isFinished(Player *player, PlayerMovement* movement) const {
 
 
 void JumpAction::execute(Player *player, PlayerMovement* movement, float deltaTime) {
-
+    if(currentTime == 0){
+        player->changeMstate(new JumpState()); 
+        movement->setVelocityX(forceVelocity_x); 
+        movement->setVelocityY(forceVelocity_y); 
+        movement->lockKeyboardInput(); 
+    }
 }
 
 bool JumpAction::isFinished(Player *player, PlayerMovement* movement) const {
-    return true; 
+    return player->getVelocity().y == 0; 
 }
+
+
+
+void ClimbAction::execute(Player *player, PlayerMovement* movement, float deltaTime) {
+    if(currentTime == 0){
+        player->changeMstate(new ClimbState()); 
+        movement->lockMovement(); 
+        Vector2 startPos = movement->getPosition(); 
+        Vector2 endPos = {startPos.x, targetY};
+        lerpMover.start(startPos, endPos, 1.0f); 
+    }
+
+    currentTime += deltaTime; 
+    Vector2 nextPos = lerpMover.update(deltaTime); 
+    movement->setPosition(nextPos); 
+}
+
+bool ClimbAction::isFinished(Player *player, PlayerMovement* movement) const {
+    return lerpMover.isDone() && timeAction <= currentTime; 
+}
+
+
 
 
 void TopEnterAction::execute(Player *player, PlayerMovement* movement, float deltaTime) {
@@ -84,8 +135,8 @@ void HorizontalEnterAction::execute(Player *player, PlayerMovement* movement, fl
         player->changeMstate(new StandState()); 
         movement->lockMovement(); 
         Vector2 startPos = movement->getPosition(); 
-        Vector2 endPos = {startPos.x + 13.0f, startPos.y};
-        lerpMover.start(startPos, endPos, 2.0f); 
+        Vector2 endPos = {startPos.x + 14.0f, startPos.y};
+        lerpMover.start(startPos, endPos, 1.5f); 
     }
 
     currentTime += deltaTime; 

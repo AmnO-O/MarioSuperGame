@@ -25,6 +25,8 @@ private:
 	float currentTime; 
 
     bool disableUpdate = false; 
+    bool disableInput = false; 
+
 public: 
     PlayerMovement(Vector2 pos, Vector2 vel, std::unique_ptr<CharacterStats> stats_): 
         position(pos), velocity(vel), stats(std::move(stats_)), facingRight(true), currentTime(0.0f), groundLevel(0.0), disableUpdate(false){
@@ -55,14 +57,19 @@ public:
     void unlockMovement() {disableUpdate = false;}
     bool isLocked() const { return disableUpdate; }
 
+    void lockKeyboardInput(){disableInput = true;}
+    void unlockKeyboardInput(){disableInput = false;}
+    bool isLockedKeyboardInput() const {return disableInput;}
+
     bool isDoneLerpMoving() const {return lerpMover.isDone();}
 
-    void setVelocityY(float velocityY) {velocity.y = velocityY;}
-    void setVelocityX(float velocityX) {velocity.x = velocityX;}
     void setOnGround(); 
-
     void setGroundLevel(float groundLevel_); 
     void setPosition(const Vector2 &pos) {position = pos;}
+    
+    void setFacingRight(bool facingRight_) {facingRight = facingRight_;}
+    void setVelocityY(float velocityY) {velocity.y = velocityY;}
+    void setVelocityX(float velocityX) {velocity.x = velocityX;}
 
     void setShape(const Rectangle &rect) {position.y = position.y + shape.y - rect.height; shape = {rect.width, rect.height};}
     void setShape(const Vector2 &shape_) {position.y = position.y + shape.y - shape_.y; shape = {shape_.x, shape_.y};}

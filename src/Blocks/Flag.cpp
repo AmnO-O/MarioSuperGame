@@ -1,6 +1,6 @@
 #include "Blocks/Flag.h"
 
-Flag::Flag(Texture2D &tex, std::istream &is, float time) : Block(tex), time(time) {
+Flag::Flag(Texture2D &tex, std::istream &is, float time) : Block(tex), time(time), animationClimbFlag(nullptr) {
     is >> head.x >> head.y >> head.width >> head.height;
     is >> body.x >> body.y >> body.width >> body.height;
     is >> pos.x >> pos.y;
@@ -28,28 +28,27 @@ void Flag::Draw(DrawStat ds) const {
 }
 
 void Flag::Update(float deltaTime, Player* player) { 
+    if(animationClimbFlag != nullptr)
+        animationClimbFlag->update(deltaTime); 
 
     if (hasClimb){
         frametime += deltaTime;
+
         if (frametime > time) {
             frametime = time;
             hasClimb = false;
         }
-        // if(animationEnterFlag.doneAction()){
-        //     hasClimb = false;
-        //     animationEnterFlag.resetAll(); 
-        // }
-        // animationEnterFlag.update(deltaTime); 
+
         return;
     }
+    
 }
 
 Vector2 Flag::changeCam() {
     return {-1.0f, -1.0f};
 }
 Vector2 Flag::changePlayerPos() {
-    //if (hasClimb && animationEnterFlag.doneAction())
-    if (hasClimb)
+    if (hasClimb && animationClimbFlag->doneAction())
         return tp;
     return {-1.0f, -1.0f};
 }
@@ -58,31 +57,28 @@ void Flag::adaptCollision(ICollidable* other) {
     Player* player = dynamic_cast<Player*>(other);
 
     if (player) {
-        hasClimb = true;
-        // Rectangle body = player->getHitbox(); 
-        // Rectangle hitbox = getHitbox();
-        // // Check overlap
-        // float left = (body.x + body.width) - hitbox.x;
-        // float right = (hitbox.x + hitbox.width) - body.x;
-        // float top = (body.y + body.height) - hitbox.y;
-        // float bottom = (hitbox.y + hitbox.height) - body.y;
-        // //if (left <= 0 || right <= 0 || top <= 0 || bottom <= 0) return;
+        Rectangle body = player->getHitbox(); 
+        Rectangle hitbox = getHitbox();
+        // Check overlap
+        float left = (body.x + body.width) - hitbox.x;
+        float right = (hitbox.x + hitbox.width) - body.x;
+        float top = (body.y + body.height) - hitbox.y;
+        float bottom = (hitbox.y + hitbox.height) - body.y;
+        //if (left <= 0 || right <= 0 || top <= 0 || bottom <= 0) return;
 
-        // // Find minimal penetration
-        // float minPen = left;
-        // enum Dir { LEFT, RIGHT, TOP, BOTTOM } dir = LEFT;
-        // if (right < minPen) { minPen = right; dir = RIGHT; }
-        // if (top < minPen) { minPen = top; dir = TOP; }
-        // if (bottom < minPen) { minPen = bottom; dir = BOTTOM; }
+        // Find minimal penetration
+        float minPen = left;
+        enum Dir { LEFT, RIGHT, TOP, BOTTOM } dir = LEFT;
+        if (right < minPen) { minPen = right; dir = RIGHT; }
+        if (top < minPen) { minPen = top; dir = TOP; }
+        if (bottom < minPen) { minPen = bottom; dir = BOTTOM; }
 
-        // if (dir == TOP && body.y + body.height >= hitbox.y - 0.2) { 
-        //     if( hitbox.x + 4 < body.x  && body.x + body.width < hitbox.x + hitbox.width - 4){
-        //         if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)){
-        //             hasClimb = true;
-        //             animationEnterFlag.setPlayer(player); 
-        //             animationEnterFlag.addAction(std::make_unique<EnterAction>());
-        //         }
-        //     }
-        // }
+        if (dir == LEFT) { 
+            hasClimb = true;
+            animationClimbFlag = std::make_unique<PlayerActionManager>(player); 
+            animationClimbFlag->addAction(std::make_unique<ClimbAction>(hitbox.y + hitbox.height - player->getShape().y, time + 0.5f));
+            animationClimbFlag->addAction(std::make_unique<SetPositionAction>(Vector2({hitbox.x + hitbox.width, hitbox.y + hitbox.height - player->getShape().y}), false, 0.5f));
+            animationClimbFlag->addAction(std::make_unique<JumpAction>(150.0f, -200.0f));
+        }
     }
 }

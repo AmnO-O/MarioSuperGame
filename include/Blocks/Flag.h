@@ -5,6 +5,7 @@
 #include "Block.h"
 #include "iostream"
 #include "Character/PlayerAction.h"
+#include <memory>
 
 class Flag : public Block {
 protected:
@@ -16,7 +17,7 @@ protected:
     Rectangle body;
     int height;
     
-    // PlayerActionManager animationEnterSewer; 
+    std::unique_ptr<PlayerActionManager> animationClimbFlag; 
 public:
     Flag(Texture2D &tex, std::istream &is, float time);
     Rectangle getHitbox() const override;
@@ -25,7 +26,7 @@ public:
     void Draw(DrawStat ds) const override;
     void adaptCollision(ICollidable* other) override;
     void Update(float delta, Player* player) override;
-    ~Flag() override = default;
+    ~Flag() override = default; 
 };
 
 #endif

@@ -104,6 +104,10 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 	if(pressingLeft && pressingRight) pressingRight = pressingLeft = false; 
 	if(pressingCrounch) pressingRight = pressingLeft = false; 
 	
+	if(disableInput){
+		pressingLeft = pressingRight = pressingSpace = pressingCrounch = isClickedSpace = false; 
+	}
+
 	float forceX = 0;
 	float forceY = 980;
 
