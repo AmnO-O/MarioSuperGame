@@ -46,6 +46,7 @@ class World: public GameState
         bool getIsMario() const;
         int getMapIndex() const;
 
+        void drawStats();
         void processInput() override;
         void update(float deltaTime) override;
         void render() override;

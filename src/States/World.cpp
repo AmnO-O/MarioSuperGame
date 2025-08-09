@@ -55,58 +55,8 @@ int World::getMapIndex() const
     return mapIndex;
 }
 
-void World::processInput()
+void World::drawStats()
 {
-    if (IsKeyPressed(KEY_P))
-        popup_menu.toggle();
-}
-
-void World::update(float deltaTime) 
-{
-    if (!SoundManager::getInstance().death_played)
-        processInput();
-
-    if (SoundManager::getInstance().death_played && !IsSoundPlaying(SoundManager::getInstance().deathSound))
-	{
-        PlaySound(SoundManager::getInstance().gameOverSound);
-		StateManager::getInstance().pushState(std::make_unique<GameOverMenu>());
-		SoundManager::getInstance().game_over_played = true;
-	}
-    
-    if (!popup_menu.isVisible)
-    {
-        if(deltaTime < 0.2) 
-        {
-            currentMap->Update(deltaTime);
-        }
-    }
-        
-    if (!popup_menu.isVisible)
-        settings_button.update(deltaTime);
-
-    if (popup_menu.isVisible)
-        popup_menu.update(deltaTime);
-    
-    number_of_coins = StatsManager::getInstance().getCoins();
-    score_number = StatsManager::getInstance().getScore();
-}
-
-void World::render() 
-{
-    currentMap->Draw();
-
-    settings_button.render();
-
-    if (!popup_menu.isVisible)
-    {
-        bool isHovered = CheckCollisionPointRec(GetMousePosition(), settings_button.getBounds());
-        if (isHovered)
-            DrawTexture(settings_button_state, 25, 27, WHITE);
-    }
-
-    if (popup_menu.isVisible)
-        popup_menu.render();
-
     std::string charType; 
     if (isMario)
         charType = "MARIO";
@@ -160,5 +110,59 @@ void World::render()
         title = "1-4";
     
     DrawTextEx(font, title.c_str(), {984, 86}, 40, 2, WHITE);
+}
 
+void World::processInput()
+{
+    if (IsKeyPressed(KEY_P))
+        popup_menu.toggle();
+}
+
+void World::update(float deltaTime) 
+{
+    if (!SoundManager::getInstance().death_played)
+        processInput();
+
+    if (SoundManager::getInstance().death_played && !IsSoundPlaying(SoundManager::getInstance().deathSound))
+	{
+        PlaySound(SoundManager::getInstance().gameOverSound);
+		StateManager::getInstance().pushState(std::make_unique<GameOverMenu>(mapIndex, isMario));
+		SoundManager::getInstance().game_over_played = true;
+	}
+    
+    if (!popup_menu.isVisible)
+    {
+        if(deltaTime < 0.2) 
+        {
+            currentMap->Update(deltaTime);
+        }
+    }
+        
+    if (!popup_menu.isVisible)
+        settings_button.update(deltaTime);
+
+    if (popup_menu.isVisible)
+        popup_menu.update(deltaTime);
+    
+    number_of_coins = StatsManager::getInstance().getCoins();
+    score_number = StatsManager::getInstance().getScore();
+}
+
+void World::render() 
+{
+    currentMap->Draw();
+
+    settings_button.render();
+
+    if (!popup_menu.isVisible)
+    {
+        bool isHovered = CheckCollisionPointRec(GetMousePosition(), settings_button.getBounds());
+        if (isHovered)
+            DrawTexture(settings_button_state, 25, 27, WHITE);
+    }
+
+    if (popup_menu.isVisible)
+        popup_menu.render();
+
+    drawStats();
 }
