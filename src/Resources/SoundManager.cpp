@@ -44,6 +44,8 @@ void SoundManager::loadAll()
     stompSound = LoadSound("assets/sounds/stomp.wav");
     SetSoundVolume(stompSound, getEffectVolume());
 
+    warningSound = LoadSound("assets/sounds/warning.wav");
+    SetSoundVolume(warningSound, getEffectVolume());
 }
 
 void SoundManager::unloadAll() 
@@ -60,6 +62,7 @@ void SoundManager::unloadAll()
     UnloadSound(pipedownSound);
     UnloadSound(flagpoleSound);
     UnloadSound(stompSound);
+    UnloadSound(warningSound);
 }
 
 float SoundManager::getMusicVolume() const
@@ -92,4 +95,5 @@ void SoundManager::setEffectVolume(float volume)
     SetSoundVolume(pipedownSound, volume);
     SetSoundVolume(flagpoleSound, volume);
     SetSoundVolume(stompSound, volume);
+    SetSoundVolume(warningSound, volume);
 }

@@ -132,8 +132,12 @@ void World::update(float deltaTime)
     if (!SoundManager::getInstance().death_played)
         processInput();
 
-    if (SoundManager::getInstance().death_played && !IsSoundPlaying(SoundManager::getInstance().deathSound))
+    if ((SoundManager::getInstance().death_played && !IsSoundPlaying(SoundManager::getInstance().deathSound)) 
+    || (Timer::getInstance().remaining <= 0.0f))
 	{
+        if (IsMusicStreamPlaying(SoundManager::getInstance().playMusic))
+            StopMusicStream(SoundManager::getInstance().playMusic);
+
         PlaySound(SoundManager::getInstance().gameOverSound);
 		StateManager::getInstance().pushState(std::make_unique<GameOverMenu>(mapIndex, isMario));
 		SoundManager::getInstance().game_over_played = true;

@@ -18,6 +18,7 @@ class Timer
 
         float remaining;
         Color time_color;
+        bool warning_played = false;
 
         static Timer& getInstance();
         void setup(float seconds);
