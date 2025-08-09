@@ -9,20 +9,34 @@ void Goomba::update(float deltaTime) {
         if (delayDead >= 0.5f) setDead();
     }
 
+    if (state == State::DIE2) {
+        velocity.y = 10.0f;
+        delayDead += deltaTime;
+        if (delayDead >= 0.0f) setDead2();
+    }
+
     Enemy::update(deltaTime);
 }
 
 void Goomba::updateAnimationType() {
     if (state == State::DIE) {
         position.y += hitbox.height * 0.5f;
+        hitbox.y = 0.0f;
         activeAnimation = animations["DIE"].get();
     } 
     else activeAnimation = animations["RUNNING"].get();
     updateHitbox();
 }
 
+void Goomba::setDead2() {
+    falling = true;
+    velocity = {0.0f, 150.0f};
+}
+
 void Goomba::adaptCollision(ICollidable* other) {
     if (dynamic_cast<Coin*>(other) || (dynamic_cast<GameObject*>(other) && !dynamic_cast<Fireball*>(other))) return;
+
+    Enemy::adaptCollision(other);
     Player* player = dynamic_cast<Player*>(other);
     if (player) {
         Rectangle playerHitbox = player->getHitbox();
@@ -32,13 +46,6 @@ void Goomba::adaptCollision(ICollidable* other) {
                 state = State::DIE;
                 updateAnimationType();
             }
-        }
-    }
-
-    Enemy* enemy = dynamic_cast<Enemy*>(other);
-    if (enemy && enemy != this) {
-        if (state == State::RUNNING) {
-            velocity.x = -velocity.x;
         }
     }
 }
