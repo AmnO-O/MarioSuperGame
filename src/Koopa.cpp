@@ -32,12 +32,23 @@ void Koopa::updateAnimationType() {
         case State::SPINNING:
             activeAnimation = animations["SPINNING"].get();
             break;
+        case State::DIE2:
+            position.y += 10.0f;
+            activeAnimation = animations["DIE2"].get();
+            break;
     }
     updateHitbox();
 }
 
+void Koopa::setDead2() {
+    falling = true;
+    velocity = {0.0f, 150.0f};
+}
+
 void Koopa::adaptCollision(ICollidable* other) {
     if (dynamic_cast<Coin*>(other) || (dynamic_cast<GameObject*>(other) && !dynamic_cast<Fireball*>(other))) return;
+    Enemy::adaptCollision(other);
+
     Player* player = dynamic_cast<Player*>(other);
     if (player) {
         Rectangle playerHitbox = player->getHitbox();
@@ -61,44 +72,6 @@ void Koopa::adaptCollision(ICollidable* other) {
                 float pushDirection = (playerHitbox.x < hitbox.x) ? -1.0f : 1.0f;
                 pushShell(pushDirection);
             }
-        }
-    }
-    
-    Enemy* enemy = dynamic_cast<Enemy*>(other);
-    if (enemy && enemy != this) {
-        if (state == State::SPINNING) {
-            enemy->setDead();
-        }
-        else if (state == State::RUNNING) {
-            velocity.x = -velocity.x;
-        }
-        else if (state == State::SHELL && velocity.x != 0) {
-            enemy->setDead();
-        }
-    }
-    
-    Block* block = dynamic_cast<Block*>(other);
-    if (block) {
-        Rectangle blockHitbox = block->getHitbox();
-        
-        if (velocity.x != 0) {
-            if (velocity.x > 0 && hitbox.x + hitbox.width > blockHitbox.x && 
-                hitbox.x < blockHitbox.x) {
-                velocity.x = -velocity.x;
-                updateAnimationType();
-                position.x = blockHitbox.x - hitbox.width;
-            }
-            else if (velocity.x < 0 && hitbox.x < blockHitbox.x + blockHitbox.width && 
-                     hitbox.x + hitbox.width > blockHitbox.x + blockHitbox.width) {
-                velocity.x = -velocity.x;
-                position.x = blockHitbox.x + blockHitbox.width;
-            }
-        }
-        
-        if (velocity.y > 0 && hitbox.y + hitbox.height > blockHitbox.y && 
-            hitbox.y < blockHitbox.y) {
-            position.y = blockHitbox.y - hitbox.height;
-            velocity.y = 0;
         }
     }
 }
