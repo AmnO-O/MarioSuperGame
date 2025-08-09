@@ -533,6 +533,12 @@ void Player::update(float deltaTime){
 		}
 		return; 
 	}
+    Vector2 position = movement->getPosition(); 
+
+	if(position.y >= 700 && isDead() == false){
+		triggerDeath(); 
+		return; 
+	}
 
 	movement->update(deltaTime, Sstate, Mstate);
 	fireballs.update(deltaTime); 

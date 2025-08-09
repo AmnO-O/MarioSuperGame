@@ -156,8 +156,7 @@ public:
     bool isInvincible() const {return Sstate->isInvincible();}
     bool canShootFire() const {return Sstate->canShootFire();}
     bool isDead() const {
-        Vector2 position = movement->getPosition(); 
-        return Mstate->isDead() || (position.y >= 750); 
+        return Mstate->isDead(); 
     }
 
     bool IsActive() const override{return Mstate->isDead() == false;}
