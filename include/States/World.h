@@ -36,17 +36,20 @@ class World: public GameState
 
     public:
 
-        int score;
-        int coins;
+        int score_number;
+        int number_of_coins;
         
         World(bool checkMario, int index);
         ~World();
 
         bool getIsMario() const;
         int getMapIndex() const;
+
         void processInput() override;
         void update(float deltaTime) override;
         void render() override;
+
+       
         bool isRunning;
 };
 

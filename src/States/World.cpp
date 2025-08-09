@@ -10,8 +10,8 @@ World::World(bool checkMario, int index)
   : popup_menu(),
     mapIndex(index),
     isMario(checkMario),
-    score(0),
-    coins(0),
+    score_number(0),
+    number_of_coins(0),
     settings_button("assets/images/setting.png", {25, 27, 100, 100}, [&]() {
         popup_menu.toggle();
     }),
@@ -113,21 +113,36 @@ void World::render()
     DrawTextEx(font, charType.c_str(), {203, 33}, 40, 2, WHITE);
 
     int maxDigit = 6;
-    int scoreDigits = std::to_string(score).length();
+    int scoreDigits = std::to_string(score_number).length();
     std::string scoreStr;
 
-    if (scoreDigits < maxDigit)
+    if (scoreDigits <= maxDigit)
     {
         int remaining = maxDigit - scoreDigits;
         for (int i=0; i<remaining; i++)
             scoreStr += "0";
 
-        scoreStr += std::to_string(score);
+        scoreStr += std::to_string(score_number);
     }
 
     DrawTextEx(font, scoreStr.c_str(), {203, 86}, 40, 2, WHITE);
 
-    
+    DrawTexture(coin_display, 614, 79, WHITE);
+    int maxCoinsDigits = 2;
+    int coinsDigits = std::to_string(number_of_coins).length();
+    std::string coinsStr  = ":";
+
+    if (coinsDigits <= maxCoinsDigits)
+    {
+        int remaining = maxCoinsDigits - coinsDigits;
+        for (int i=0; i<remaining; i++)
+            coinsStr += "0";
+
+        coinsStr += std::to_string(number_of_coins);
+    }
+
+    DrawTextEx(font, coinsStr.c_str(), {660, 86}, 40, 2, WHITE);
+
 
     std::string w = "WORLD"; std::string title;
     DrawTextEx(font, w.c_str(), {941, 33}, 40, 2, WHITE);
