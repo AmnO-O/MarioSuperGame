@@ -8,6 +8,7 @@
 #include "../Observer/Observer.h"
 #include "../Object/Creator.h"
 #include "../Resources/StateManager.h"
+#include "../Resources/StatsManager.h"
 #include "../Widgets/Button.h"
 #include "../Widgets/PopUpMenu.h"
 #include <iostream>

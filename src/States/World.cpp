@@ -86,6 +86,9 @@ void World::update(float deltaTime)
 
     if (popup_menu.isVisible)
         popup_menu.update(deltaTime);
+    
+    number_of_coins = StatsManager::getInstance().getCoins();
+    score_number = StatsManager::getInstance().getScore();
 }
 
 void World::render() 

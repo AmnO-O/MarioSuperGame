@@ -5,6 +5,7 @@
 GameOverMenu::GameOverMenu()
   : title("GAME OVER"),
     restart_button("RESTART", {641, 509, 330, 50}, WHITE, RED, [&]() {
+        StatsManager::getInstance().reset();
         StateManager::getInstance().popState();
         bool isMario = dynamic_cast<World*>(StateManager::getInstance().getCurrentState())->getIsMario();
         int mapIndex = dynamic_cast<World*>(StateManager::getInstance().getCurrentState())->getMapIndex();
@@ -16,8 +17,8 @@ GameOverMenu::GameOverMenu()
         SoundManager::getInstance().game_over_played = false;
     }),
     exit_button("EXIT", {707, 620, 330, 50}, WHITE, RED, [&]() {
+        StatsManager::getInstance().reset();
         StateManager::getInstance().pushState(std::make_unique<MainMenu>());
-        
         StopSound(SoundManager::getInstance().gameOverSound);
         PlayMusicStream(SoundManager::getInstance().playMusic);
         SoundManager::getInstance().death_played = false;
