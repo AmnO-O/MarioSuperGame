@@ -6,19 +6,21 @@ enum State {
     RUNNING,
     SHELL,
     SPINNING,
-    DIE
+    DIE,
+    DIE2
 };
 
 class Enemy : public Character, public ICollidable {
 protected:
     CharacterType type;
-    State state = RUNNING;
-    std::map<std::string, std::unique_ptr<AnimationManager>> animations;
+    bool falling = false;
     float delayDead = 0.0f; 
+    std::map<std::string, std::unique_ptr<AnimationManager>> animations;
 
     void readRectAnimation(const std::string& filePath, Texture2D& sheet) ;
 
 public:
+    State state = RUNNING;
     Enemy(CharacterType type, Vector2 pos);
 
     virtual void updateAnimationType() = 0;
@@ -32,6 +34,7 @@ public:
     void setOnGround();
 
     void setDead();
+    virtual void setDead2() {};
     bool isDead() const { return dead; }
     bool IsActive() const override { return !dead; }
 
