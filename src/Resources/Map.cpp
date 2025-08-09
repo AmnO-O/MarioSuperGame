@@ -4,6 +4,7 @@
 #include "Blocks/Coin.h"
 #include "Blocks/Sewer.h"
 #include "Blocks/Question.h"
+#include "Blocks/Flag.h"
 #include <fstream>
 
 void Map::input(std::istream &is, Texture2D &objectTex) {
@@ -40,6 +41,10 @@ void Map::input(std::istream &is, Texture2D &objectTex) {
         else if (s == "H_SEWER") {
             for (int i = 0; i < n; i++)
                 blocks.push_back(new HorizontalSewer(objectTex, is));
+        }
+        else if (s == "FLAG") {
+            for (int i = 0; i < n; i++)
+                blocks.push_back(new Flag(objectTex, is, 1.1f));
         }
     }
 
@@ -83,12 +88,12 @@ void Map::Update(float delta) {
         blocks[i]->Update(delta, character);
         Vector2 tmpCam = blocks[i]->changeCam();
         Vector2 tmpPos = blocks[i]->changePlayerPos();
-        if (tmpPos.x >= 0 && tmpPos.y >= 0 && tmpCam.x >= 0 && tmpCam.y >= 0) {
+        if (tmpPos.x >= 0 && tmpPos.y >= 0) {
             character->setGroundLevel(2.0f * GetScreenHeight());
             character->setPosition(tmpPos);
-            cam->setTarget(tmpCam);
         }
-
+        if (tmpCam.x >= 0 && tmpCam.y >= 0)
+            cam->setTarget(tmpCam);
     }
         
     if(character)
