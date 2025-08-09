@@ -11,6 +11,7 @@
 #include "../Resources/StatsManager.h"
 #include "../Widgets/Button.h"
 #include "../Widgets/PopUpMenu.h"
+#include "../Resources/Timer.h"
 #include <iostream>
 
 class World: public GameState
@@ -39,6 +40,7 @@ class World: public GameState
 
         int score_number;
         int number_of_coins;
+        float remaining_time;
         
         World(bool checkMario, int index);
         ~World();

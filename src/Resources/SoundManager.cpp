@@ -43,6 +43,7 @@ void SoundManager::loadAll()
 
     stompSound = LoadSound("assets/sounds/stomp.wav");
     SetSoundVolume(stompSound, getEffectVolume());
+
 }
 
 void SoundManager::unloadAll() 

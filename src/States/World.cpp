@@ -110,6 +110,15 @@ void World::drawStats()
         title = "1-4";
     
     DrawTextEx(font, title.c_str(), {984, 86}, 40, 2, WHITE);
+
+    std::string time = "TIME";
+    DrawTextEx(font, time.c_str(), {1308, 33}, 40, 2, WHITE);   
+    int totalSec = (int)floorf(Timer::getInstance().remaining + 0.0001f); // small epsilon for safety
+    int mins = totalSec / 60;
+    int secs = totalSec % 60;
+
+    std::string timeDisplay = (mins < 10 ? "0" : "") + std::to_string(mins) + ":" + (secs < 10 ? "0" : "") + std::to_string(secs);
+    DrawTextEx(font, timeDisplay.c_str(), {1300, 86}, 40, 2, Timer::getInstance().time_color);
 }
 
 void World::processInput()
@@ -133,13 +142,11 @@ void World::update(float deltaTime)
     if (!popup_menu.isVisible)
     {
         if(deltaTime < 0.2) 
-        {
             currentMap->Update(deltaTime);
-        }
-    }
-        
-    if (!popup_menu.isVisible)
+
+        Timer::getInstance().update(deltaTime);
         settings_button.update(deltaTime);
+    }
 
     if (popup_menu.isVisible)
         popup_menu.update(deltaTime);

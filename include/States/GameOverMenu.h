@@ -26,6 +26,8 @@ class GameOverMenu: public GameState
         ~GameOverMenu() = default;
 
         void drawStats(); 
+        void restart();
+        void exitGame();
         void processInput() override {};
         void update(float deltaTime) override;
         void render() override;

@@ -9,22 +9,10 @@ GameOverMenu::GameOverMenu(int mapIndex, bool checkMario)
     prevMapIndex(mapIndex),
     isprevMario(checkMario),
     restart_button("RESTART", {641, 509, 330, 50}, WHITE, RED, [&]() {
-        StatsManager::getInstance().reset();
-        StateManager::getInstance().popState();
-        StateManager::getInstance().pushState(std::make_unique<World>(isprevMario, prevMapIndex));
-
-        StopSound(SoundManager::getInstance().gameOverSound);
-        PlayMusicStream(SoundManager::getInstance().playMusic);
-        SoundManager::getInstance().death_played = false;
-        SoundManager::getInstance().game_over_played = false;
+        restart();
     }),
     exit_button("EXIT", {707, 620, 330, 50}, WHITE, RED, [&]() {
-        StatsManager::getInstance().reset();
-        StateManager::getInstance().pushState(std::make_unique<MainMenu>());
-        StopSound(SoundManager::getInstance().gameOverSound);
-        PlayMusicStream(SoundManager::getInstance().playMusic);
-        SoundManager::getInstance().death_played = false;
-        SoundManager::getInstance().game_over_played = false;
+        exitGame();
     })
 {
     font = LoadFont("assets/fonts/SuperMarioBros.ttf");
@@ -84,6 +72,37 @@ void GameOverMenu::drawStats()
         title = "1-4";
     
     DrawTextEx(font, title.c_str(), {984, 86}, 40, 2, WHITE);
+
+    std::string time = "TIME";
+    DrawTextEx(font, time.c_str(), {1308, 33}, 40, 2, WHITE);   
+    int totalSec = (int)floorf(Timer::getInstance().remaining + 0.0001f); // small epsilon for safety
+    int mins = totalSec / 60;
+    int secs = totalSec % 60;
+
+    std::string timeDisplay = (mins < 10 ? "0" : "") + std::to_string(mins) + ":" + (secs < 10 ? "0" : "") + std::to_string(secs);
+    DrawTextEx(font, timeDisplay.c_str(), {1300, 86}, 40, 2, WHITE);
+}
+
+void GameOverMenu::restart()
+{
+    StatsManager::getInstance().reset();
+    StateManager::getInstance().popState();
+    StateManager::getInstance().pushState(std::make_unique<World>(isprevMario, prevMapIndex));
+    Timer::getInstance().setup(10.0f);
+    StopSound(SoundManager::getInstance().gameOverSound);
+    PlayMusicStream(SoundManager::getInstance().playMusic);
+    SoundManager::getInstance().death_played = false;
+    SoundManager::getInstance().game_over_played = false;
+}
+
+void GameOverMenu::exitGame()
+{
+    StatsManager::getInstance().reset();
+    StateManager::getInstance().pushState(std::make_unique<MainMenu>());
+    StopSound(SoundManager::getInstance().gameOverSound);
+    PlayMusicStream(SoundManager::getInstance().playMusic);
+    SoundManager::getInstance().death_played = false;
+    SoundManager::getInstance().game_over_played = false;
 }
 
 void GameOverMenu::update(float deltaTime)
