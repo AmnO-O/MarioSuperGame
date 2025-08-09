@@ -8,6 +8,9 @@ public:
         readRectAnimation("assets/animation/goomba.txt", Images::textures["enemies1.png"]);
     }
 
+    bool IsActive() const override {
+        return state != State::DIE && state != State::DIE2;
+    }
     void update(float deltaTime) override;
     void updateAnimationType() override;
     void setDead2() override;
