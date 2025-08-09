@@ -1,4 +1,5 @@
 #include "Blocks/Sewer.h"
+#include "Resources/SoundManager.h"
 
 Sewer::Sewer(Texture2D &tex, std::istream &is) : Block(tex) {
     is >> head.x >> head.y >> head.width >> head.height;
@@ -62,6 +63,7 @@ void Sewer::Update(float deltaTime, Player* player) {
             if( hitbox.x + 2 < body.x  && body.x + body.width < hitbox.x + hitbox.width - 2){
                 if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)){
                     hasDowned = true;
+                    PlaySound(SoundManager::getInstance().pipedownSound);
                     animationEnterSewer.setPlayer(player); 
                     animationEnterSewer.addAction(std::make_unique<EnterAction>());
                 }

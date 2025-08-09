@@ -9,6 +9,7 @@
 #include "Object/GameObject.h"
 #include <vector>
 
+
 class ContainCoin : public GameObject {
 private:
     BounceAnimation *coinAni;

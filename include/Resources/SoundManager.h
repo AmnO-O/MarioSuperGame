@@ -33,6 +33,11 @@ class SoundManager
         Sound coinSound;
         Sound mushroomSound;
         Sound powerUpSound;
+        Sound fireballSound;
+        Sound pipedownSound;
+        Sound flagpoleSound;
+        Sound stompSound;
+        Sound warningSound;
         
         bool death_played = false;
         bool game_over_played = false;
