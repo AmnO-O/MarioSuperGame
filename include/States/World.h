@@ -19,10 +19,12 @@ class World: public GameState
 
         Map* currentMap;
         int mapIndex;
+        Font font;
         Player *character; 
         
         ImageButton settings_button;
         Texture2D settings_button_state;
+        Texture2D coin_display;
         PopUpMenu popup_menu;
         
         bool startdeath = false;
@@ -34,6 +36,9 @@ class World: public GameState
 
     public:
 
+        int score;
+        int coins;
+        
         World(bool checkMario, int index);
         ~World();
 
