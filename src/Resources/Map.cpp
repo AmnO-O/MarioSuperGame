@@ -4,6 +4,9 @@
 #include "Blocks/Coin.h"
 #include "Blocks/Sewer.h"
 #include "Blocks/Question.h"
+#include "Character/Goomba.h"
+#include "Character/Koopa.h"
+#include "Character/Piranha.h"
 #include <fstream>
 
 void Map::input(std::istream &is, Texture2D &objectTex) {
@@ -52,6 +55,13 @@ void Map::input(std::istream &is, Texture2D &objectTex) {
                 int x, y;
                 is >> x >> y;
                 enemies.push_back(new Koopa({x * 1.0f, y * 1.0f}));
+            }
+        }
+        else if (s == "PIRANHA") {
+            for (int i = 0; i < n; i++) {
+                int x, y; bool ig;
+                is >> x >> y >> ig;
+                enemies.push_back(new Piranha({x * 1.0f, y * 1.0f}, ig));
             }
         }
     }
