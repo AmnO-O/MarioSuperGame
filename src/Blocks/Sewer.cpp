@@ -77,7 +77,7 @@ void Sewer::changeCam(std::queue<Vector3> &camChange) {
     //     return cam;
     // return {-1.0f, -1.0f};
     if (hasDowned)
-        camChange.push({cam.x, cam.y, 1.0f});
+        camChange.push({cam.x, cam.y, 2.0f});
 }
 void Sewer::changePlayerPos(PlayerActionManager &pm) {
     // if (hasDowned && animationEnterSewer.doneAction()) {
@@ -148,7 +148,7 @@ void HorizontalSewer::Update(float deltaTime, Player* player) {
 
 void HorizontalSewer::changeCam(std::queue<Vector3> &camChange) {
     if (hasDowned) {
-        camChange.push({cam.x, cam.y, 0.6f});
+        camChange.push({cam.x, cam.y, 1.5f});
     }
 }
 

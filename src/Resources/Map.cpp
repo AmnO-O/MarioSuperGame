@@ -67,6 +67,7 @@ void Map::input(std::istream &is, Texture2D &objectTex) {
             }
         }
     }
+    std::sort(enemies.begin(), enemies.end(), [](auto a, auto b) { return a->getPosition().x < b->getPosition().x; });
 }
 
 Map::Map(const std::string& folderPath, Texture2D &objectTex) {
@@ -109,17 +110,45 @@ void Map::Update(float delta) {
         blocks[i]->changePlayerPos(pm);
         blocks[i]->changeCam(camChange);
     }
-    
-    pm.update(delta);
 
     if(character)
         character->update(delta); 
 
-    for (int i = (int)enemies.size() - 1; i >= 0; i--) {
-        enemies[i]->update(delta);
+    spawnEnemy();
+    for (int i = (int)curEnemies.size() - 1; i >= 0; i--) {
+        curEnemies[i]->update(delta);
     }
     
     cam -> update(character); 
+}
+
+void Map::spawnEnemy() {
+    Vector2 mapSize = getSize();
+    float screenW = (float)GetScreenWidth();
+    float screenH = (float)GetScreenHeight();
+	
+    // --- Zoom so whole map fits (optional) ---
+    float scaleX = screenW / mapSize.x;
+    float scaleY = screenH / mapSize.y;
+    float zoom = (std::max(scaleX, scaleY));
+
+    float halfW = screenW * 0.5f / zoom;
+    float halfH = screenH * 0.5f / zoom;
+    Vector2 target = cam->getCamera().target;
+
+    int i = 0;
+    while (i < enemies.size()) {
+        Vector2 pos = enemies[i]->getPosition();
+        if (pos.x > target.x + halfW)
+            break;
+        if (pos.y > target.y + halfH || pos.y < target.y - halfH) {
+            i++;
+            continue;
+        }
+        curEnemies.push_back(enemies[i]);
+        CollisionManager::getInstance().Register(enemies[i]);
+        enemies.pop_front();
+    }
 }
 
 void Map::Draw() const {    
@@ -141,8 +170,8 @@ void Map::Draw() const {
             blocks[i]->Draw(DrawStat::First);
         }
                 
-        for (int i = 0; i < enemies.size(); i++) {
-            enemies[i]->render();
+        for (int i = 0; i < curEnemies.size(); i++) {
+            curEnemies[i]->render();
             // DrawRectangleLines(enemies[i]->getHitbox().x, enemies[i]->getHitbox().y, 
             //                     enemies[i]->getHitbox().width, enemies[i]->getHitbox().height, GREEN);
         }
@@ -163,10 +192,14 @@ void Map::Unload() {
     for (int i = 0; i < blocks.size(); i++)
         delete blocks[i];
 
+    for (int i = 0; i < curEnemies.size(); i++) {
+        delete curEnemies[i];
+    }
+
     for (int i = 0; i < enemies.size(); i++) {
         delete enemies[i];
     }
-
+    
     delete cam;
 }
 
@@ -177,8 +210,8 @@ void Map::SetUp(Player* player) {
         CollisionManager::getInstance().Register(blocks[i]);
     character = player;
 
-    for (int i = 0; i < enemies.size(); i++) 
-        CollisionManager::getInstance().Register(enemies[i]);
+    // for (int i = 0; i < enemies.size(); i++) 
+    //     CollisionManager::getInstance().Register(enemies[i]);
     pm.setPlayer(character);
 }
 

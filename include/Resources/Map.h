@@ -25,11 +25,13 @@ private:
     std::queue<Vector3> camChange;
 
     std::vector<Block*> blocks;
-    std::vector<Enemy*> enemies;
+    std::deque<Enemy*> enemies;
+    std::vector<Enemy*> curEnemies;
     Player *character;
     PlayerActionManager pm;
 
     void input(std::istream &is, Texture2D &objectTex);
+    void spawnEnemy();
 public:
     Map() = delete;
     Map(const std::string& folderPath, Texture2D &objectTex);
