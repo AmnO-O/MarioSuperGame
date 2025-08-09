@@ -314,7 +314,7 @@ Fireball* Player::shootFireball(){
 }
 
 void Player::triggerDeath(){
-	if(Mstate->isDead()){
+	if(isDead()){		
 		return; 
 	}
 
@@ -324,6 +324,7 @@ void Player::triggerDeath(){
 		PlaySound(SoundManager::getInstance().deathSound);
 		SoundManager::getInstance().death_played = true;
 	}
+
 
 	IMoveState *tmp = Mstate;
 	Mstate = new DeadState();

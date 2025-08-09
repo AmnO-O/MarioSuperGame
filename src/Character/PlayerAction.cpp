@@ -33,7 +33,15 @@ void PlayerActionManager::resetAll(){
 RunAction::RunAction(float target) : targetX(target) {}
 
 void RunAction::execute(Player *player, PlayerMovement* movement, float deltaTime) {
+    if(currentTime == 0){
+        player->changeMstate(new RunState()); 
+        movement->lockMovement(); 
+        Vector2 startPos = movement->getPosition(); 
+        Vector2 endPos = {targetX, startPos.y};
+        lerpMover.start(startPos, endPos, 2.0f); 
+    }
 
+    currentTime += deltaTime; 
 }
 
 bool RunAction::isFinished(Player *player, PlayerMovement* movement) const {
@@ -51,12 +59,12 @@ bool JumpAction::isFinished(Player *player, PlayerMovement* movement) const {
 }
 
 
-void EnterAction::execute(Player *player, PlayerMovement* movement, float deltaTime) {
+void TopEnterAction::execute(Player *player, PlayerMovement* movement, float deltaTime) {
     if(currentTime == 0){
         player->changeMstate(new EnterState()); 
         movement->lockMovement(); 
         Vector2 startPos = movement->getPosition(); 
-        Vector2 endPos = {startPos.x, startPos.y + 30.0f};
+        Vector2 endPos = {startPos.x, startPos.y + 20.0f};
         lerpMover.start(startPos, endPos, 2.0f); 
     }
 
@@ -65,6 +73,45 @@ void EnterAction::execute(Player *player, PlayerMovement* movement, float deltaT
     movement->setPosition(nextPos); 
 }
 
-bool EnterAction::isFinished(Player *player, PlayerMovement* movement) const {
+bool TopEnterAction::isFinished(Player *player, PlayerMovement* movement) const {
+    return lerpMover.isDone(); 
+}
+
+
+
+void HorizontalEnterAction::execute(Player *player, PlayerMovement* movement, float deltaTime) {
+    if(currentTime == 0){
+        player->changeMstate(new StandState()); 
+        movement->lockMovement(); 
+        Vector2 startPos = movement->getPosition(); 
+        Vector2 endPos = {startPos.x + 13.0f, startPos.y};
+        lerpMover.start(startPos, endPos, 2.0f); 
+    }
+
+    currentTime += deltaTime; 
+    Vector2 nextPos = lerpMover.update(deltaTime); 
+    movement->setPosition(nextPos); 
+}
+
+bool HorizontalEnterAction::isFinished(Player *player, PlayerMovement* movement) const {
+    return lerpMover.isDone(); 
+}
+
+
+void PopupAction::execute(Player *player, PlayerMovement* movement, float deltaTime) {
+    if(currentTime == 0){
+        player->changeMstate(new StandState()); 
+        movement->lockMovement(); 
+        Vector2 startPos = movement->getPosition(); 
+        Vector2 endPos = {startPos.x, startPos.y - 12.0f};
+        lerpMover.start(startPos, endPos, 1.0f); 
+    }
+
+    currentTime += deltaTime; 
+    Vector2 nextPos = lerpMover.update(deltaTime); 
+    movement->setPosition(nextPos); 
+}
+
+bool PopupAction::isFinished(Player *player, PlayerMovement* movement) const {
     return lerpMover.isDone(); 
 }

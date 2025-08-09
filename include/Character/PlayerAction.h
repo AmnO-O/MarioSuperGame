@@ -17,6 +17,7 @@ public:
 class RunAction : public IAction {
     float targetX;
     float currentTime = 0; 
+    LerpMover lerpMover; 
 public:
     RunAction(float target); 
     void execute(Player *player, PlayerMovement* movement, float deltaTime) override; 
@@ -30,14 +31,32 @@ public:
     bool isFinished(Player *player, PlayerMovement* movement) const override; 
 };
 
-class EnterAction : public IAction{
+class TopEnterAction : public IAction{
     float currentTime = 0; 
     LerpMover lerpMover; 
 public: 
-    EnterAction(){}; 
+    TopEnterAction(){}; 
     void execute(Player *player, PlayerMovement* movement, float deltaTime) override; 
     bool isFinished(Player *player, PlayerMovement* movement) const override; 
 }; 
+
+class HorizontalEnterAction : public IAction {
+    float currentTime = 0; 
+    LerpMover lerpMover; 
+public: 
+    HorizontalEnterAction(){}; 
+    void execute(Player *player, PlayerMovement* movement, float deltaTime) override; 
+    bool isFinished(Player *player, PlayerMovement* movement) const override; 
+};
+
+class PopupAction : public IAction{
+    float currentTime = 0; 
+    LerpMover lerpMover;
+ public: 
+    PopupAction(){}; 
+    void execute(Player *player, PlayerMovement* movement, float deltaTime) override; 
+    bool isFinished(Player *player, PlayerMovement* movement) const override; 
+};
 
 
 class PlayerActionManager {

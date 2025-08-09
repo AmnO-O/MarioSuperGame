@@ -64,7 +64,7 @@ void Sewer::Update(float deltaTime, Player* player) {
                 if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)){
                     hasDowned = true;
                     animationEnterSewer.setPlayer(player); 
-                    animationEnterSewer.addAction(std::make_unique<EnterAction>());
+                    animationEnterSewer.addAction(std::make_unique<TopEnterAction>());
                 }
             }
         }
@@ -96,14 +96,15 @@ void HorizontalSewer::Draw(DrawStat ds) const {
     rec.width = height - head.width - body.width * (((int)height - (int)head.width) / (int)body.width);
     DrawTextureRec(tex, rec, {pos.x + height - rec.width, pos.y}, WHITE);
 }
-void HorizontalSewer::Update(float delta, Player* player) {
+
+void HorizontalSewer::Update(float deltaTime, Player* player) {
     if (!canDown) return;
     if (hasDowned){
-        // if(animationEnterSewer.doneAction()){
+        if(animationEnterSewer.doneAction()){
             hasDowned = false;
-        //     animationEnterSewer.resetAll(); 
-        // }
-        // animationEnterSewer.update(deltaTime); 
+            animationEnterSewer.resetAll(); 
+        }
+        animationEnterSewer.update(deltaTime); 
         return;
     }
 
@@ -129,8 +130,8 @@ void HorizontalSewer::Update(float delta, Player* player) {
             if( hitbox.y <= body.y  && body.y + body.height <= hitbox.y + hitbox.height){
                 if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)){
                     hasDowned = true;
-                    // animationEnterSewer.setPlayer(player); 
-                    // animationEnterSewer.addAction(std::make_unique<EnterAction>());
+                    animationEnterSewer.setPlayer(player); 
+                    animationEnterSewer.addAction(std::make_unique<HorizontalEnterAction>());
                 }
             }
         }

@@ -63,7 +63,7 @@ void World::update(float deltaTime)
     if (!SoundManager::getInstance().death_played)
         processInput();
 
-    if (SoundManager::getInstance().death_played && !IsSoundPlaying(SoundManager::getInstance().deathSound))
+    if (character -> isDead() || (SoundManager::getInstance().death_played && !IsSoundPlaying(SoundManager::getInstance().deathSound)))
 	{
         PlaySound(SoundManager::getInstance().gameOverSound);
 		StateManager::getInstance().pushState(std::make_unique<GameOverMenu>());
