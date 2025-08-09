@@ -1,6 +1,8 @@
 #include "Character/Goomba.h"
 #include "Blocks/Coin.h"
 #include "Character/Character.h"
+#include "Resources/SoundManager.h"
+#include "Resources/StatsManager.h"
 
 void Goomba::update(float deltaTime) {
     if (state == GoombaState::DIE) {
@@ -16,6 +18,7 @@ void Goomba::updateAnimationType() {
     if (state == GoombaState::DIE) {
         position.y += hitbox.height * 0.5f;
         activeAnimation = animations["DIE"].get();
+        StatsManager::getInstance().addScore(100);
     } 
     else activeAnimation = animations["RUNNING"].get();
     updateHitbox();
@@ -30,6 +33,7 @@ void Goomba::adaptCollision(ICollidable* other) {
         if (playerHitbox.y + playerHitbox.height <= hitbox.y + 5) {
             if (state == GoombaState::RUNNING) {
                 state = GoombaState::DIE;
+                PlaySound(SoundManager::getInstance().stompSound);
                 updateAnimationType();
             }
         } 

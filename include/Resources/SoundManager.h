@@ -36,6 +36,7 @@ class SoundManager
         Sound fireballSound;
         Sound pipedownSound;
         Sound flagpoleSound;
+        Sound stompSound;
         
         bool death_played = false;
         bool game_over_played = false;

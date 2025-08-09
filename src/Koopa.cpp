@@ -2,6 +2,8 @@
 #include "Character/Character.h"
 #include "Blocks/Block.h"
 #include "Blocks/Coin.h"
+#include "Resources/SoundManager.h"
+#include "Resources/StatsManager.h"
 
 void Koopa::update(float deltaTime) {
     if (dead) {
@@ -45,11 +47,15 @@ void Koopa::adaptCollision(ICollidable* other) {
         if (playerHitbox.y + playerHitbox.height <= hitbox.y + 5) {
             if (state == KoopaState::RUNNING) {
                 position.y += 10.0f;
+                PlaySound(SoundManager::getInstance().stompSound);
+                StatsManager::getInstance().addScore(50);
                 enterShell();
             } 
             else if (state == KoopaState::SHELL) {
                 velocity.x = (playerHitbox.x < hitbox.x) ? 1.0f : -1.0f;
                 startSpinning();
+                PlaySound(SoundManager::getInstance().stompSound);
+                StatsManager::getInstance().addScore(100);
             }
             else if (state == KoopaState::SPINNING) {
                 stopSpinning();
@@ -68,6 +74,7 @@ void Koopa::adaptCollision(ICollidable* other) {
     if (enemy && enemy != this) {
         if (state == KoopaState::SPINNING) {
             enemy->setDead();
+            StatsManager::getInstance().addScore(100);
         }
         else if (state == KoopaState::RUNNING) {
             velocity.x = -velocity.x;
