@@ -57,16 +57,19 @@ void Koopa::adaptCollision(ICollidable* other) {
             if (state == State::RUNNING) {
                 position.y += 10.0f;
                 enterShell();
-            } 
-            else if (state == State::SHELL) {
-                velocity.x = (playerHitbox.x < hitbox.x) ? 1.0f : -1.0f;
-                startSpinning();
             }
             else if (state == State::SPINNING) {
                 stopSpinning();
                 enterShell();
             }
         } 
+        else if (playerHitbox.x + playerHitbox.width <= hitbox.x + 5 || 
+                 playerHitbox.x >= hitbox.x + hitbox.width - 5) {
+            if (state == State::SHELL && canBePushed) {
+                float pushDirection = (playerHitbox.x < hitbox.x) ? -1.0f : 1.0f;
+                pushShell(pushDirection);
+            }
+        }
         else {
             if (state == State::SHELL && canBePushed) {
                 float pushDirection = (playerHitbox.x < hitbox.x) ? -1.0f : 1.0f;
