@@ -1,11 +1,12 @@
 #include "Blocks/Flag.h"
 
 Flag::Flag(Texture2D &tex, std::istream &is, float time) : Block(tex), time(time), animationClimbFlag(nullptr) {
+    drawStat = DrawStat::Zero;
     is >> head.x >> head.y >> head.width >> head.height;
     is >> body.x >> body.y >> body.width >> body.height;
     is >> pos.x >> pos.y;
     is >> height;
-    is >> tp.x >> tp.y;
+    // is >> tp.x >> tp.y;
     if (height < head.height)
         throw ResourceException("Flag height < Flag Head!");
 }
@@ -44,14 +45,14 @@ void Flag::Update(float deltaTime, Player* player) {
     
 }
 
-Vector2 Flag::changeCam() {
-    return {-1.0f, -1.0f};
-}
-Vector2 Flag::changePlayerPos() {
-    if (hasClimb && animationClimbFlag->doneAction())
-        return tp;
-    return {-1.0f, -1.0f};
-}
+// Vector2 Flag::changeCam() {
+//     return {-1.0f, -1.0f};
+// }
+// Vector2 Flag::changePlayerPos() {
+//     if (hasClimb && animationClimbFlag->doneAction())
+//         return tp;
+//     return {-1.0f, -1.0f};
+// }
 
 void Flag::adaptCollision(ICollidable* other) {
     Player* player = dynamic_cast<Player*>(other);

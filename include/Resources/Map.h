@@ -12,16 +12,22 @@
 #include "Character/Goomba.h"
 #include "Character/Koopa.h"
 #include "MyCamera2D.h"
+#include <queue>
 
 class Map {
 private:
     int space;
-    MyCamera2D* cam;
     int curspace = 0;
     Texture2D background;
+    float des;
+
+    MyCamera2D* cam;
+    std::queue<Vector3> camChange;
+
     std::vector<Block*> blocks;
-    Player *character;
     std::vector<Enemy*> enemies;
+    Player *character;
+    PlayerActionManager pm;
 
     void input(std::istream &is, Texture2D &objectTex);
 public:
@@ -33,6 +39,7 @@ public:
     void Update(float delta);
     void Draw() const;
     void Unload();
+    bool isEnd();
 };
 
 #endif

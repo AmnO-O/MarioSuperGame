@@ -33,11 +33,12 @@ void Sewer::Draw(DrawStat ds) const {
 void Sewer::Update(float deltaTime, Player* player) { 
     if (!canDown) return;
     if (hasDowned){
-        if(animationEnterSewer.doneAction()){
+        // if(animationEnterSewer.doneAction()){
             hasDowned = false;
-            animationEnterSewer.resetAll(); 
-        }
-        animationEnterSewer.update(deltaTime); 
+            canDown = false;
+        //     animationEnterSewer.resetAll(); 
+        // }
+        // animationEnterSewer.update(deltaTime); 
         return;
     }
 
@@ -63,23 +64,29 @@ void Sewer::Update(float deltaTime, Player* player) {
             if( hitbox.x + 4 < body.x  && body.x + body.width < hitbox.x + hitbox.width - 4){
                 if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)){
                     hasDowned = true;
-                    animationEnterSewer.setPlayer(player); 
-                    animationEnterSewer.addAction(std::make_unique<TopEnterAction>());
+                    // animationEnterSewer.setPlayer(player); 
+                    // animationEnterSewer.addAction(std::make_unique<TopEnterAction>());
                 }
             }
         }
     }
 }
 
-Vector2 Sewer::changeCam() {
-    if (hasDowned && animationEnterSewer.doneAction())
-        return cam;
-    return {-1.0f, -1.0f};
+void Sewer::changeCam(std::queue<Vector3> &camChange) {
+    // if (hasDowned && animationEnterSewer.doneAction())
+    //     return cam;
+    // return {-1.0f, -1.0f};
+    if (hasDowned)
+        camChange.push({cam.x, cam.y, 1.0f});
 }
-Vector2 Sewer::changePlayerPos() {
-    if (hasDowned && animationEnterSewer.doneAction())
-        return tp;
-    return {-1.0f, -1.0f};
+void Sewer::changePlayerPos(PlayerActionManager &pm) {
+    // if (hasDowned && animationEnterSewer.doneAction()) {
+    if (hasDowned) {
+        pm.addAction(std::make_unique<TopEnterAction>());
+        pm.addAction(std::make_unique<SetPositionAction>(tp, true, 0.0f));
+        // return tp;
+    }
+    // return {-1.0f, -1.0f};
 }
 
 Rectangle HorizontalSewer::getHitbox() const {
@@ -100,11 +107,12 @@ void HorizontalSewer::Draw(DrawStat ds) const {
 void HorizontalSewer::Update(float deltaTime, Player* player) {
     if (!canDown) return;
     if (hasDowned){
-        if(animationEnterSewer.doneAction()){
+        // if(animationEnterSewer.doneAction()){
             hasDowned = false;
-            animationEnterSewer.resetAll(); 
-        }
-        animationEnterSewer.update(deltaTime); 
+            canDown = false;
+        //     animationEnterSewer.resetAll(); 
+        // }
+        // animationEnterSewer.update(deltaTime); 
         return;
     }
 
@@ -130,10 +138,28 @@ void HorizontalSewer::Update(float deltaTime, Player* player) {
             if( hitbox.y <= body.y  && body.y + body.height <= hitbox.y + hitbox.height){
                 if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)){
                     hasDowned = true;
-                    animationEnterSewer.setPlayer(player); 
-                    animationEnterSewer.addAction(std::make_unique<HorizontalEnterAction>());
+                    // animationEnterSewer.setPlayer(player); 
+                    // animationEnterSewer.addAction(std::make_unique<HorizontalEnterAction>());
                 }
             }
         }
     }
+}
+
+void HorizontalSewer::changeCam(std::queue<Vector3> &camChange) {
+    if (hasDowned) {
+        camChange.push({cam.x, cam.y, 0.6f});
+    }
+}
+
+void HorizontalSewer::changePlayerPos(PlayerActionManager &pm) {
+    if (hasDowned) {
+    // if (hasDowned && animationEnterSewer.doneAction()) {
+        pm.addAction(std::make_unique<HorizontalEnterAction>());
+        pm.addAction(std::make_unique<SetPositionAction>(tp, true, 0.0f));
+        if (isDown)
+            pm.addAction(std::make_unique<PopupAction>());
+        // return tp;
+    }
+    // return {-1.0f, -1.0f};
 }

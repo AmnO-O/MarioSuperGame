@@ -8,7 +8,7 @@
 #include <fstream>
 
 void Map::input(std::istream &is, Texture2D &objectTex) {
-    is >> space;
+    is >> space >> des;
     cam = new MyCamera2D(1.0f * GetScreenWidth(), 1.0f * GetScreenHeight()); 
     cam->setMapSize(getSize());
 
@@ -82,20 +82,36 @@ Map::Map(const std::string& folderPath, Texture2D &objectTex) {
 }
 
 void Map::Update(float delta) {
+    // if (pm.doneAction()) {
+    //     pm.resetAll();
+    // }
+    pm.update(delta);
+    if (!camChange.empty()) {
+        camChange.front().z -= delta;
+        if (camChange.front().z <= 0) {
+            cam->setTarget({camChange.front().x, camChange.front().y});
+            camChange.pop();
+        }
+    }
+
     CollisionManager::getInstance().Register(character->shootFireball()); 
     CollisionManager::getInstance().CheckAllCollisions();
     for (int i = 0; i < blocks.size(); i++) {
         blocks[i]->Update(delta, character);
-        Vector2 tmpCam = blocks[i]->changeCam();
-        Vector2 tmpPos = blocks[i]->changePlayerPos();
-        if (tmpPos.x >= 0 && tmpPos.y >= 0) {
-            character->setGroundLevel(2.0f * GetScreenHeight());
-            character->setPosition(tmpPos);
-        }
-        if (tmpCam.x >= 0 && tmpCam.y >= 0)
-            cam->setTarget(tmpCam);
+        // Vector2 tmpCam = blocks[i]->changeCam();
+        // Vector2 tmpPos = blocks[i]->changePlayerPos(pm);
+        // if (tmpPos.x >= 0 && tmpPos.y >= 0) {
+        //     character->setGroundLevel(2.0f * GetScreenHeight());
+        //     character->setPosition(tmpPos);
+        // }
+        // if (tmpCam.x >= 0 && tmpCam.y >= 0)
+        //     cam->setTarget(tmpCam);
+        blocks[i]->changePlayerPos(pm);
+        blocks[i]->changeCam(camChange);
     }
-        
+    
+    pm.update(delta);
+
     if(character)
         character->update(delta); 
 
@@ -113,29 +129,31 @@ void Map::Draw() const {
 
         DrawTexture(background, 0, 0, WHITE);
 
+        for (int i = 0; i < blocks.size(); i++) {
+            blocks[i]->Draw(DrawStat::Zero);
+        }
     
-        if( dynamic_cast<Player*> (character) &&  dynamic_cast<Player*> (character)->hidePlayer()){
+        if( character &&  character->hidePlayer()){
             character->render(); 
         }
 
         for (int i = 0; i < blocks.size(); i++) {
             blocks[i]->Draw(DrawStat::First);
         }
-        
-        for (int i = 0; i < blocks.size(); i++) {
-            blocks[i]->Draw(DrawStat::Second);
-        }
-
-        if( dynamic_cast<Player*> (character) &&  !dynamic_cast<Player*> (character)->hidePlayer()){
-            character->render(); 
-        }
-
-
+                
         for (int i = 0; i < enemies.size(); i++) {
             enemies[i]->render();
             // DrawRectangleLines(enemies[i]->getHitbox().x, enemies[i]->getHitbox().y, 
             //                     enemies[i]->getHitbox().width, enemies[i]->getHitbox().height, GREEN);
         }
+
+        if( character &&  !character->hidePlayer()){
+            character->render(); 
+        }
+
+        for (int i = 0; i < blocks.size(); i++) {
+            blocks[i]->Draw(DrawStat::Second);
+        }       
     
     EndMode2D(); 
 }
@@ -161,4 +179,9 @@ void Map::SetUp(Player* player) {
 
     for (int i = 0; i < enemies.size(); i++) 
         CollisionManager::getInstance().Register(enemies[i]);
+    pm.setPlayer(character);
+}
+
+bool Map::isEnd() {
+    return character->getPosition().x >= des;
 }

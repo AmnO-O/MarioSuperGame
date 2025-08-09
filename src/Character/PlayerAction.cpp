@@ -154,7 +154,7 @@ void PopupAction::execute(Player *player, PlayerMovement* movement, float deltaT
         player->changeMstate(new StandState()); 
         movement->lockMovement(); 
         Vector2 startPos = movement->getPosition(); 
-        Vector2 endPos = {startPos.x, startPos.y - 12.0f};
+        Vector2 endPos = {startPos.x, startPos.y - player->getShape().y};
         lerpMover.start(startPos, endPos, 1.0f); 
     }
 
