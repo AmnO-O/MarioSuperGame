@@ -1,14 +1,24 @@
 #include "States/MainMenu.h"
 #include "States/SubMenu.h"
 #include "States/SettingsMenu.h"
+#include "tinyfiledialogs.h"
+#include "States/World.h"
 
 MainMenu::MainMenu()  
-  : mario_button("MARIO GAME", {570, 450, 330, 60}, WHITE, RED, [&]() { 
-        StateManager::getInstance().pushState(std::make_unique<SubMenu>(true));  
+  : new_game_button("NEW GAME", {570, 450, 330, 60}, WHITE, RED, [&]() {
+        StateManager::getInstance().pushState(std::make_unique<SubMenu>());
     }),
-    luigi_button("LUIGI GAME", {570, 533, 330, 60}, WHITE, RED, [&]() { 
-        StateManager::getInstance().pushState(std::make_unique<SubMenu>(false));
-    }), 
+    load_game_button("LOAD GAME", {570, 533, 330, 60}, WHITE, RED, [&]() {
+        const char* filename = tinyfd_openFileDialog(
+        "Load Game", "", 1, (const char*[]){"*.txt"}, "Text Files", 0);
+    
+        if (filename) 
+        {
+            auto* world = new World(true, 1); 
+            world->loadGame(filename);
+            StateManager::getInstance().pushState(std::unique_ptr<GameState>(world));
+        }
+    }),
     settings_button("assets/images/setting.png", {25, 27, 100, 100}, [&]() {
         StateManager::getInstance().pushState(std::make_unique<SettingsMenu>());
     })
@@ -27,8 +37,8 @@ MainMenu::~MainMenu()
 
 void MainMenu::update(float deltaTime) 
 {
-    mario_button.update(deltaTime);
-    luigi_button.update(deltaTime);
+    new_game_button.update(deltaTime);
+    load_game_button.update(deltaTime);
     settings_button.update(deltaTime);
 }
 
@@ -36,8 +46,8 @@ void MainMenu::render()
 {
     DrawTexture(background, 0, 0, WHITE);
 
-    mario_button.render(); 
-    luigi_button.render(); 
+    new_game_button.render(); 
+    load_game_button.render(); 
     settings_button.render();
 
     bool isHovered = CheckCollisionPointRec(GetMousePosition(), settings_button.getBounds());

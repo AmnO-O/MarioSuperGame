@@ -13,6 +13,7 @@
 #include "../Widgets/PopUpMenu.h"
 #include "../Resources/Timer.h"
 #include <iostream>
+#include <fstream>
 
 class World: public GameState
 {
@@ -49,6 +50,8 @@ class World: public GameState
         int getMapIndex() const;
 
         void drawStats();
+        void saveGame(const std::string& filename) const;
+        void loadGame(const std::string& filename);
         void processInput() override;
         void update(float deltaTime) override;
         void render() override;

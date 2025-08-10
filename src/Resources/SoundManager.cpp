@@ -9,43 +9,43 @@ SoundManager& SoundManager::getInstance()
 void SoundManager::loadAll() 
 {
 	playMusic = LoadMusicStream("assets/sounds/SuperMarioBros_theme_song.mp3");
-    SetMusicVolume(playMusic, getMusicVolume());
+    SetMusicVolume(playMusic, getMusicVolume() * 0.5f);
 	
 	deathSound = LoadSound("assets/sounds/death.wav");
-	SetSoundVolume(deathSound, getEffectVolume());
+	SetSoundVolume(deathSound, getEffectVolume() * 0.5f);
 
     gameOverSound = LoadSound("assets/sounds/gameOver.wav");
-	SetSoundVolume(gameOverSound, getEffectVolume());
+	SetSoundVolume(gameOverSound, getEffectVolume() * 0.5f);
 
     jumpSound = LoadSound("assets/sounds/jump.wav");
-	SetSoundVolume(jumpSound, getEffectVolume());
+	SetSoundVolume(jumpSound, getEffectVolume() * 0.5f);
 
     brickSound = LoadSound("assets/sounds/block.wav");
-    SetSoundVolume(brickSound, getEffectVolume());
+    SetSoundVolume(brickSound, getEffectVolume() * 0.5f);
 
     coinSound = LoadSound("assets/sounds/coin.wav");
-    SetSoundVolume(coinSound, getEffectVolume());
+    SetSoundVolume(coinSound, getEffectVolume() * 0.5f);
 
     mushroomSound = LoadSound("assets/sounds/mushroom.wav");
-    SetSoundVolume(mushroomSound, getEffectVolume());
+    SetSoundVolume(mushroomSound, getEffectVolume() * 0.5f);
 
     powerUpSound = LoadSound("assets/sounds/powerUpAppear.wav");
-    SetSoundVolume(powerUpSound, getEffectVolume() * 2.5f);
+    SetSoundVolume(powerUpSound, getEffectVolume() * 1.5f);
 
     fireballSound = LoadSound("assets/sounds/fireball.wav");
-    SetSoundVolume(fireballSound, getEffectVolume());
+    SetSoundVolume(fireballSound, getEffectVolume() * 0.5f);
 
     pipedownSound = LoadSound("assets/sounds/pipedown.wav");
-    SetSoundVolume(pipedownSound, getEffectVolume());
+    SetSoundVolume(pipedownSound, getEffectVolume() * 0.5f);
 
     flagpoleSound = LoadSound("assets/sounds/flagpole.wav");
-    SetSoundVolume(flagpoleSound, getEffectVolume());
+    SetSoundVolume(flagpoleSound, getEffectVolume() * 0.5f);
 
     stompSound = LoadSound("assets/sounds/stomp.wav");
-    SetSoundVolume(stompSound, getEffectVolume());
+    SetSoundVolume(stompSound, getEffectVolume() * 0.5f);
 
     warningSound = LoadSound("assets/sounds/warning.wav");
-    SetSoundVolume(warningSound, getEffectVolume());
+    SetSoundVolume(warningSound, getEffectVolume() * 0.5f);
 }
 
 void SoundManager::unloadAll() 

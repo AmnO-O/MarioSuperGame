@@ -121,6 +121,57 @@ void World::drawStats()
     DrawTextEx(font, timeDisplay.c_str(), {1300, 86}, 40, 2, Timer::getInstance().time_color);
 }
 
+void World::saveGame(const std::string& filename) const
+{
+    std::ofstream fout(filename);
+    if (!fout.is_open()) 
+        std::throw_with_nested(std::runtime_error("Failed to open save file"));
+
+    fout << (isMario ? "MARIO" : "LUIGI") << '\n';
+    fout << mapIndex << '\n';
+    fout << character->getPosition().x << ' ' << character->getPosition().y << '\n';
+    fout << score_number << '\n';
+    fout << number_of_coins << '\n';
+    fout << Timer::getInstance().remaining << '\n';
+    // Add more as needed
+
+    fout.close();
+}
+
+void World::loadGame(const std::string& filename)
+{
+    std::ifstream fin(filename);
+    if (!fin.is_open())
+        std::throw_with_nested(std::runtime_error("Failed to open save file"));
+
+    std::string playerType;
+    fin >> playerType;
+    
+    if (playerType == "MARIO")
+        isMario = true;
+    else
+        isMario = false;
+
+    fin >> mapIndex;
+    
+    float x, y;
+    fin >> x >> y;
+    character->setPosition({x, y});
+
+    int score; int coins;
+    fin >> score;
+    fin >> coins;
+    StatsManager::getInstance().setStats(score, coins);
+
+    float rem;
+    fin >> rem;
+    //Timer::getInstance().setup(rem);
+
+    // Add more as needed
+
+    fin.close();
+}
+
 void World::processInput()
 {
     if (IsKeyPressed(KEY_P))

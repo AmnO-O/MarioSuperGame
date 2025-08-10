@@ -11,8 +11,8 @@ class MainMenu : public GameState
 {
     private:
 
-        NormalButton mario_button;
-        NormalButton luigi_button;
+        NormalButton new_game_button;
+        NormalButton load_game_button;
         ImageButton settings_button;
         Texture2D settings_button_state;
         Texture2D background;
