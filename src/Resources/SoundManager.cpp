@@ -1,46 +1,74 @@
 #include "Resources/SoundManager.h"
 
-void SoundManager::loadMenuSound()
+SoundManager& SoundManager::getInstance()
 {
-    InitAudioDevice();
-    menuSound = LoadMusicStream(menu_filePath.c_str());
-    SetMusicVolume(menuSound, current_volume);
+    static SoundManager instance;
+    return instance;
 }
 
-void SoundManager::playMenuSound()
+void SoundManager::loadAll() 
 {
-    PlayMusicStream(menuSound);
+	playMusic = LoadMusicStream("assets/sounds/SuperMarioBros_theme_song.mp3");
+    SetMusicVolume(playMusic, getMusicVolume());
+	
+	deathSound = LoadSound("assets/sounds/death.wav");
+	SetSoundVolume(deathSound, getEffectVolume());
+
+    gameOverSound = LoadSound("assets/sounds/gameOver.wav");
+	SetSoundVolume(gameOverSound, getEffectVolume());
+
+    jumpSound = LoadSound("assets/sounds/jump.wav");
+	SetSoundVolume(jumpSound, getEffectVolume());
+
+    brickSound = LoadSound("assets/sounds/block.wav");
+    SetSoundVolume(brickSound, getEffectVolume());
+
+    coinSound = LoadSound("assets/sounds/coin.wav");
+    SetSoundVolume(coinSound, getEffectVolume());
+
+    mushroomSound = LoadSound("assets/sounds/mushroom.wav");
+    SetSoundVolume(mushroomSound, getEffectVolume());
+
+    powerUpSound = LoadSound("assets/sounds/powerUpAppear.wav");
+    SetSoundVolume(powerUpSound, getEffectVolume() * 2.5f);
 }
 
-void SoundManager::pauseMenuSound()
+void SoundManager::unloadAll() 
 {
-    PauseMusicStream(menuSound);
+    UnloadMusicStream(playMusic);
+    UnloadSound(deathSound);
+    UnloadSound(gameOverSound);
+    UnloadSound(jumpSound);
+    UnloadSound(brickSound);
+    UnloadSound(coinSound);
+    UnloadSound(mushroomSound);
+    UnloadSound(powerUpSound);
 }
 
-void SoundManager::resumeMenuSound()
+float SoundManager::getMusicVolume() const
 {
-    ResumeMusicStream(menuSound);
+    return current_music_volume;
 }
 
-void SoundManager::unloadMenuSound()
+float SoundManager::getEffectVolume() const
 {
-    StopMusicStream(menuSound);
-    UnloadMusicStream(menuSound);
-    CloseAudioDevice();
-}
-
-void SoundManager::updateMenuSound()
-{
-    UpdateMusicStream(menuSound);
-}
-
-float SoundManager::getVolume() const
-{
-    return current_volume;
+    return current_effect_volume;
 }
 
 void SoundManager::setMusicVolume(float volume)
 {
-    current_volume = volume;
-    SetMusicVolume(menuSound, volume);
+    current_music_volume = volume;
+    SetMusicVolume(playMusic, volume);
+}
+
+void SoundManager::setEffectVolume(float volume)
+{
+    current_effect_volume = volume;
+	SetSoundVolume(deathSound, volume);
+	SetSoundVolume(gameOverSound, volume);
+	SetSoundVolume(jumpSound, volume);
+    SetSoundVolume(brickSound, volume);
+    SetSoundVolume(coinSound, volume);
+    SetSoundVolume(mushroomSound, volume);
+    SetSoundVolume(powerUpSound, volume);
 }

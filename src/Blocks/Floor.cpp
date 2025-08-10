@@ -19,7 +19,7 @@ void Floor::Draw(DrawStat ds) const {
     }
 }
 
-void Floor::Update(float delta) {
+void Floor::Update(float delta, Player* player) {
     // if (drawStat == DrawStat::None) return;
     // Rectangle hitbox = getHitbox();
     // if ()

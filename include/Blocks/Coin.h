@@ -34,7 +34,7 @@ public:
     Rectangle getHitbox() const override;
     void Draw(DrawStat ds) const override;
     void adaptCollision(ICollidable* other) override;
-    void Update(float delta) override;
+    void Update(float delta, Player* player) override;
     bool IsActive() const override;
     void isHitBelow(ICollidable* block) override { Bounce(); }
     ~Coin() override {}

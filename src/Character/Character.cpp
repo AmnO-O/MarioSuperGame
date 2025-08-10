@@ -1,6 +1,8 @@
 #include "Character/Character.h"
 #include "Blocks/Coin.h"
 #include "Character/Enemy.h"
+#include "Resources/StateManager.h"
+#include "States/GameOverMenu.h"
 #include <iostream>
 #include <cassert>
 #include <algorithm>
@@ -101,6 +103,10 @@ std::string Player::getShape_Action() const{
 
 void Player::updateShape(){
 	std::string animationKey = getShape_Action();
+
+	if(Mstate->getMoveState() == "CLIMBING"){
+		animations[animationKey]->setTimeSwitch(0.15f);
+	}
 
 	if ((int)animationKey.size() >= 7 && animationKey.substr(0, 8) == "MORPHING") {
 		animationKey = "SMALL_MORPHING";
@@ -295,8 +301,7 @@ void Player::powerUp(PowerUpType t){
 
 
 Fireball* Player::shootFireball(){
-		Fireball *fireball = nullptr; 
-
+	Fireball *fireball = nullptr; 
 
 	if (IsKeyPressed(KEY_F) && Sstate->canShootFire()) {
 		delete Mstate;
@@ -305,48 +310,45 @@ Fireball* Player::shootFireball(){
 		updateShape();
 		updateHitbox();
 
-		Vector2 startPos = movement->getPosition();
-		startPos.x += (movement->isFacingRight() ? 15 : -5);
-		startPos.y += 5;
-
-
-		fireball = new Fireball(startPos, movement->isFacingRight()); 
-		fireball->setGroundLevel(2.0f * GetScreenHeight()); 
-        fireballs.emplace_back(fireball);
+		fireball = fireballs.shootFireball(movement->getPosition(), movement->isFacingRight()); 
     }
 
 	return fireball; 
 
 }
 
-void Player::cleanFireballs(){
-    fireballs.erase(
-        std::remove_if(fireballs.begin(), fireballs.end(), [](const auto &fb) { return !fb->isActive(); }),
-        fireballs.end()
-    );
-}
-
 void Player::triggerDeath(){
-	if(Mstate->isDead()){
+	if(isDead()){		
 		return; 
 	}
 
-	IMoveState *tmp = Mstate; 
-	Mstate = new DeadState(); 
-	delete tmp; 
-	tmp = nullptr; 
+	if (!SoundManager::getInstance().death_played)
+	{
+		StopMusicStream(SoundManager::getInstance().playMusic);
+		PlaySound(SoundManager::getInstance().deathSound);
+		SoundManager::getInstance().death_played = true;
+	}
 
-	movement->setDisableUpdate(); 
+
+	IMoveState *tmp = Mstate;
+	Mstate = new DeadState();
+	delete tmp;
+	tmp = nullptr;
+
 	movement->setVelocityX(0.0f); 
-	movement->setVelocityY(-200.0f); 
+	movement->setVelocityY(-170.0f); 
 	movement->setGroundLevel(1000.0f); 
+
 }
 
 
 void Player::adapt_collision_with_enimies(ICollidable* other){
 	if(isInvincible() || blink.isActive()) return; 
 
-	if(movement->adapt_collision_with_enimies(other)) return;
+	if(movement->adapt_collision_with_enimies(other, this)){
+		// movement->adaptCollision(other, Mstate, this); 
+		return; 
+	}
 
 
 	if(isBig() == false){
@@ -367,7 +369,11 @@ void Player::adapt_collision_with_enimies(ICollidable* other){
 }
 
 void Player::adaptCollision(ICollidable* other){
-	if(Mstate->isDead()){
+	if(isDead()){
+		return; 
+	}
+
+	if(isLocked()){
 		return; 
 	}
 
@@ -414,6 +420,8 @@ void Player::setOnGround(){
 }
 
 void Player::adaptChangePosition(){
+	if(isLocked()) return; 
+	
 	if(groundLevel - hitbox.height > hitbox.y){
 		if(!Mstate->isDead()){
 			delete Mstate;
@@ -437,11 +445,11 @@ void Player::setGroundLevel(float groundLevel_){
 	adaptChangePosition();
 }
 
-void Player::setPosition(const Vector2 &position){
-	hitbox.x = position.x;
-	hitbox.y = position.y;
+void Player::setPosition(const Vector2 &pos){
+	hitbox.x = pos.x;
+	hitbox.y = pos.y;
 
-	movement->setPosition(position);
+	movement->setPosition(pos);
 	adaptChangePosition();
 }
 
@@ -502,11 +510,6 @@ void Player::update(float deltaTime){
 			Sstate = next;
 		}
 	}
-
-	cleanFireballs();
-
-	for (auto& fb : fireballs)
-		fb->update(deltaTime);
 	
 	showPlayer = blink.update(deltaTime); 
 	Mstate->update(deltaTime);
@@ -534,9 +537,15 @@ void Player::update(float deltaTime){
 		}
 		return; 
 	}
+    Vector2 position = movement->getPosition(); 
+
+	if(position.y >= 700 && isDead() == false){
+		triggerDeath(); 
+		return; 
+	}
 
 	movement->update(deltaTime, Sstate, Mstate);
- 
+	fireballs.update(deltaTime); 
 
 	if(activeAnimation)
 		activeAnimation->update(deltaTime);
@@ -551,15 +560,13 @@ void Player::update(float deltaTime){
 }
 
 void Player::render(){
-
 	if(activeAnimation){
 		if(showPlayer){
 			activeAnimation->render(movement->getPosition(), movement->isFacingRight() == false);
 		}
 	}
 
-	for (auto& fireball : fireballs)
-		fireball->render();
+	fireballs.render(); 
 }
 
 Player::~Player() {
@@ -567,15 +574,10 @@ Player::~Player() {
 	delete Mstate;
 	delete movement;
 
-	for(auto &fireball : fireballs){
-		delete fireball;
-		fireball = nullptr;
-	}
-
 	Images::unloadAllTextures();
 }
 
-
+// Action implement. 
 
 void Player::run_from_a_to_b(float startX, float endX){
 	if(movement->isDoneLerpMoving() == false){

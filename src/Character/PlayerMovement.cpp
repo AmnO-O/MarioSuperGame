@@ -20,34 +20,14 @@ void PlayerMovement::setGroundLevel(float groundLevel_){
 	 }
 }
 
-bool PlayerMovement::adapt_collision_with_enimies(ICollidable* other){
+bool PlayerMovement::adapt_collision_with_enimies(ICollidable* other, Player* player){
 	Rectangle rect = other->getHitbox();
 
-	float penLeft = (position.x + shape.x) - rect.x; 
-	float penRight = (rect.x + rect.width) - position.x;
-	float penX = penLeft < penRight ? -penLeft : penRight; 
-
-	float penTop = (position.y + shape.y) - rect.y;
-	float penBot = (rect.y + rect.height) - position.y;
-	float penY = penTop < penBot ? -penTop : penBot;
-
-	if (std::fabs(penX) < std::fabs(penY)){
-		return false;
-	}else{
-		position.y += penY; 
-
-		if (penY < 0 && velocity.y > 0) {
-			velocity.y = -150;
-			//enemy->die();    
-
-			return true;
-		} else {
-			//takeDamage();
-			return false;
-		}
+	if(velocity.y < 0 && position.y + shape.y > rect.y){
+		return false; 
 	}
 
-	
+	velocity.y = -150.0f; 
 	return true; 
 }
 
@@ -96,6 +76,21 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 		return; 
 	}
 
+	if(Mstate->isDead()){
+		float forceY = 430; 
+
+		if(position.y + shape.y >= groundLevel) forceY = 0; 
+
+		velocity.y += forceY * deltaTime;
+        position.y += velocity.y * deltaTime;
+		
+		return ; 
+	}
+
+	if(disableUpdate == true) 
+		return ; 
+
+
 	currentTime += deltaTime; 
 
 	bool pressingLeft = IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT);
@@ -109,14 +104,10 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 	if(pressingLeft && pressingRight) pressingRight = pressingLeft = false; 
 	if(pressingCrounch) pressingRight = pressingLeft = false; 
 	
-	if(disableUpdate == true){
-		pressingLeft = pressingRight = isClickedSpace = pressingSpace = pressingCrounch = false; 
-		velocity.y += 450 * deltaTime;
-        position.y += velocity.y * deltaTime;
-		
-		return ; 
+	if(disableInput){
+		pressingLeft = pressingRight = pressingSpace = pressingCrounch = isClickedSpace = false; 
 	}
-	
+
 	float forceX = 0;
 	float forceY = 980;
 
@@ -141,16 +132,23 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 		forceY += stats->jumpInitialVelocity; 
 		currentTime = 0; 
 
+		PlaySound(SoundManager::getInstance().jumpSound);
+
 		if((pressingCrounch == false || Sstate->canBreakBrick() == false)){
 			delete Mstate; 
 			Mstate = new JumpState(); 
-		}else{
+		}
+		
+		else{
 			Mstate->changeIsJump(); 
 		}
 	}
-	else if(pressingSpace && Mstate->isJumping() && currentTime <= stats->maxJumpTime){
+	else if(pressingSpace && Mstate->isJumping() && currentTime <= stats->maxJumpTime)
+	{
 		forceY += stats->jumpHoldAcceleration; 
-	}else if(Mstate -> isJumping() == false){
+	}
+	
+	else if(Mstate -> isJumping() == false){
 		forceY -= 980;
 	}
 
@@ -165,8 +163,10 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 	velocity.x += forceX * deltaTime;
 	velocity.y += forceY * deltaTime;
 
-	velocity.x = std::min(velocity.x, 150.0f);
-	velocity.x = std::max(velocity.x, -150.0f);
+	if(disableInput == false){
+		velocity.x = std::min(velocity.x, 150.0f);
+		velocity.x = std::max(velocity.x, -150.0f);
+	}
 
 	position.x += velocity.x * deltaTime;
 	position.y += velocity.y * deltaTime;

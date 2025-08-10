@@ -23,12 +23,14 @@ class StateManager
     private:
 
         std::stack<std::unique_ptr<GameState>> stateStack;
+        
+        StateManager() = default; 
+        StateManager(const StateManager&) = delete;
+        StateManager& operator=(const StateManager&) = delete;
 
     public:
-
-        StateManager() = default;
-        ~StateManager() = default;
-
+        
+        static StateManager& getInstance();
         void pushState(std::unique_ptr<GameState> newState);
         void popState();
         GameState* getCurrentState();

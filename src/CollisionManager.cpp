@@ -37,7 +37,7 @@ void CollisionManager::CheckCharObj() {
     float maxOverlap = 0.0f;
 
     // Check character vs all others
-    for (auto* obj : collidables) {
+    for (auto* obj : collidables) if(mainCharacter -> IsActive()){
         if (obj != mainCharacter && obj->IsActive() && CheckCollisionRecs(mainCharacter->getHitbox(), obj->getHitbox())) {
             float curOverlap = overlap(mainCharacter->getHitbox(), obj->getHitbox());
             if (curOverlap > maxOverlap) {

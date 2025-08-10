@@ -54,7 +54,7 @@ Rectangle Coin::getHitbox() const {
     return { pos.x, pos.y, srcRect.x, srcRect.y };
 }
 
-void Coin::Update(float delta) {
+void Coin::Update(float delta, Player* player) {
     if (stat == BlockStat::Broken) return; // Don't update if broken
     if (stat == BlockStat::Bouncing) {
         coinAni.Update(delta);
@@ -116,11 +116,14 @@ void Coin::Break() {
     std::cout << "Get Coin\n";
     stat = BlockStat::Broken;
     drawStat = DrawStat::None;
+
+    PlaySound(SoundManager::getInstance().coinSound);
 }
 
 void Coin::Bounce() {
     std::cout << "Bounce Coin\n";
     stat = BlockStat::Bouncing;
+    PlaySound(SoundManager::getInstance().coinSound);
 }
 
 bool Coin::IsActive() const {

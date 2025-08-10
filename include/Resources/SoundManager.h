@@ -3,27 +3,48 @@
 
 #include <raylib.h>
 #include <string>
+#include <unordered_map>
+#include <filesystem>
 
 
 class SoundManager
 {
     private:
 
-        float current_volume = 1.0f; //Current volume = default volume when first init
-        const std::string menu_filePath = "assets/sounds/SuperMarioBros_theme_song.mp3";
-        Music menuSound;
-    
+        SoundManager() = default; 
+        SoundManager(const SoundManager&) = delete;
+        SoundManager& operator=(const SoundManager&) = delete;
+
+        float current_music_volume = 0.5f; 
+        float current_effect_volume = 0.5f;
+
     public:
 
-    void loadMenuSound();
-    void playMenuSound();
-    void pauseMenuSound();
-    void resumeMenuSound();
-    void unloadMenuSound();
-    void updateMenuSound();
+        static SoundManager& getInstance();
+        
+        // Music
+        Music playMusic;
+        Sound deathSound;
+        Sound gameOverSound;
+        
+        // Effects
+        Sound jumpSound;
+        Sound brickSound;
+        Sound coinSound;
+        Sound mushroomSound;
+        Sound powerUpSound;
+        
+        bool death_played = false;
+        bool game_over_played = false;
 
-    float getVolume() const;
-    void setMusicVolume(float volume);
+        void loadAll();
+	    void unloadAll();
+
+        float getMusicVolume() const;
+        float getEffectVolume() const;
+        void setMusicVolume(float volume);
+        void setEffectVolume(float volume);
+
    
 };
 

@@ -1,20 +1,23 @@
 #include "Blocks/Question.h"
 #include "Character/Character.h"
 
-Question::Question(Texture2D &tex, std::istream &is) : Block(tex), bounceAni(tex, {0, 0, 0, 0}, 0.25f, 6.0f, 1.0f), ani(tex, false, 0.2f) {
+Question::Question(Texture2D &tex, std::istream &is) : Block(tex), bounceAni(tex, {0, 0, 0, 0}, 0.25f, 6.0f, 0.2f)
+                                                        , ani(tex, false, 0.2f), brokenAni(tex, {0, 0, 0, 0}, 0.25f, 6.0f, 1.0f) {
     int n = 0;
     is >> n;
     for (int i = 0; i < n; i++) {
         int x, y, w, h;
         is >> x >> y >> w >> h;
         ani.addRect({1.0f * x, 1.0f * y, 1.0f * w, 1.0f * h});
+        bounceAni.addRect({1.0f * x, 1.0f * y, 1.0f * w, 1.0f * h});
     }
 
     is >> BrokenRect.x >> BrokenRect.y >> BrokenRect.width >> BrokenRect.height;
     is >> pos.x >> pos.y;
 
     Vector2 shape = ani.getCurrentShape();
-    bounceAni.addRect(BrokenRect);
+    brokenAni.addRect(BrokenRect);
+    brokenAni.setBlockRec({pos.x, pos.y, shape.x, shape.y});
     bounceAni.setBlockRec({pos.x, pos.y, shape.x, shape.y});
 
     std::string s;
@@ -22,10 +25,12 @@ Question::Question(Texture2D &tex, std::istream &is) : Block(tex), bounceAni(tex
     is >> s;
     if (s == "COIN") 
         type = QuestionType::COIN;
-    else if (s == "BIG") 
+    else if (s == "POWER") 
         type = QuestionType::POWER;
     else if (s == "STAR") 
         type = QuestionType::STAR;
+    else if (s == "NORMAL")
+        type = QuestionType::NORMAL;
 }
 
 Rectangle Question::getHitbox() const {
@@ -33,16 +38,25 @@ Rectangle Question::getHitbox() const {
     return { position.x, position.y, BrokenRect.width, BrokenRect.height };
 }
 
-void Question::Update(float delta) {
-    if (object && object->IsActive()) object->update(delta);
+void Question::Update(float delta, Player* player) {
+    clearObj();
+    for (auto object : objects)
+        if (object && object->IsActive()) 
+            object->update(delta);
 
     if (stat == BlockStat::Broken) return; // Don't update if broken
 
+    if (stat == BlockStat::Breaking) {
+        brokenAni.Update(delta);
+        if (brokenAni.ended())
+            stat = BlockStat::Broken;
+        return;
+    }
+
     if (stat == BlockStat::Bouncing) {
         bounceAni.Update(delta);
-        if (bounceAni.ended()) {
-            stat = BlockStat::Broken;
-        }
+        if (bounceAni.ended())
+            stat = BlockStat::Normal;
         return;
     }
     ani.update(delta);
@@ -50,9 +64,16 @@ void Question::Update(float delta) {
 
 void Question::Draw(DrawStat ds) const {
     if (drawStat != ds) return;
-    if (object && object->IsActive()) object->render();
+    for (auto object : objects)
+        if (object && object->IsActive()) 
+            object->render();
 
-    if (stat == BlockStat::Bouncing || stat == BlockStat::Broken) {
+    if (stat == BlockStat::Breaking || stat == BlockStat::Broken) {
+        brokenAni.Draw();
+        return;
+    }
+
+    if (stat == BlockStat::Bouncing) {
         bounceAni.Draw();
         return;
     }
@@ -94,21 +115,36 @@ void Question::adaptCollision(ICollidable* other) {
 void Question::Break(Player* player) {
     CollisionManager::getInstance().NotifyAbove(this);
 
+    if (creator) delete creator;
     switch (type)
     {
         case QuestionType::COIN:
             creator = new CoinCreator();
+            PlaySound(SoundManager::getInstance().coinSound);
             break;
         
         case QuestionType::POWER:
             if (player->isBig())
+            {
                 creator = new FireFlowerCreator();
+                PlaySound(SoundManager::getInstance().powerUpSound);
+            }
+
             else
+            {
                 creator = new MushroomCreator();
+                PlaySound(SoundManager::getInstance().powerUpSound);
+            }
+
             break;
 
         case QuestionType::STAR:
             creator = new StarCreator();
+            PlaySound(SoundManager::getInstance().powerUpSound);
+            break;
+
+        case QuestionType::NORMAL:
+            creator = new NormalMushroomCreator();
             break;
 
         default:
@@ -117,10 +153,24 @@ void Question::Break(Player* player) {
 
     if (creator) {
         Vector2 shape = ani.getCurrentShape();
-        object = creator->create({pos.x, pos.y, shape.x, shape.y});
-        ICollidable* item = dynamic_cast<ICollidable*>(object);
+        objects.push_back(creator->create({pos.x, pos.y, shape.x, shape.y}));
+        ICollidable* item = dynamic_cast<ICollidable*>(objects[objects.size() - 1]);
         if (item)
             CollisionManager::getInstance().Register(item);
     }
-    stat = BlockStat::Bouncing;
+    num--;
+    if (num == 0) 
+        stat = BlockStat::Breaking;
+    else
+        stat = BlockStat::Bouncing;
+}
+
+void Question::clearObj() {
+    objects.erase(
+    std::remove_if(objects.begin(), objects.end(),
+        [](GameObject* obj) {
+            return obj == nullptr || !obj->IsActive();
+        }),
+    objects.end()
+    );
 }

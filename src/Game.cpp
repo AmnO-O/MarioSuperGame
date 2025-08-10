@@ -2,6 +2,7 @@
 #include "Resources/ResourceManager.h"
 #include "raylib.h"
 #include "States/MainMenu.h"
+#include <iostream>
 
 // Singleton instance
 Game& Game::getInstance() {
@@ -13,20 +14,27 @@ Game::Game() {
     InitWindow(1600, 900, "Mario Game");
     SetTargetFPS(60);
     isRunning = true;
-    soundManager.loadMenuSound();
-    stateManager.pushState(std::make_unique<MainMenu>(stateManager, soundManager));
+    
+    InitAudioDevice();
+    SoundManager::getInstance().loadAll();
+
+    StateManager::getInstance().pushState(std::make_unique<MainMenu>());
 }
 
 Game::~Game() {
-    soundManager.unloadMenuSound();
-    while (stateManager.getCurrentState()) {
-        stateManager.popState();
+    SoundManager::getInstance().unloadAll();
+    
+    while (StateManager::getInstance().getCurrentState()) {
+        StateManager::getInstance().popState();
     }
+
+    CloseAudioDevice();
     CloseWindow();
 }
 
 void Game::run() {
-    soundManager.playMenuSound();
+    SoundManager::getInstance().playMusic.looping = true;
+    PlayMusicStream(SoundManager::getInstance().playMusic);
 
     while (!WindowShouldClose() && isRunning) {
         float deltaTime = GetFrameTime();
@@ -43,13 +51,15 @@ void Game::processInput() {
 }
 
 void Game::update(float deltaTime) {
-    soundManager.updateMenuSound();
-    stateManager.update(deltaTime);
+ 
+    UpdateMusicStream(SoundManager::getInstance().playMusic);
+    StateManager::getInstance().update(deltaTime);
 }
 
 void Game::render() {
     BeginDrawing();
     ClearBackground(RAYWHITE);
-    stateManager.render();
+    
+    StateManager::getInstance().render();
     EndDrawing();
 }

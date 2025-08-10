@@ -27,7 +27,7 @@ Rectangle Brick::getHitbox() const {
     return { position.x, position.y, srcRect.width, srcRect.height };
 }
 
-void Brick::Update(float delta) {
+void Brick::Update(float delta, Player* player) {
     if (stat == BlockStat::Broken) return; // Don't update if broken
 
     if (stat == BlockStat::Bouncing) {
@@ -138,6 +138,8 @@ void Brick::Break() {
     drawStat = DrawStat::Second;
     fragmentVelocity = initVelocity;
     frameTime = 0.0f;
+
+    PlaySound(SoundManager::getInstance().brickSound);
 }
 
 void Brick::Bounce() {    

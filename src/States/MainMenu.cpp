@@ -2,20 +2,15 @@
 #include "States/SubMenu.h"
 #include "States/SettingsMenu.h"
 
-MainMenu::MainMenu(StateManager& stateManager, SoundManager& soundManager)
-  : stateManager(stateManager), 
-    soundManager(soundManager),   
-    mario_button("MARIO GAME", {570, 450, 330, 60}, WHITE, RED, [&]() { 
-        //stateManager.popState();
-        stateManager.pushState(std::make_unique<SubMenu>(stateManager, soundManager, true));  
+MainMenu::MainMenu()  
+  : mario_button("MARIO GAME", {570, 450, 330, 60}, WHITE, RED, [&]() { 
+        StateManager::getInstance().pushState(std::make_unique<SubMenu>(true));  
     }),
     luigi_button("LUIGI GAME", {570, 533, 330, 60}, WHITE, RED, [&]() { 
-        //stateManager.popState();
-        stateManager.pushState(std::make_unique<SubMenu>(stateManager, soundManager, false));
+        StateManager::getInstance().pushState(std::make_unique<SubMenu>(false));
     }), 
     settings_button("assets/images/setting.png", {25, 27, 100, 100}, [&]() {
-        //stateManager.popState();       
-        stateManager.pushState(std::make_unique<SettingsMenu>(stateManager, soundManager));
+        StateManager::getInstance().pushState(std::make_unique<SettingsMenu>());
     })
 {
     background = LoadTexture("assets/images/main_menu_background.png"); 
