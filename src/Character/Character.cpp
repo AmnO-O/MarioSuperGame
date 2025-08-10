@@ -104,6 +104,10 @@ std::string Player::getShape_Action() const{
 void Player::updateShape(){
 	std::string animationKey = getShape_Action();
 
+	if(Mstate->getMoveState() == "CLIMBING"){
+		animations[animationKey]->setTimeSwitch(0.15f);
+	}
+
 	if ((int)animationKey.size() >= 7 && animationKey.substr(0, 8) == "MORPHING") {
 		animationKey = "SMALL_MORPHING";
 		animations[animationKey]->setTimeSwitch(0.1f);
@@ -314,7 +318,7 @@ Fireball* Player::shootFireball(){
 }
 
 void Player::triggerDeath(){
-	if(Mstate->isDead()){
+	if(isDead()){		
 		return; 
 	}
 
@@ -324,6 +328,7 @@ void Player::triggerDeath(){
 		PlaySound(SoundManager::getInstance().deathSound);
 		SoundManager::getInstance().death_played = true;
 	}
+
 
 	IMoveState *tmp = Mstate;
 	Mstate = new DeadState();
@@ -530,6 +535,12 @@ void Player::update(float deltaTime){
 			updateHitbox();		
 			shrinkOnHit = false; 
 		}
+		return; 
+	}
+    Vector2 position = movement->getPosition(); 
+
+	if(position.y >= 700 && isDead() == false){
+		triggerDeath(); 
 		return; 
 	}
 

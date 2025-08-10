@@ -13,10 +13,22 @@ public:
     virtual ~IAction() = default;
 };
 
+class SetPositionAction : public IAction{
+    Vector2 position; 
+    bool facingRight; 
+    float currentTime = 0; 
+    float timeShow; 
+public: 
+    SetPositionAction(Vector2 pos, bool facingRight_, float timeShow_); 
+    void execute(Player *player, PlayerMovement* movement, float deltaTime) override; 
+    bool isFinished(Player *player, PlayerMovement* movement) const override; 
+}; 
+
 
 class RunAction : public IAction {
     float targetX;
     float currentTime = 0; 
+    LerpMover lerpMover; 
 public:
     RunAction(float target); 
     void execute(Player *player, PlayerMovement* movement, float deltaTime) override; 
@@ -25,19 +37,52 @@ public:
 
 class JumpAction : public IAction {
     float currentTime = 0; 
+
+    float forceVelocity_x; 
+    float forceVelocity_y; 
 public:
+    JumpAction(float forceVelocity_x, float forceVelocity_y) : forceVelocity_x(forceVelocity_x), forceVelocity_y(forceVelocity_y){}
     void execute(Player *player, PlayerMovement* movement, float deltaTime) override; 
     bool isFinished(Player *player, PlayerMovement* movement) const override; 
 };
 
-class EnterAction : public IAction{
+class ClimbAction : public IAction {
+    float currentTime = 0; 
+    float targetY;
+    LerpMover lerpMover; 
+    float timeAction; 
+public:
+    ClimbAction(float targetY_, float timeAction_) : targetY(targetY_), timeAction(timeAction_){}
+    void execute(Player *player, PlayerMovement* movement, float deltaTime) override; 
+    bool isFinished(Player *player, PlayerMovement* movement) const override; 
+};
+
+class TopEnterAction : public IAction{
     float currentTime = 0; 
     LerpMover lerpMover; 
 public: 
-    EnterAction(){}; 
+    TopEnterAction(){}; 
     void execute(Player *player, PlayerMovement* movement, float deltaTime) override; 
     bool isFinished(Player *player, PlayerMovement* movement) const override; 
 }; 
+
+class HorizontalEnterAction : public IAction {
+    float currentTime = 0; 
+    LerpMover lerpMover; 
+public: 
+    HorizontalEnterAction(){}; 
+    void execute(Player *player, PlayerMovement* movement, float deltaTime) override; 
+    bool isFinished(Player *player, PlayerMovement* movement) const override; 
+};
+
+class PopupAction : public IAction{
+    float currentTime = 0; 
+    LerpMover lerpMover;
+ public: 
+    PopupAction(){}; 
+    void execute(Player *player, PlayerMovement* movement, float deltaTime) override; 
+    bool isFinished(Player *player, PlayerMovement* movement) const override; 
+};
 
 
 class PlayerActionManager {

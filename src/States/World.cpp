@@ -1,5 +1,6 @@
 #include "States/World.h"
 #include "States/MainMenu.h"
+#include "States/LevelMenu.h"
 #include "States/GameOverMenu.h"
 #include "Game.h"
 #include "Resources/ResourceManager.h"
@@ -129,6 +130,11 @@ void World::processInput()
 
 void World::update(float deltaTime) 
 {
+    if (currentMap->isEnd()) {
+        StateManager::getInstance().pushState(std::make_unique<LevelMenu>(isMario));
+        ResumeMusicStream(SoundManager::getInstance().playMusic);
+    }
+
     if (!SoundManager::getInstance().death_played)
         processInput();
 
