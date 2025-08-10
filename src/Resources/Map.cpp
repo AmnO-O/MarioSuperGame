@@ -7,6 +7,7 @@
 #include "Character/Goomba.h"
 #include "Character/Koopa.h"
 #include "Character/Piranha.h"
+#include "Character/EnemyFactory.h"
 #include "Blocks/Flag.h"
 #include <fstream>
 
@@ -55,28 +56,36 @@ void Map::input(std::istream &is, Texture2D &objectTex) {
     is >> nEnemy;
     while (is >> s) {
         int n; is >> n;
+        std::unique_ptr<EnemyFactory> factory;
+
         if (s == "GOOMBA") {
+            factory = std::make_unique<GoombaFactory>();
             for (int i = 0; i < n; i++) {
                 int x, y;
                 is >> x >> y;
-                enemies.push_back(new Goomba({x * 1.0f, y * 1.0f}));
+                enemies.push_back(factory->createEnemy({x * 1.0f, y * 1.0f}).release());
             }
         }
         else if (s == "KOOPA") {
+            factory = std::make_unique<KoopaFactory>();
             for (int i = 0; i < n; i++) {
                 int x, y;
                 is >> x >> y;
-                enemies.push_back(new Koopa({x * 1.0f, y * 1.0f}));
+                enemies.push_back(factory->createEnemy({x * 1.0f, y * 1.0f}).release());
             }
         }
         else if (s == "PIRANHA") {
             for (int i = 0; i < n; i++) {
                 int x, y; bool ig;
                 is >> x >> y >> ig;
-                enemies.push_back(new Piranha({x * 1.0f, y * 1.0f}, ig));
+                enemies.push_back(
+                    (new PiranhaFactory(ig))->createEnemy({x * 1.0f, y * 1.0f}).release()
+                );
             }
+            continue;
         }
     }
+
     std::sort(enemies.begin(), enemies.end(), [](auto a, auto b) { return a->getPosition().x < b->getPosition().x; });
 }
 
