@@ -87,6 +87,7 @@ public:
 
 
     Vector2 getPosition() const {return position;}
+    Vector2 getVelocity() const {return velocity;}
     bool isFacingRight() const {return facingRight; }
 
 }; 

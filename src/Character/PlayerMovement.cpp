@@ -163,8 +163,10 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 	velocity.x += forceX * deltaTime;
 	velocity.y += forceY * deltaTime;
 
-	velocity.x = std::min(velocity.x, 150.0f);
-	velocity.x = std::max(velocity.x, -150.0f);
+	if(disableInput == false){
+		velocity.x = std::min(velocity.x, 150.0f);
+		velocity.x = std::max(velocity.x, -150.0f);
+	}
 
 	position.x += velocity.x * deltaTime;
 	position.y += velocity.y * deltaTime;

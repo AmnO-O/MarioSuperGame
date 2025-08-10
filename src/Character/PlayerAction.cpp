@@ -81,10 +81,12 @@ void JumpAction::execute(Player *player, PlayerMovement* movement, float deltaTi
         movement->setVelocityY(forceVelocity_y); 
         movement->lockKeyboardInput(); 
     }
+    
+    currentTime += deltaTime;
 }
 
 bool JumpAction::isFinished(Player *player, PlayerMovement* movement) const {
-    return player->getVelocity().y == 0; 
+    return movement->getVelocity().y == 0 && movement->getVelocity().x == 0; 
 }
 
 
