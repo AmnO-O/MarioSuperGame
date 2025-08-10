@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include "Character/Character.h"
+#include "Resources/StatsManager.h"
 
 ContainCoin::ContainCoin(Rectangle block) : GameObject(), coinAni(new BounceAnimation(Images::textures["mapobject.png"], block , 1.0f, 40.0f, 0.1f)) {
     std::ifstream fin;
@@ -118,12 +119,17 @@ void Coin::Break() {
     drawStat = DrawStat::None;
 
     PlaySound(SoundManager::getInstance().coinSound);
+    StatsManager::getInstance().addCoins();
+    StatsManager::getInstance().addScore(20);
 }
 
 void Coin::Bounce() {
     std::cout << "Bounce Coin\n";
     stat = BlockStat::Bouncing;
+    
     PlaySound(SoundManager::getInstance().coinSound);
+    StatsManager::getInstance().addCoins();
+    StatsManager::getInstance().addScore(20);
 }
 
 bool Coin::IsActive() const {

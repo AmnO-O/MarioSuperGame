@@ -1,5 +1,6 @@
 #include "Blocks/Question.h"
 #include "Character/Character.h"
+#include "Resources/StatsManager.h"
 
 Question::Question(Texture2D &tex, std::istream &is) : Block(tex), bounceAni(tex, {0, 0, 0, 0}, 0.25f, 6.0f, 0.2f)
                                                         , ani(tex, false, 0.2f), brokenAni(tex, {0, 0, 0, 0}, 0.25f, 6.0f, 1.0f) {
@@ -121,6 +122,8 @@ void Question::Break(Player* player) {
         case QuestionType::COIN:
             creator = new CoinCreator();
             PlaySound(SoundManager::getInstance().coinSound);
+            StatsManager::getInstance().addCoins();
+            StatsManager::getInstance().addScore(20);
             break;
         
         case QuestionType::POWER:

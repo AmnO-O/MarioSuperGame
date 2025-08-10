@@ -2,6 +2,8 @@
 #include "Character/Character.h"
 #include "Blocks/Block.h"
 #include "Blocks/Coin.h"
+#include "Resources/SoundManager.h"
+#include "Resources/StatsManager.h"
 
 void Koopa::update(float deltaTime) {
     if (dead) {
@@ -56,7 +58,15 @@ void Koopa::adaptCollision(ICollidable* other) {
         if (playerHitbox.y + playerHitbox.height <= hitbox.y + 5) {
             if (state == State::RUNNING) {
                 position.y += 10.0f;
+                PlaySound(SoundManager::getInstance().stompSound);
+                StatsManager::getInstance().addScore(50);
                 enterShell();
+            } 
+            else if (state == State::SHELL) {
+                velocity.x = (playerHitbox.x < hitbox.x) ? 1.0f : -1.0f;
+                startSpinning();
+                PlaySound(SoundManager::getInstance().stompSound);
+                StatsManager::getInstance().addScore(100);
             }
             else if (state == State::SPINNING) {
                 stopSpinning();
@@ -75,6 +85,44 @@ void Koopa::adaptCollision(ICollidable* other) {
                 float pushDirection = (playerHitbox.x < hitbox.x) ? -1.0f : 1.0f;
                 pushShell(pushDirection);
             }
+        }
+    }
+    
+    Enemy* enemy = dynamic_cast<Enemy*>(other);
+    if (enemy && enemy != this) {
+        if (state == State::SPINNING) {
+            enemy->setDead();
+            StatsManager::getInstance().addScore(100);
+        }
+        else if (state == State::RUNNING) {
+            velocity.x = -velocity.x;
+        }
+        else if (state == State::SHELL && velocity.x != 0) {
+            enemy->setDead();
+        }
+    }
+    
+    Block* block = dynamic_cast<Block*>(other);
+    if (block) {
+        Rectangle blockHitbox = block->getHitbox();
+        
+        if (velocity.x != 0) {
+            if (velocity.x > 0 && hitbox.x + hitbox.width > blockHitbox.x && 
+                hitbox.x < blockHitbox.x) {
+                velocity.x = -velocity.x;
+                position.x = blockHitbox.x - hitbox.width;
+            }
+            else if (velocity.x < 0 && hitbox.x < blockHitbox.x + blockHitbox.width && 
+                     hitbox.x + hitbox.width > blockHitbox.x + blockHitbox.width) {
+                velocity.x = -velocity.x;
+                position.x = blockHitbox.x + blockHitbox.width;
+            }
+        }
+        
+        if (velocity.y > 0 && hitbox.y + hitbox.height > blockHitbox.y && 
+            hitbox.y < blockHitbox.y) {
+            position.y = blockHitbox.y - hitbox.height;
+            velocity.y = 0;
         }
     }
 }

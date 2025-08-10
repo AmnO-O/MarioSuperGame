@@ -1,5 +1,6 @@
 #pragma once
 #include "Fireball.h"
+#include "Resources/SoundManager.h"
 #include <algorithm>
 
 class FireballManager{
@@ -31,6 +32,7 @@ public:
         fireball = new Fireball(playerPosition, isFacingRight); 
 		fireball->setGroundLevel(2.0f * GetScreenHeight()); 
         fireballs.emplace_back(fireball);
+        PlaySound(SoundManager::getInstance().fireballSound);
 
         return fireball; 
     }

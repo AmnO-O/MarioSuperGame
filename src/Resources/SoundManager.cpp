@@ -31,6 +31,21 @@ void SoundManager::loadAll()
 
     powerUpSound = LoadSound("assets/sounds/powerUpAppear.wav");
     SetSoundVolume(powerUpSound, getEffectVolume() * 2.5f);
+
+    fireballSound = LoadSound("assets/sounds/fireball.wav");
+    SetSoundVolume(fireballSound, getEffectVolume());
+
+    pipedownSound = LoadSound("assets/sounds/pipedown.wav");
+    SetSoundVolume(pipedownSound, getEffectVolume());
+
+    flagpoleSound = LoadSound("assets/sounds/flagpole.wav");
+    SetSoundVolume(flagpoleSound, getEffectVolume());
+
+    stompSound = LoadSound("assets/sounds/stomp.wav");
+    SetSoundVolume(stompSound, getEffectVolume());
+
+    warningSound = LoadSound("assets/sounds/warning.wav");
+    SetSoundVolume(warningSound, getEffectVolume());
 }
 
 void SoundManager::unloadAll() 
@@ -43,6 +58,11 @@ void SoundManager::unloadAll()
     UnloadSound(coinSound);
     UnloadSound(mushroomSound);
     UnloadSound(powerUpSound);
+    UnloadSound(fireballSound);
+    UnloadSound(pipedownSound);
+    UnloadSound(flagpoleSound);
+    UnloadSound(stompSound);
+    UnloadSound(warningSound);
 }
 
 float SoundManager::getMusicVolume() const
@@ -71,4 +91,9 @@ void SoundManager::setEffectVolume(float volume)
     SetSoundVolume(coinSound, volume);
     SetSoundVolume(mushroomSound, volume);
     SetSoundVolume(powerUpSound, volume);
+    SetSoundVolume(fireballSound, volume);
+    SetSoundVolume(pipedownSound, volume);
+    SetSoundVolume(flagpoleSound, volume);
+    SetSoundVolume(stompSound, volume);
+    SetSoundVolume(warningSound, volume);
 }

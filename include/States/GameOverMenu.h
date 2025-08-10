@@ -17,12 +17,17 @@ class GameOverMenu: public GameState
     NormalButton restart_button;
     NormalButton exit_button;
     std::string title;
+    int prevMapIndex;
+    bool isprevMario;
 
     public:
 
-        GameOverMenu();
+        GameOverMenu(int mapIndex, bool checkMario);
         ~GameOverMenu() = default;
 
+        void drawStats(); 
+        void restart();
+        void exitGame();
         void processInput() override {};
         void update(float deltaTime) override;
         void render() override;
