@@ -69,7 +69,7 @@ void World::drawStats()
     DrawTextEx(font, charType.c_str(), {203, 33}, 40, 2, WHITE);
 
     int maxDigit = 6;
-    int scoreDigits = std::to_string(score_number).length();
+    int scoreDigits = (int)std::to_string(score_number).length();
     std::string scoreStr;
 
     if (scoreDigits <= maxDigit)
@@ -85,7 +85,7 @@ void World::drawStats()
 
     DrawTexture(coin_display, 614, 79, WHITE);
     int maxCoinsDigits = 2;
-    int coinsDigits = std::to_string(number_of_coins).length();
+    int coinsDigits = (int)std::to_string(number_of_coins).length();
     std::string coinsStr  = ":";
 
     if (coinsDigits <= maxCoinsDigits)

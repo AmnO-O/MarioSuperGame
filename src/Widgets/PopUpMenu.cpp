@@ -29,7 +29,7 @@ void PopUpMenu::restart()
     bool isMario = dynamic_cast<World*>(StateManager::getInstance().getCurrentState())->getIsMario();
     int mapIndex = dynamic_cast<World*>(StateManager::getInstance().getCurrentState())->getMapIndex();
     StatsManager::getInstance().reset();
-    StateManager::getInstance().pushState(std::make_unique<World>(isMario, mapIndex, 20.0f));
+    StateManager::getInstance().pushState(std::make_unique<World>(isMario, mapIndex, 60.0f));
     ResumeMusicStream(SoundManager::getInstance().playMusic);
 }
 
