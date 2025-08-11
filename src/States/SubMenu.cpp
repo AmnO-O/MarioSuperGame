@@ -4,7 +4,7 @@
 #include "States/World.h"
 
 SubMenu::SubMenu()
-  : mario_button("MARIO GAME", {570, 450, 330, 60}, WHITE, RED, [&]() { 
+  : mario_button("MARIO GAME", {570, 400, 330, 60}, WHITE, RED, [&]() { 
         StateManager::getInstance().pushState(std::make_unique<LevelMenu>(true));  
     }),
     luigi_button("LUIGI GAME", {570, 533, 330, 60}, WHITE, RED, [&]() { 
@@ -46,5 +46,5 @@ void SubMenu::render()
     if (isHovered)
         DrawTexture(return_button_state, 25, 27, WHITE);
 
-    DrawTextEx(titleFont, title.c_str(), {577, 79}, 50, 2, BLACK);
+    DrawTextEx(titleFont, title.c_str(), {324, 79}, 50, 2, BLACK);
 }
