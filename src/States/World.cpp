@@ -175,7 +175,9 @@ void World::update(float deltaTime)
             currentMap->Update(deltaTime);
 
         Timer::getInstance().update(deltaTime);
-        settings_button.update(deltaTime);
+        
+        if (!SoundManager::getInstance().death_played)
+            settings_button.update(deltaTime);
     }
 
     if (popup_menu.isVisible)
@@ -194,7 +196,7 @@ void World::render()
     if (!popup_menu.isVisible)
     {
         bool isHovered = CheckCollisionPointRec(GetMousePosition(), settings_button.getBounds());
-        if (isHovered)
+        if (isHovered && !SoundManager::getInstance().death_played)
             DrawTexture(settings_button_state, 25, 27, WHITE);
     }
 
