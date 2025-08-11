@@ -1,8 +1,9 @@
 #pragma once
 #include "raylib.h"
 #include "Animation/Appearance.h"
+#include "Observer/ICollidable.h"
 
-class GameObject{
+class GameObject : public IFallable {
 protected: 
     Vector2 position; 
     Vector2 velocity; 

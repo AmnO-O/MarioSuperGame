@@ -10,7 +10,7 @@ enum State {
     DIE2
 };
 
-class Enemy : public Character, public ICollidable {
+class Enemy : public Character, public ICollidable, public IFallable {
 protected:
     CharacterType type;
     bool falling = false;
@@ -32,6 +32,7 @@ public:
 
     void setPosition(const Vector2& pos);
     void setOnGround();
+    void setGroundLevel(float groundlevel_) override { Character::setGroundLevel(groundlevel_); }
 
     void setDead();
     virtual void setDead2() {};

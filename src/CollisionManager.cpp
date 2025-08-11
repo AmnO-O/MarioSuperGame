@@ -1,5 +1,6 @@
 #include "Observer/Observer.h"
 #include "Blocks/Block.h"
+#include "Character/Enemy.h"
 #include "Blocks/Coin.h"
 #include <algorithm>
 
@@ -29,7 +30,7 @@ void CollisionManager::RemoveInactive() {
 }
 
 void CollisionManager::CheckCharObj() {
-    if (!mainCharacter) return;
+    if (!mainCharacter || !mainCharacter->IsActive()) return;
     Player *player = dynamic_cast<Player*>(mainCharacter);
     bool isOnGround = false; 
 
@@ -68,7 +69,7 @@ void CollisionManager::CheckObjObj() {
     for (int i = (int)collidables.size() - 1; i >= 0; i--) {
         ICollidable* mostOverlapObj = nullptr;
         float maxOverlap = 0.0f;
-        GameObject* p = dynamic_cast<GameObject*>(collidables[i]);
+        IFallable* p = dynamic_cast<IFallable*>(collidables[i]);
         bool isOnGround = false;
 
         for (auto* b : collidables) {
@@ -92,8 +93,10 @@ void CollisionManager::CheckObjObj() {
             mostOverlapObj->adaptCollision(collidables[i]);
         }
 
-        if (p && !isOnGround)
+        if (p && !isOnGround) {
             p->setGroundLevel(2.0f * GetScreenHeight());
+            // std::cout << "Enemy Fall\n";
+        }
     }
 }
 
