@@ -87,8 +87,8 @@ void GameOverMenu::restart()
 {
     StatsManager::getInstance().reset();
     StateManager::getInstance().popState();
-    StateManager::getInstance().pushState(std::make_unique<World>(isprevMario, prevMapIndex));
-    Timer::getInstance().setup(20.0f);
+    
+    StateManager::getInstance().pushState(std::make_unique<World>(isprevMario, prevMapIndex, 20.0f));
     StopSound(SoundManager::getInstance().gameOverSound);
     PlayMusicStream(SoundManager::getInstance().playMusic);
     SoundManager::getInstance().death_played = false;

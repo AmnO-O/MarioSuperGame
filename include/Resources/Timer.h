@@ -6,6 +6,7 @@
 #include <raylib.h>
 #include <cmath>
 
+
 class Timer
 {
     private:

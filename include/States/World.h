@@ -35,15 +35,17 @@ class World: public GameState
         bool GOMplayed = false;
         
         bool isMario;
+        bool hasUpdated = false;
 
 
     public:
 
         int score_number;
         int number_of_coins;
+        float time_level;
         float remaining_time;
         
-        World(bool checkMario, int index);
+        World(bool checkMario, int index, float time);
         ~World();
 
         bool getIsMario() const;
@@ -51,7 +53,6 @@ class World: public GameState
 
         void drawStats();
         void saveGame(const std::string& filename) const;
-        void loadGame(const std::string& filename);
         void processInput() override;
         void update(float deltaTime) override;
         void render() override;

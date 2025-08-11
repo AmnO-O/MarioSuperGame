@@ -6,9 +6,10 @@
 #include <raylib.h>
 #include "Character/Character.h"
 
-World::World(bool checkMario, int index)
+World::World(bool checkMario, int index, float time)
   : popup_menu(),
     mapIndex(index),
+    time_level(time),
     isMario(checkMario),
     score_number(0),
     number_of_coins(0),
@@ -32,6 +33,7 @@ World::World(bool checkMario, int index)
         currentMap = new Map("assets/maps/1-1/", Images::textures["mapobject.png"]);
 
     currentMap->SetUp(character);
+    Timer::getInstance().setup(time_level);
 }
 
 World::~World() 
@@ -138,39 +140,6 @@ void World::saveGame(const std::string& filename) const
     fout.close();
 }
 
-void World::loadGame(const std::string& filename)
-{
-    std::ifstream fin(filename);
-    if (!fin.is_open())
-        std::throw_with_nested(std::runtime_error("Failed to open save file"));
-
-    std::string playerType;
-    fin >> playerType;
-    
-    if (playerType == "MARIO")
-        isMario = true;
-    else
-        isMario = false;
-
-    fin >> mapIndex;
-    
-    float x, y;
-    fin >> x >> y;
-    character->setPosition({x, y});
-
-    int score; int coins;
-    fin >> score;
-    fin >> coins;
-    StatsManager::getInstance().setStats(score, coins);
-
-    float rem;
-    fin >> rem;
-    //Timer::getInstance().setup(rem);
-
-    // Add more as needed
-
-    fin.close();
-}
 
 void World::processInput()
 {
@@ -179,7 +148,13 @@ void World::processInput()
 }
 
 void World::update(float deltaTime) 
-{
+{    
+    if (!hasUpdated)
+    {
+        hasUpdated = true;
+        return;
+    }
+    
     if (!SoundManager::getInstance().death_played)
         processInput();
 

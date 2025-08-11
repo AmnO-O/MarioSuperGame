@@ -22,6 +22,7 @@ class MainMenu : public GameState
         MainMenu();
         ~MainMenu();
         
+        void loadGame(const std::string& filename);
         void processInput() override {};
         void update(float deltaTime) override;
         void render() override;   

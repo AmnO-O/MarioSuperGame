@@ -11,13 +11,6 @@ MainMenu::MainMenu()
     load_game_button("LOAD GAME", {570, 533, 330, 60}, WHITE, RED, [&]() {
         const char* filename = tinyfd_openFileDialog(
         "Load Game", "", 1, (const char*[]){"*.txt"}, "Text Files", 0);
-    
-        if (filename) 
-        {
-            auto* world = new World(true, 1); 
-            world->loadGame(filename);
-            StateManager::getInstance().pushState(std::unique_ptr<GameState>(world));
-        }
     }),
     settings_button("assets/images/setting.png", {25, 27, 100, 100}, [&]() {
         StateManager::getInstance().pushState(std::make_unique<SettingsMenu>());
