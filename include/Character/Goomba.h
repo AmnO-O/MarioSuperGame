@@ -1,21 +1,18 @@
 #pragma once
 #include "Enemy.h"
 
-enum class GoombaState {
-    RUNNING,
-    DIE
-};
-
 class Goomba : public Enemy {
-private:
-    GoombaState state = GoombaState::RUNNING;
 public:
     Goomba(Vector2 pos) : Enemy(CharacterType::GOOMBA, pos) {
         velocity.x = -35.0f;
         readRectAnimation("assets/animation/goomba.txt", Images::textures["enemies1.png"]);
     }
 
+    bool IsActive() const override {
+        return state != State::DIE && state != State::DIE2;
+    }
     void update(float deltaTime) override;
     void updateAnimationType() override;
+    void setDead2() override;
     void adaptCollision(ICollidable* other) override;
 };

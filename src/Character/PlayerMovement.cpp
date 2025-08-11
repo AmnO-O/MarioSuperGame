@@ -104,6 +104,10 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 	if(pressingLeft && pressingRight) pressingRight = pressingLeft = false; 
 	if(pressingCrounch) pressingRight = pressingLeft = false; 
 	
+	if(disableInput){
+		pressingLeft = pressingRight = pressingSpace = pressingCrounch = isClickedSpace = false; 
+	}
+
 	float forceX = 0;
 	float forceY = 980;
 
@@ -159,8 +163,10 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 	velocity.x += forceX * deltaTime;
 	velocity.y += forceY * deltaTime;
 
-	velocity.x = std::min(velocity.x, 150.0f);
-	velocity.x = std::max(velocity.x, -150.0f);
+	if(disableInput == false){
+		velocity.x = std::min(velocity.x, 150.0f);
+		velocity.x = std::max(velocity.x, -150.0f);
+	}
 
 	position.x += velocity.x * deltaTime;
 	position.y += velocity.y * deltaTime;
