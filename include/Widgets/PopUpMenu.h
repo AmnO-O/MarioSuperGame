@@ -28,6 +28,7 @@ class PopUpMenu
 
         void restart();
         void exitGame();
+        void save();
         void toggle();
         void update(float deltaTime);
         void render();

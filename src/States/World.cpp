@@ -7,9 +7,10 @@
 #include <raylib.h>
 #include "Character/Character.h"
 
-World::World(bool checkMario, int index)
+World::World(bool checkMario, int index, float time)
   : popup_menu(),
     mapIndex(index),
+    time_level(time),
     isMario(checkMario),
     score_number(0),
     number_of_coins(0),
@@ -33,6 +34,7 @@ World::World(bool checkMario, int index)
         currentMap = new Map("assets/maps/1-1/", Images::textures["mapobject.png"]);
 
     currentMap->SetUp(character);
+    Timer::getInstance().setup(time_level);
 }
 
 World::~World() 
@@ -122,6 +124,24 @@ void World::drawStats()
     DrawTextEx(font, timeDisplay.c_str(), {1300, 86}, 40, 2, Timer::getInstance().time_color);
 }
 
+void World::saveGame(const std::string& filename) const
+{
+    std::ofstream fout(filename);
+    if (!fout.is_open()) 
+        std::throw_with_nested(std::runtime_error("Failed to open save file"));
+
+    fout << (isMario ? "MARIO" : "LUIGI") << '\n';
+    fout << mapIndex << '\n';
+    fout << character->getPosition().x << ' ' << character->getPosition().y << '\n';
+    fout << score_number << '\n';
+    fout << number_of_coins << '\n';
+    fout << Timer::getInstance().remaining << '\n';
+    // Add more as needed
+
+    fout.close();
+}
+
+
 void World::processInput()
 {
     if (IsKeyPressed(KEY_P))
@@ -129,12 +149,18 @@ void World::processInput()
 }
 
 void World::update(float deltaTime) 
-{
+{    
+    if (!hasUpdated)
+    {
+        hasUpdated = true;
+        return;
+    }
+    
     if (currentMap->isEnd()) {
         StateManager::getInstance().pushState(std::make_unique<LevelMenu>(isMario));
         ResumeMusicStream(SoundManager::getInstance().playMusic);
     }
-
+  
     if (!SoundManager::getInstance().death_played)
         processInput();
 
@@ -155,7 +181,9 @@ void World::update(float deltaTime)
             currentMap->Update(deltaTime);
 
         Timer::getInstance().update(deltaTime);
-        settings_button.update(deltaTime);
+        
+        if (!SoundManager::getInstance().death_played)
+            settings_button.update(deltaTime);
     }
 
     if (popup_menu.isVisible)
@@ -174,7 +202,7 @@ void World::render()
     if (!popup_menu.isVisible)
     {
         bool isHovered = CheckCollisionPointRec(GetMousePosition(), settings_button.getBounds());
-        if (isHovered)
+        if (isHovered && !SoundManager::getInstance().death_played)
             DrawTexture(settings_button_state, 25, 27, WHITE);
     }
 
