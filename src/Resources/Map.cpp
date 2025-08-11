@@ -51,8 +51,8 @@ void Map::input(std::istream &is, Texture2D &objectTex) {
         }
     }
 
-    int nEnemy;
-    is >> nEnemy;
+    // int nEnemy;
+    // is >> nEnemy;
     while (is >> s) {
         int n; is >> n;
         if (s == "GOOMBA") {

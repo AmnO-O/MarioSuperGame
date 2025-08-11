@@ -42,8 +42,14 @@ void PopUpMenu::exitGame()
 
 void PopUpMenu::save()
 {
+    const char* filters[] = { "*.txt" };
     const char* filename = tinyfd_saveFileDialog(
-        "Save Game", "savegame.txt", 1, (const char*[]){"*.txt"}, "Text Files");
+        "Save Game",          // Dialog title
+        "savegame.txt",       // Default filename
+        1,                    // Number of filter patterns
+        filters,              // Filter pattern array
+        "Text Files"          // Filter description
+    );
     if (filename)
     {
         auto* world = dynamic_cast<World*>(StateManager::getInstance().getCurrentState());

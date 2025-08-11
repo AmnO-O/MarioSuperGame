@@ -9,7 +9,15 @@ MainMenu::MainMenu()
         StateManager::getInstance().pushState(std::make_unique<SubMenu>());
     }),
     load_game_button("LOAD GAME", {570, 533, 330, 60}, WHITE, RED, [&]() {
-        const char* filename = tinyfd_openFileDialog("Load Game", "", 1, (const char*[]){"*.txt"}, "Text Files", 0);
+        const char* filterPatterns[] = { "*.txt" };
+        const char* filename = tinyfd_openFileDialog(
+            "Load Game", 
+            "", 
+            1, 
+            filterPatterns, 
+            "Text Files", 
+            0
+        );
         if (filename)
             loadGame(std::string(filename));
     }),
