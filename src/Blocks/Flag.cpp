@@ -1,4 +1,5 @@
 #include "Blocks/Flag.h"
+#include "Resources/StatsManager.h"
 
 Flag::Flag(Texture2D &tex, std::istream &is, float time) : Block(tex), time(time), animationClimbFlag(nullptr) {
     drawStat = DrawStat::Zero;
@@ -73,6 +74,10 @@ void Flag::adaptCollision(ICollidable* other) {
         if (right < minPen) { minPen = right; dir = RIGHT; }
         if (top < minPen) { minPen = top; dir = TOP; }
         if (bottom < minPen) { minPen = bottom; dir = BOTTOM; }
+
+        float collision_height = hitbox.y + hitbox.height - body.y;
+        int extra_points = static_cast<int>(collision_height / 16) * 100;
+        StatsManager::getInstance().addScore(extra_points);
 
         if (dir == LEFT) { 
             hasClimb = true;

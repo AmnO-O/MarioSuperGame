@@ -165,10 +165,10 @@ void World::update(float deltaTime)
     
     if (currentMap->isEnd()) {
         StateManager::getInstance().pushState(std::make_unique<LevelMenu>(isMario));
-        ResumeMusicStream(SoundManager::getInstance().playMusic);
+        //ResumeMusicStream(SoundManager::getInstance().playMusic);
     }
   
-    if (!SoundManager::getInstance().death_played)
+    if (!SoundManager::getInstance().death_played && !checkClimbing())
         processInput();
 
     if ((SoundManager::getInstance().death_played && !IsSoundPlaying(SoundManager::getInstance().deathSound)) 
@@ -190,7 +190,7 @@ void World::update(float deltaTime)
         if (!checkClimbing())
             Timer::getInstance().update(deltaTime);
         
-        if (!SoundManager::getInstance().death_played)
+        if (!SoundManager::getInstance().death_played && !checkClimbing())
             settings_button.update(deltaTime);
     }
 
@@ -210,7 +210,7 @@ void World::render()
     if (!popup_menu.isVisible)
     {
         bool isHovered = CheckCollisionPointRec(GetMousePosition(), settings_button.getBounds());
-        if (isHovered && !SoundManager::getInstance().death_played)
+        if (isHovered && !SoundManager::getInstance().death_played && !checkClimbing())
             DrawTexture(settings_button_state, 25, 27, WHITE);
     }
 
