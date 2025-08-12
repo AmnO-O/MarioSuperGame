@@ -10,8 +10,7 @@
 #include "Observer/ICollidable.h"
 #include "PlayerAction.h"
 #include "Resources/SoundManager.h"
-
-
+#include <iostream>
 class Character{
 protected:
     Vector2 position; 
@@ -76,7 +75,7 @@ private:
     bool  active         = false; 
 
 public:
-    BlinkCounter(float interval = 0.1f, float totalDuration = 3.0f)
+    BlinkCounter(float interval = 0.1f, float totalDuration = 10.0f)
       : interval(interval), totalDuration(totalDuration) {}
 
     void reset() {
@@ -137,6 +136,9 @@ public:
     Player(CharacterType type, Vector2 pos); 
     Player(CharacterType type, float cordX, float groundLevel); 
 
+    void loadData(std::istream &fin); 
+    void printData(std::ostream &fout); 
+
     void changeMstate(IMoveState *Mstate_){
         if(Mstate->getMoveState() != Mstate_->getMoveState()){
             delete Mstate; 
@@ -149,34 +151,34 @@ public:
         delete Mstate_; 
     }
 
+    void changeSstate(IShapeState *Sstate_){
+        if(Sstate->getShapeState() != Sstate_->getShapeState()){
+            delete Sstate; 
+            Sstate = Sstate_;    
+            updateShape(); 
+            updateHitbox(); 
+            return; 
+        }
+
+        delete Sstate_; 
+    }
+
     Vector2 getPosition() const {return movement->getPosition(); }
     Rectangle getHitbox() const override {return hitbox; }
-    Vector2 getShape() const{
-        return Vector2({hitbox.width, hitbox.height});
-    }
+    Vector2 getShape() const{return Vector2({hitbox.width, hitbox.height});}
 
     bool isBig() const { return Sstate->canBreakBrick();}
     bool isInvincible() const {return Sstate->isInvincible();}
     bool canShootFire() const {return Sstate->canShootFire();}
-    bool isDead() const {
-        return Mstate->isDead(); 
-    }
-
+    bool isDead() const {return Mstate->isDead(); }
+    bool isRecovery() const {return blink.isActive() || shrinkOnHit; }
     bool IsActive() const override{return Mstate->isDead() == false;}
-
-    bool hidePlayer() const{
-        return movement->isLocked(); 
-    }
-
-    bool isLocked() const{
-        return movement->isLocked(); 
-    }
+    bool hidePlayer() const{return movement->isLocked(); }
+    bool isLocked() const{return movement->isLocked(); }
     
     // action
     void run_to(float end_x) {run_from_a_to_b(hitbox.x, end_x);}
     void run_from_a_to_b(float start_x, float end_x);
-    void climb_to(float destinationY);
-    void jump_to(float destinationY);
 
     // setter 
     void setPosition(const Vector2 &pos); 

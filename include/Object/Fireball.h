@@ -24,6 +24,16 @@ private:
     }
 
 public:
+    std::string getTypeID() const override { return "FIREBALL"; }
+
+    void printData(std::ostream &fout) const override {
+        fout << getTypeID() << " ";
+        GameObject::printData(fout);
+    }
+
+    void loadData(std::istream &fin) override {
+        GameObject::loadData(fin);
+    }
 
     Fireball(Vector2 startPos, bool facingRight) : GameObject(startPos, {0, 0}) {
         velocity.x = facingRight ? 170.0f : -170.0f;
