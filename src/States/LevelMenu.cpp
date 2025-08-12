@@ -7,7 +7,7 @@ LevelMenu::LevelMenu(bool checkMario)
   : isMario(checkMario),
     title("CHOOSE YOUR LEVEL"), 
     high_score("TOP- 000000"),
-    return_button("assets/images/turn_back.png", {25,27,100,100}, [&]() {
+    return_button("assets/images/turn_back_white.png", {25,27,100,100}, [&]() {
         StateManager::getInstance().pushState(std::make_unique<SubMenu>());
         StatsManager::getInstance().reset();
     }),

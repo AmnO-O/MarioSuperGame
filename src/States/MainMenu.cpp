@@ -21,7 +21,7 @@ MainMenu::MainMenu()
         if (filename)
             loadGame(std::string(filename));
     }),
-    settings_button("assets/images/setting.png", {25, 27, 100, 100}, [&]() {
+    settings_button("assets/images/setting_white.png", {25, 27, 100, 100}, [&]() {
         StateManager::getInstance().pushState(std::make_unique<SettingsMenu>());
     })
 {

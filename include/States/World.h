@@ -45,7 +45,6 @@ class World: public GameState
         int number_of_coins;
         float remaining_time; //Time for display
         float time_level; //Time to complete the level
-        float time_taken; //Time taken to complete the level
 
         World(bool checkMario, int index, float time);
         ~World();

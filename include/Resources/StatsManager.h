@@ -14,7 +14,7 @@ class StatsManager
 
     public:
 
-        
+        float time_taken; 
         static StatsManager& getInstance();
         
         void reset();

@@ -17,12 +17,11 @@ class EndResult : public GameState
         std::string title;
         NormalButton back_button;
         int prevMapIndex;
-        float time_taken; 
 
 
     public:
 
-        EndResult(int mIndex, float time);
+        EndResult(int mIndex);
         ~EndResult() = default;
 
         void drawStats();

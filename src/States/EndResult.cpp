@@ -1,13 +1,12 @@
 #include "States/EndResult.h"
 #include "States/MainMenu.h"
 
-EndResult::EndResult(int mIndex, float time)
+EndResult::EndResult(int mIndex)
     : title("END RESULT"),
       back_button("EXIT", { 707, 620, 330, 50 }, WHITE, RED, [&]() {
           backToMainMenu();
       }),
-      prevMapIndex(mIndex),
-      time_taken(time)
+      prevMapIndex(mIndex)
 {
     font = LoadFont("assets/fonts/SuperMarioBros.ttf");
 }
@@ -69,7 +68,7 @@ void EndResult::drawStats()
 
     std::string time = "TIME";
     DrawTextEx(font, time.c_str(), {1308, 33}, 40, 2, WHITE);   
-    int totalSec = time_taken; // small epsilon for safety
+    int totalSec = StatsManager::getInstance().time_taken; // small epsilon for safety
     int mins = totalSec / 60;
     int secs = totalSec % 60;
 
