@@ -38,7 +38,9 @@ void Enemy::update(float deltaTime) {
         if (delayDead >= 0.2f) setDead2();
     }
 
-    velocity.y += 300 * deltaTime;
+    if (state != State::DIE2) 
+        velocity.y += 300 * deltaTime;
+        
     position.x += velocity.x * deltaTime;
     position.y += velocity.y * deltaTime;
 

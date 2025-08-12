@@ -11,12 +11,6 @@ void Goomba::update(float deltaTime) {
         if (delayDead >= 0.5f) setDead();
     }
 
-    if (state == State::DIE2) {
-        velocity.y = 10.0f;
-        delayDead += deltaTime;
-        if (delayDead >= 0.0f) setDead2();
-    }
-
     Enemy::update(deltaTime);
 }
 
@@ -47,6 +41,14 @@ void Goomba::adaptCollision(ICollidable* other) {
         if (playerHitbox.y + playerHitbox.height <= hitbox.y + 5) {
             if (state == State::RUNNING) {
                 state = State::DIE;
+                PlaySound(SoundManager::getInstance().stompSound);
+                updateAnimationType();
+            }
+        }
+
+        if (player->isInvincible()) {
+            if (state != State::DIE && state != State::DIE2) {
+                state = State::DIE2;
                 PlaySound(SoundManager::getInstance().stompSound);
                 updateAnimationType();
             }

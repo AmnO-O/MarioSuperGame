@@ -52,27 +52,19 @@ void Map::input(std::istream &is, Texture2D &objectTex) {
         }
     }
 
-    int nEnemy;
-    is >> nEnemy;
     while (is >> s) {
         int n; is >> n;
         std::unique_ptr<EnemyFactory> factory;
 
         if (s == "GOOMBA") {
             factory = std::make_unique<GoombaFactory>();
-            for (int i = 0; i < n; i++) {
-                int x, y;
-                is >> x >> y;
-                enemies.push_back(factory->createEnemy({x * 1.0f, y * 1.0f}).release());
-            }
         }
         else if (s == "KOOPA") {
             factory = std::make_unique<KoopaFactory>();
-            for (int i = 0; i < n; i++) {
-                int x, y;
-                is >> x >> y;
-                enemies.push_back(factory->createEnemy({x * 1.0f, y * 1.0f}).release());
-            }
+        }
+        else if (s == "PARA_KOOPA") {
+            factory = std::make_unique<ParaKoopaFactory>();
+
         }
         else if (s == "PIRANHA") {
             for (int i = 0; i < n; i++) {
@@ -83,6 +75,12 @@ void Map::input(std::istream &is, Texture2D &objectTex) {
                 );
             }
             continue;
+        }
+
+        for (int i = 0; i < n; i++) {
+            int x, y;
+            is >> x >> y;
+            enemies.push_back(factory->createEnemy({x * 1.0f, y * 1.0f}).release());
         }
     }
 

@@ -30,7 +30,7 @@ void PopUpMenu::restart()
     StatsManager::getInstance().reset();
     StateManager::getInstance().pushState(std::make_unique<World>(isMario, mapIndex));
     ResumeMusicStream(SoundManager::getInstance().playMusic);
-    Timer::getInstance().setup(10.0f);
+    Timer::getInstance().setup(300.0f);
 }
 
 void PopUpMenu::exitGame()
