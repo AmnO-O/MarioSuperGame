@@ -198,7 +198,7 @@ void World::update(float deltaTime)
     if (Timer::getInstance().remaining <= 0.0f && isEnd)
     {
         StateManager::getInstance().pushState(std::make_unique<EndResult>(mapIndex, time_taken));
-        PlaySound(SoundManager::getInstance().gameOverSound);
+        PlaySound(SoundManager::getInstance().endSound);
     }
 
     if (!popup_menu.isVisible)

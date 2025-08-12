@@ -10,6 +10,9 @@ void SoundManager::loadAll()
 {
 	playMusic = LoadMusicStream("assets/sounds/SuperMarioBros_theme_song.mp3");
     SetMusicVolume(playMusic, getMusicVolume() * 0.5f);
+
+    endSound = LoadSound("assets/sounds/win.wav");
+    SetSoundVolume(endSound, getEffectVolume() * 0.5f);
 	
 	deathSound = LoadSound("assets/sounds/death.wav");
 	SetSoundVolume(deathSound, getEffectVolume() * 0.5f);
@@ -51,6 +54,7 @@ void SoundManager::loadAll()
 void SoundManager::unloadAll() 
 {
     UnloadMusicStream(playMusic);
+    UnloadSound(endSound);
     UnloadSound(deathSound);
     UnloadSound(gameOverSound);
     UnloadSound(jumpSound);
@@ -84,6 +88,7 @@ void SoundManager::setMusicVolume(float volume)
 void SoundManager::setEffectVolume(float volume)
 {
     current_effect_volume = volume;
+    SetSoundVolume(endSound, volume);
 	SetSoundVolume(deathSound, volume);
 	SetSoundVolume(gameOverSound, volume);
 	SetSoundVolume(jumpSound, volume);
