@@ -38,17 +38,17 @@ void Goomba::adaptCollision(ICollidable* other) {
     if (player) {
         Rectangle playerHitbox = player->getHitbox();
 
-        if (playerHitbox.y + playerHitbox.height <= hitbox.y + 5) {
-            if (state == State::RUNNING) {
-                state = State::DIE;
+        if (player->isInvincible()) {
+            if (state != State::DIE && state != State::DIE2) {
+                state = State::DIE2;
                 PlaySound(SoundManager::getInstance().stompSound);
                 updateAnimationType();
             }
         }
-
-        if (player->isInvincible()) {
-            if (state != State::DIE && state != State::DIE2) {
-                state = State::DIE2;
+        
+        if (playerHitbox.y + playerHitbox.height <= hitbox.y + 5) {
+            if (state == State::RUNNING) {
+                state = State::DIE;
                 PlaySound(SoundManager::getInstance().stompSound);
                 updateAnimationType();
             }
