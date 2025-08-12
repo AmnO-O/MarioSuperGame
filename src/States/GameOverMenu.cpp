@@ -27,7 +27,7 @@ void GameOverMenu::drawStats()
     int number_of_coins = StatsManager::getInstance().getCoins();
 
     int maxDigit = 6;
-    int scoreDigits = std::to_string(score_number).length();
+    int scoreDigits = (int)std::to_string(score_number).length();
     std::string scoreStr;
 
     if (scoreDigits <= maxDigit)
@@ -45,7 +45,7 @@ void GameOverMenu::drawStats()
     DrawTextEx(font, coins.c_str(), {572, 33}, 40, 2, WHITE);
 
     int maxCoinsDigits = 2;
-    int coinsDigits = std::to_string(number_of_coins).length();
+    int coinsDigits = (int)std::to_string(number_of_coins).length();
     std::string coinsStr;
 
     if (coinsDigits <= maxCoinsDigits)
@@ -86,9 +86,9 @@ void GameOverMenu::drawStats()
 void GameOverMenu::restart()
 {
     StatsManager::getInstance().reset();
-    StateManager::getInstance().popState();
-    StateManager::getInstance().pushState(std::make_unique<World>(isprevMario, prevMapIndex));
-    Timer::getInstance().setup(300.0f);
+    // StateManager::getInstance().popState();
+    
+    StateManager::getInstance().pushState(std::make_unique<World>(isprevMario, prevMapIndex, 60.0f));
     StopSound(SoundManager::getInstance().gameOverSound);
     PlayMusicStream(SoundManager::getInstance().playMusic);
     SoundManager::getInstance().death_played = false;

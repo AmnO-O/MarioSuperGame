@@ -363,6 +363,7 @@ void Player::adapt_collision_with_enimies(ICollidable* other){
 
 	IMoveState *tmp = Mstate; 
 	Mstate = new HitState(); 
+	PlaySound(SoundManager::getInstance().pipedownSound);
 	delete tmp; 
 	tmp = nullptr; 
 	showPlayer = false; 

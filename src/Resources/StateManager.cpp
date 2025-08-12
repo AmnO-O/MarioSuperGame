@@ -1,4 +1,5 @@
 #include "Resources/StateManager.h"
+#include "States/World.h"
 
 StateManager& StateManager::getInstance()
 {

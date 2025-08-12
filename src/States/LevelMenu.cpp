@@ -8,11 +8,10 @@ LevelMenu::LevelMenu(bool checkMario)
     title("CHOOSE YOUR LEVEL"), 
     high_score("TOP- 000000"),
     return_button("assets/images/turn_back.png", {25,27,100,100}, [&]() {
-        StateManager::getInstance().pushState(std::make_unique<SubMenu>(isMario));
+        StateManager::getInstance().pushState(std::make_unique<SubMenu>());
     }),
     world1_1("assets/images/World1-1.png", {73, 277, 532, 208}, [&]() {
-        StateManager::getInstance().pushState(std::make_unique<World>(isMario, 1));
-        Timer::getInstance().setup(300.0f);
+        StateManager::getInstance().pushState(std::make_unique<World>(isMario, 1, 60.0f));
     }),
     world1_2("assets/images/World1-2.png", {977, 277, 532, 208}, []() {}),
     world1_3("assets/images/World1-3.png", {73, 635, 532, 208}, []() {}),

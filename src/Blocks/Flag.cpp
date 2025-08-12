@@ -79,7 +79,7 @@ void Flag::adaptCollision(ICollidable* other) {
             animationClimbFlag = std::make_unique<PlayerActionManager>(player); 
             animationClimbFlag->addAction(std::make_unique<ClimbAction>(hitbox.y + hitbox.height - player->getShape().y, time + 0.5f));
             animationClimbFlag->addAction(std::make_unique<SetPositionAction>(Vector2({hitbox.x + hitbox.width, hitbox.y + hitbox.height - player->getShape().y}), false, 0.5f));
-            animationClimbFlag->addAction(std::make_unique<JumpAction>(163.0f, -200.0f));
+            animationClimbFlag->addAction(std::make_unique<JumpAction>(173.0f, -200.0f));
         }
     }
 }

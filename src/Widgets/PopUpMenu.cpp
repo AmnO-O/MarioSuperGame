@@ -3,6 +3,7 @@
 #include "Resources/StateManager.h"
 #include "States/MainMenu.h"
 #include "States/World.h"
+#include "tinyfiledialogs.h"
 
 PopUpMenu::PopUpMenu()
   : isVisible(false),
@@ -15,8 +16,8 @@ PopUpMenu::PopUpMenu()
     exit_button("EXIT", {710, 488, 330, 50}, WHITE, RED, [&]() {
         exitGame();
     }),
-    save_button("SAVE GAME", {594, 584, 330, 50}, WHITE, RED, []() {
-
+    save_button("SAVE GAME", {594, 584, 330, 50}, WHITE, RED, [&]() {
+        save(); 
     }),
     frame({500, 225, 600, 472})
 {
@@ -28,9 +29,8 @@ void PopUpMenu::restart()
     bool isMario = dynamic_cast<World*>(StateManager::getInstance().getCurrentState())->getIsMario();
     int mapIndex = dynamic_cast<World*>(StateManager::getInstance().getCurrentState())->getMapIndex();
     StatsManager::getInstance().reset();
-    StateManager::getInstance().pushState(std::make_unique<World>(isMario, mapIndex));
+    StateManager::getInstance().pushState(std::make_unique<World>(isMario, mapIndex, 60.0f));
     ResumeMusicStream(SoundManager::getInstance().playMusic);
-    Timer::getInstance().setup(300.0f);
 }
 
 void PopUpMenu::exitGame()
@@ -38,6 +38,24 @@ void PopUpMenu::exitGame()
     StatsManager::getInstance().reset();
     StateManager::getInstance().pushState(std::make_unique<MainMenu>());
     ResumeMusicStream(SoundManager::getInstance().playMusic);
+}
+
+void PopUpMenu::save()
+{
+    const char* filters[] = { "*.txt" };
+    const char* filename = tinyfd_saveFileDialog(
+        "Save Game",          // Dialog title
+        "savegame.txt",       // Default filename
+        1,                    // Number of filter patterns
+        filters,              // Filter pattern array
+        "Text Files"          // Filter description
+    );
+    if (filename)
+    {
+        auto* world = dynamic_cast<World*>(StateManager::getInstance().getCurrentState());
+        if (world)
+            world->saveGame(filename);
+    }
 }
 
 void PopUpMenu::toggle()
