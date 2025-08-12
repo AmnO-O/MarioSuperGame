@@ -2,6 +2,7 @@
 #include "Resources/SoundManager.h"
 
 Sewer::Sewer(Texture2D &tex, std::istream &is) : Block(tex) {
+    drawStat = DrawStat::Second;
     is >> head.x >> head.y >> head.width >> head.height;
     is >> body.x >> body.y >> body.width >> body.height;
     is >> pos.x >> pos.y;

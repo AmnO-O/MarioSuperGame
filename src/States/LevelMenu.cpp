@@ -13,7 +13,9 @@ LevelMenu::LevelMenu(bool checkMario)
     world1_1("assets/images/World1-1.png", {73, 277, 532, 208}, [&]() {
         StateManager::getInstance().pushState(std::make_unique<World>(isMario, 1, 60.0f));
     }),
-    world1_2("assets/images/World1-2.png", {977, 277, 532, 208}, []() {}),
+    world1_2("assets/images/World1-2.png", {977, 277, 532, 208}, [&]() {
+        StateManager::getInstance().pushState(std::make_unique<World>(isMario, 2, 60.0f));
+    }),
     world1_3("assets/images/World1-3.png", {73, 635, 532, 208}, []() {}),
     world1_4("assets/images/World1-4.png", {977, 635, 532, 208}, []() {})
 {

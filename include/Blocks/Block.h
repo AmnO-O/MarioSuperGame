@@ -22,7 +22,7 @@ enum class DrawStat {
 
 class Block : public ICollidable {
 protected:
-    DrawStat drawStat = DrawStat::First;
+    DrawStat drawStat = DrawStat::Zero;
     Texture2D &tex;
     Vector2 pos;
 
