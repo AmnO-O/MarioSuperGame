@@ -24,7 +24,9 @@ void AnimationManager::update(float deltaTime){
         currentIndex ++;
     }
 
-    if(currentIndex >= frames.size()) currentIndex = 0, isOnePeriod = true; 
+    if(currentIndex >= frames.size()){
+        currentTime = 0.0f, currentIndex = 0, isOnePeriod = true; 
+    }
 }
 
 void AnimationManager::render(Vector2 position, bool flip){

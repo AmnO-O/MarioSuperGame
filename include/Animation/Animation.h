@@ -15,15 +15,18 @@ private:
 
     bool isOnePeriod = false; 
 public: 
-    AnimationManager() = default; 
     AnimationManager(Texture2D &t, bool flip, float timeSwitch): 
         sheet(t), currentTime(0.0f), timeSwitch(timeSwitch), 
-        flipX(flip), currentIndex(0){}; 
+        flipX(flip), currentIndex(0), isOnePeriod(false){}; 
 
     Vector2 getCurrentShape() const;
+    int getSize() const {return (int)frames.size();}
     bool isOnePeriodPassed() const {return isOnePeriod;}
     void setTimeSwitch(float timeSwitch) {this -> timeSwitch = timeSwitch;}
     void setFlipX(bool flip) {flipX = flip;}
+    float getTimeSwitch() const {return timeSwitch;}
+    int getCurrentIndex() const {return currentIndex;}
+    void resetPeriod() {isOnePeriod = false; currentTime = 0.0f; currentIndex = 0;}
     void addRect(const Rectangle& rect);   
     void update(float deltaTime); 
     void render(Vector2 position, bool flip = false); 

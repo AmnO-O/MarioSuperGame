@@ -59,7 +59,7 @@ void MainMenu::loadGame(const std::string& filename)
 
     catch (const std::exception& e)
     {
-        std::cerr << "Error loading game" << std::endl;
+        std::cerr << "Error loading game : " << e.what() << std::endl;
         fin.close();
     }
 }

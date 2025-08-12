@@ -14,4 +14,12 @@ public:
     virtual ~ICollidable() = default;
 };
 
+class IFallable {
+public:
+    virtual Rectangle getHitbox() const = 0;
+    virtual bool IsActive() const = 0;
+    virtual void setGroundLevel(float groundlevel) = 0;
+    virtual ~IFallable() = default;
+};
+
 #endif

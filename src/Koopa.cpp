@@ -102,29 +102,29 @@ void Koopa::adaptCollision(ICollidable* other) {
         }
     }
     
-    Block* block = dynamic_cast<Block*>(other);
-    if (block) {
-        Rectangle blockHitbox = block->getHitbox();
+    // Block* block = dynamic_cast<Block*>(other);
+    // if (block) {
+    //     Rectangle blockHitbox = block->getHitbox();
         
-        if (velocity.x != 0) {
-            if (velocity.x > 0 && hitbox.x + hitbox.width > blockHitbox.x && 
-                hitbox.x < blockHitbox.x) {
-                velocity.x = -velocity.x;
-                position.x = blockHitbox.x - hitbox.width;
-            }
-            else if (velocity.x < 0 && hitbox.x < blockHitbox.x + blockHitbox.width && 
-                     hitbox.x + hitbox.width > blockHitbox.x + blockHitbox.width) {
-                velocity.x = -velocity.x;
-                position.x = blockHitbox.x + blockHitbox.width;
-            }
-        }
+    //     if (velocity.x != 0) {
+    //         if (velocity.x > 0 && hitbox.x + hitbox.width > blockHitbox.x && 
+    //             hitbox.x < blockHitbox.x) {
+    //             velocity.x = -velocity.x;
+    //             position.x = blockHitbox.x - hitbox.width;
+    //         }
+    //         else if (velocity.x < 0 && hitbox.x < blockHitbox.x + blockHitbox.width && 
+    //                  hitbox.x + hitbox.width > blockHitbox.x + blockHitbox.width) {
+    //             velocity.x = -velocity.x;
+    //             position.x = blockHitbox.x + blockHitbox.width;
+    //         }
+    //     }
         
-        if (velocity.y > 0 && hitbox.y + hitbox.height > blockHitbox.y && 
-            hitbox.y < blockHitbox.y) {
-            position.y = blockHitbox.y - hitbox.height;
-            velocity.y = 0;
-        }
-    }
+    //     if (velocity.y > 0 && hitbox.y + hitbox.height > blockHitbox.y && 
+    //         hitbox.y < blockHitbox.y) {
+    //         position.y = blockHitbox.y - hitbox.height;
+    //         velocity.y = 0;
+    //     }
+    // }
 }
 
 void Koopa::enterShell() {

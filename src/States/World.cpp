@@ -138,6 +138,11 @@ void World::saveGame(const std::string& filename) const
     fout << Timer::getInstance().remaining << '\n';
     // Add more as needed
 
+    // player_data
+    character->printData(fout); 
+
+    
+
     fout.close();
 }
 

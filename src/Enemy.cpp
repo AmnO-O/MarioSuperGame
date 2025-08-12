@@ -38,7 +38,10 @@ void Enemy::update(float deltaTime) {
         if (delayDead >= 0.2f) setDead2();
     }
 
-    velocity.y += 300 * deltaTime;
+    if (position.y + activeAnimation->getCurrentShape().y < groundLevel)
+        velocity.y += 300 * deltaTime;
+    else
+        velocity.y = 0;
     position.x += velocity.x * deltaTime;
     position.y += velocity.y * deltaTime;
 
@@ -88,27 +91,48 @@ void Enemy::adaptCollision(ICollidable* other) {
 
     Block* block = dynamic_cast<Block*>(other);
     if (block) {
-        Rectangle blockHitbox = block->getHitbox();
-        
-        if (velocity.x != 0) {
-            if (velocity.x > 0 && hitbox.x + hitbox.width > blockHitbox.x && 
-                hitbox.x < blockHitbox.x) {
+        Rectangle blockBox = other->getHitbox();
+        Rectangle enemyBox = getHitbox();
+
+        // Check if overlapping
+        if (!CheckCollisionRecs(enemyBox, blockBox)) return;
+
+        // Calculate overlaps
+        float overlapLeft   = (enemyBox.x + enemyBox.width) - blockBox.x;
+        float overlapRight  = (blockBox.x + blockBox.width) - enemyBox.x;
+        float overlapTop    = (enemyBox.y + enemyBox.height) - blockBox.y;
+        float overlapBottom = (blockBox.y + blockBox.height) - enemyBox.y;
+
+        // Find smallest overlap
+        float minOverlap = overlapLeft;
+        enum Dir { LEFT, RIGHT, TOP, BOTTOM } dir = LEFT;
+
+        if (overlapRight < minOverlap) { minOverlap = overlapRight; dir = RIGHT; }
+        if (overlapTop < minOverlap)   { minOverlap = overlapTop;   dir = TOP; }
+        if (overlapBottom < minOverlap){ minOverlap = overlapBottom;dir = BOTTOM; }
+
+        // Resolve collision
+        switch (dir) {
+            case LEFT:
+                position.x -= overlapLeft;
                 velocity.x = -velocity.x;
-                updateAnimationType();
-                position.x = blockHitbox.x - hitbox.width;
-            }
-            else if (velocity.x < 0 && hitbox.x < blockHitbox.x + blockHitbox.width && 
-                     hitbox.x + hitbox.width > blockHitbox.x + blockHitbox.width) {
+                break;
+            case RIGHT:
+                position.x += overlapRight;
                 velocity.x = -velocity.x;
-                updateAnimationType();
-                position.x = blockHitbox.x + blockHitbox.width;
-            }
+                break;
+            case TOP:
+                position.y -= overlapTop;
+                velocity.y = 0;
+                setGroundLevel(blockBox.y);
+                setOnGround();
+                break;
+            case BOTTOM:
+                position.y += overlapBottom;
+                velocity.y = 0; // Or small bounce
+                break;
         }
-        
-        if (velocity.y > 0 && hitbox.y + hitbox.height > blockHitbox.y && 
-            hitbox.y < blockHitbox.y) {
-            position.y = blockHitbox.y - hitbox.height;
-            velocity.y = 0;
-        }
+
+        updateHitbox();
     }
 }
