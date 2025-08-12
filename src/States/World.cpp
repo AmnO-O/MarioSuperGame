@@ -6,6 +6,7 @@
 #include "Resources/ResourceManager.h"
 #include <raylib.h>
 #include "Character/Character.h"
+#include "States/EndResult.h"
 
 World::World(bool checkMario, int index, float time)
   : popup_menu(),
@@ -58,11 +59,18 @@ int World::getMapIndex() const
     return mapIndex;
 }
 
-bool World::checkClimbing() const
+bool World::checkClimbing()
 {
     Flag* flag = currentMap->getFlag();
     
-    return flag && flag->animationClimbFlag && !flag->animationClimbFlag->isEmpty();
+    if (flag && flag->animationClimbFlag && !flag->animationClimbFlag->isEmpty())
+    {
+        time_taken = 60.0f - Timer::getInstance().remaining - 6.0f;
+        return true;
+    }
+
+    else
+        return false;
 }
 
 void World::drawStats()
@@ -163,16 +171,21 @@ void World::update(float deltaTime)
         return;
     }
     
+    number_of_coins = StatsManager::getInstance().getCoins();
+    score_number = StatsManager::getInstance().getScore();
+
     if (currentMap->isEnd()) {
-        StateManager::getInstance().pushState(std::make_unique<LevelMenu>(isMario));
-        //ResumeMusicStream(SoundManager::getInstance().playMusic);
+        isEnd = true;
+        StopMusicStream(SoundManager::getInstance().playMusic);
+        Timer::getInstance().warning_played = true;
+        Timer::getInstance().update(deltaTime * 15.0f);
     }
   
     if (!SoundManager::getInstance().death_played && !checkClimbing())
         processInput();
 
     if ((SoundManager::getInstance().death_played && !IsSoundPlaying(SoundManager::getInstance().deathSound)) 
-    || (Timer::getInstance().remaining <= 0.0f))
+    || (Timer::getInstance().remaining <= 0.0f && !isEnd))
 	{
         if (IsMusicStreamPlaying(SoundManager::getInstance().playMusic))
             StopMusicStream(SoundManager::getInstance().playMusic);
@@ -181,13 +194,19 @@ void World::update(float deltaTime)
 		StateManager::getInstance().pushState(std::make_unique<GameOverMenu>(mapIndex, isMario));
 		SoundManager::getInstance().game_over_played = true;
 	}
-    
+
+    if (Timer::getInstance().remaining <= 0.0f && isEnd)
+    {
+        StateManager::getInstance().pushState(std::make_unique<EndResult>(mapIndex, time_taken));
+        PlaySound(SoundManager::getInstance().gameOverSound);
+    }
+
     if (!popup_menu.isVisible)
     {
         if(deltaTime < 0.2) 
             currentMap->Update(deltaTime);
 
-        if (!checkClimbing())
+        if (!checkClimbing() && !isEnd)
             Timer::getInstance().update(deltaTime);
         
         if (!SoundManager::getInstance().death_played && !checkClimbing())
@@ -196,9 +215,6 @@ void World::update(float deltaTime)
 
     if (popup_menu.isVisible)
         popup_menu.update(deltaTime);
-    
-    number_of_coins = StatsManager::getInstance().getCoins();
-    score_number = StatsManager::getInstance().getScore();
 }
 
 void World::render() 
