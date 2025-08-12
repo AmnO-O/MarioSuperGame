@@ -1,6 +1,7 @@
 #include "Resources/Timer.h"
 #include "Resources/SoundManager.h"
 #include "Resources/StateManager.h"
+#include "Resources/StatsManager.h"
 #include "States/GameOverMenu.h"
 
 Timer& Timer::getInstance()
@@ -31,4 +32,13 @@ void Timer::update(float deltaTime)
         PlaySound(SoundManager::getInstance().warningSound);
         warning_played = true;
     }   
+}
+
+void Timer::finalUpdate(float deltaTime)
+{
+    if (remaining > 0.0f)
+    {
+        remaining -= deltaTime;
+        StatsManager::getInstance().addScore(50);
+    }
 }

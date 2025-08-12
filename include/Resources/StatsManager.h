@@ -22,7 +22,7 @@ class StatsManager
         void addScore(int amount);
         void addCoins();  
         int getScore() const;
-        int getCoins() const;
+        int getCoins() const;    
 };
 
 #endif

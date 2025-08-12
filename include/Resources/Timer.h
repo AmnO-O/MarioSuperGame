@@ -24,6 +24,7 @@ class Timer
         static Timer& getInstance();
         void setup(float seconds);
         void update(float deltaTime);
+        void finalUpdate(float deltaTime);
 };
 
 #endif

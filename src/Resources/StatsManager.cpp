@@ -37,3 +37,4 @@ int StatsManager::getCoins() const
 {
     return coins;
 }
+
