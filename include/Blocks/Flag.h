@@ -16,7 +16,6 @@ protected:
     Rectangle body;
     int height;
     
-    std::unique_ptr<PlayerActionManager> animationClimbFlag; 
 public:
     Flag(Texture2D &tex, std::istream &is, float time);
     Rectangle getHitbox() const override;
@@ -26,6 +25,7 @@ public:
     void adaptCollision(ICollidable* other) override;
     void Update(float delta, Player* player) override;
     ~Flag() override = default; 
+    std::unique_ptr<PlayerActionManager> animationClimbFlag; 
 };
 
 #endif

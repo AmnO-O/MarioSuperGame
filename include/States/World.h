@@ -50,7 +50,8 @@ class World: public GameState
 
         bool getIsMario() const;
         int getMapIndex() const;
-
+        bool checkClimbing() const;
+        
         void drawStats();
         void saveGame(const std::string& filename) const;
         void processInput() override;

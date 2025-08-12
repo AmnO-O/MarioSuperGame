@@ -58,6 +58,13 @@ int World::getMapIndex() const
     return mapIndex;
 }
 
+bool World::checkClimbing() const
+{
+    Flag* flag = currentMap->getFlag();
+    
+    return flag && flag->animationClimbFlag && !flag->animationClimbFlag->isEmpty();
+}
+
 void World::drawStats()
 {
     std::string charType; 
@@ -180,7 +187,8 @@ void World::update(float deltaTime)
         if(deltaTime < 0.2) 
             currentMap->Update(deltaTime);
 
-        Timer::getInstance().update(deltaTime);
+        if (!checkClimbing())
+            Timer::getInstance().update(deltaTime);
         
         if (!SoundManager::getInstance().death_played)
             settings_button.update(deltaTime);
