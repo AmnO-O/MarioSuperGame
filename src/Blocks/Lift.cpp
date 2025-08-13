@@ -47,38 +47,41 @@ void Lift::Update(float deltaTime, Player* player) {
     pos.x += distance.x;
     pos.y += distance.y;
     if(!canBack) {
-        if (pos.x > des.x)
+        if (pos.x > des.x) {
             pos.x = start.x;
-        if (pos.x < start.x)
+            distance.x = 0;
+        }
+        if (pos.x < start.x) {
             pos.x  = des.x;
-        if (pos.y > des.y)
+            distance.x = 0;
+        }
+        if (pos.y > des.y) {
             pos.y = start.y;
-        if (pos.y < start.y)
+            distance.y = 0;
+        }
+        if (pos.y < start.y) {
             pos.y  = des.y;
+            distance.y = 0;
+        }
     }
     // std::cout << distance.x << " " << distance.y << '\n';
     if (player) {
-        Rectangle body = player->getHitbox(); 
-        // Check overlap
-        float left = (body.x + body.width) - hitbox.x;
-        float right = (hitbox.x + hitbox.width) - body.x;
-        float top = (body.y + body.height) - hitbox.y;
-        float bottom = (hitbox.y + hitbox.height) - body.y;
-        if (left <= 0 || right <= 0 || top <= 0 || bottom <= 0) return;
+        Rectangle playerBox = player->getHitbox();
+        bool onTop =
+            playerBox.y + playerBox.height <= hitbox.y + 3.0f && // Feet at top or slightly above
+            playerBox.y + playerBox.height >= hitbox.y - 3.0f && // Within a small tolerance
+            playerBox.x + playerBox.width > hitbox.x &&          // Horizontal overlap
+            playerBox.x < hitbox.x + hitbox.width;
 
-        // Find minimal penetration
-        float minPen = left;
-        enum Dir { LEFT, RIGHT, TOP, BOTTOM } dir = LEFT;
-        if (right < minPen) { minPen = right; dir = RIGHT; }
-        if (top < minPen) { minPen = top; dir = TOP; }
-        if (bottom < minPen) { minPen = bottom; dir = BOTTOM; }
-
-        if (dir == TOP) { 
+        if (onTop) {
+            // Move player together with lift
             Vector2 playerPos = player->getPosition();
             playerPos.x += distance.x;
             playerPos.y += distance.y;
-            player->setGroundLevel(playerPos.y);
-            player->setPosition({playerPos.x, playerPos.y});
+            player->setPosition(playerPos);
+
+            // Update ground level so gravity stops pulling them
+            player->setGroundLevel(hitbox.y);
             player->setOnGround();
         }
     }
