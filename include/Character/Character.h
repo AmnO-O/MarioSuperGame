@@ -176,10 +176,6 @@ public:
     bool hidePlayer() const{return movement->isLocked(); }
     bool isLocked() const{return movement->isLocked(); }
     
-    // action
-    void run_to(float end_x) {run_from_a_to_b(hitbox.x, end_x);}
-    void run_from_a_to_b(float start_x, float end_x);
-
     // setter 
     void setPosition(const Vector2 &pos); 
     void setOnGround(); 
