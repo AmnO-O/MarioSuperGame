@@ -11,7 +11,7 @@ enum State {
     DIE2
 };
 
-class Enemy : public Character, public ICollidable, public IFallable {
+class Enemy : public Character, public ICollidable {
 protected:
     CharacterType type;
     bool falling = false;

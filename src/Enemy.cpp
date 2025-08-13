@@ -87,10 +87,12 @@ void Enemy::enemyCollision(ICollidable* other) {
     Enemy* enemy = dynamic_cast<Enemy*>(other);
     if (enemy && enemy != this) {
         if (state == State::RUNNING) {
-            if ((enemy->state == State::SHELL && velocity.x != 0) || enemy->state == State::SPINNING) {
+            if (enemy->state == State::SPINNING) {
                 state = State::DIE2;
                 updateAnimationType();
             }
+
+            if (enemy->state == State::DIE || enemy->state == State::DIE2) return;
 
             Rectangle overlap = GetCollisionRec(hitbox, enemy->hitbox);
             if (overlap.width > 0 && overlap.height > 0) {
@@ -104,8 +106,11 @@ void Enemy::enemyCollision(ICollidable* other) {
                         enemy->position.x -= push;
                     }
                     velocity.x = -velocity.x;
-                    if (enemy->state == State::RUNNING) 
+                    updateAnimationType();
+                    if (enemy->state == State::RUNNING) {
                         enemy->velocity.x = -enemy->velocity.x;
+                        enemy->updateAnimationType();
+                    }
                 }
                 hitbox.x = position.x;
                 hitbox.y = position.y;

@@ -2,15 +2,14 @@
 #include "Character/Character.h"
 
 void Piranha::update(float deltaTime) {
+    Enemy::update(deltaTime);
     if (isGoing) {
         timer += deltaTime;
-        if (timer >= 0.5f) {
+        if (timer >= 2.0f) {
             velocity.y = -velocity.y;
             timer = 0.0f;
         }   
     }
-
-    Enemy::update(deltaTime);
 }
 
 void Piranha::updateAnimationType() {

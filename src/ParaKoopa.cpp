@@ -8,7 +8,7 @@
 void ParaKoopa::update(float deltaTime) {
     
     timer += deltaTime;
-    if (timer >= 2.0f) {
+    if (timer >= 0.5f) {
         velocity.y = -velocity.y;
         timer = 0.0f;
     }   
@@ -21,14 +21,15 @@ void ParaKoopa::updateAnimationType() {
         position.y += 10.0f;
         activeAnimation = animations["DIE2"].get();
     } 
-    else activeAnimation = animations["RUNNING"].get();
+    else activeAnimation = animations["FLYING"].get();
     updateHitbox();
 }
 
 void ParaKoopa::adaptCollision(ICollidable* other) {
     if (dynamic_cast<Coin*>(other) || (dynamic_cast<GameObject*>(other) && !dynamic_cast<Fireball*>(other))) return;
 
-    Enemy::adaptCollision(other);
+    fireballCollision(other);
+
     Player* player = dynamic_cast<Player*>(other);
     if (player) {
         Rectangle playerHitbox = player->getHitbox();
@@ -44,6 +45,7 @@ void ParaKoopa::adaptCollision(ICollidable* other) {
         if (playerHitbox.y + playerHitbox.height <= hitbox.y + 5) {
             if (state == State::RUNNING) {
                 state = State::DIE2;
+                PlaySound(SoundManager::getInstance().stompSound);
                 updateAnimationType();
             }
         }
