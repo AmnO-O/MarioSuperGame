@@ -11,7 +11,7 @@ void SoundManager::loadAll()
 	playMusic = LoadMusicStream("assets/sounds/SuperMarioBros_theme_song.mp3");
     SetMusicVolume(playMusic, getMusicVolume() * 0.5f);
 
-    finalscoreSound = LoadSound("assets/sounds/finalscore.wav");
+    finalscoreSound = LoadSound("assets/sounds/finalcalc.wav");
     SetSoundVolume(finalscoreSound, getEffectVolume() * 0.5f);
 
     endSound = LoadSound("assets/sounds/end.wav");

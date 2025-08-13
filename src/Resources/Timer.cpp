@@ -36,16 +36,11 @@ void Timer::update(float deltaTime)
 
 void Timer::finalUpdate(float deltaTime)
 {
-    if (!finalUpdatePlayed)
-    {
-        PlaySound(SoundManager::getInstance().finalscoreSound);
-        finalUpdatePlayed = true;
-    }
-
     if (remaining > 0.0f)
     {
         remaining -= deltaTime;
         StatsManager::getInstance().addScore(50);
+        PlaySound(SoundManager::getInstance().finalscoreSound);
 
         if (remaining < 0.0f)
             remaining = 0.0f;

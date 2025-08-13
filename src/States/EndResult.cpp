@@ -4,8 +4,8 @@
 #include <fstream>
 
 EndResult::EndResult(int mIndex)
-    : title("END RESULT"),
-      back_button("EXIT", { 707, 620, 330, 50 }, WHITE, RED, [&]() {
+    : title("LEVEL COMPLETED!"),
+      back_button("EXIT", { 709, 691, 330, 50 }, WHITE, RED, [&]() {
           backToMainMenu();
       }),
       prevMapIndex(mIndex)
@@ -15,8 +15,8 @@ EndResult::EndResult(int mIndex)
 
 void EndResult::drawStats()
 {
-    std::string score = "SCORE";
-    DrawTextEx(font, score.c_str(), {203, 33}, 40, 2, WHITE);
+    std::string score = "SCORE:";
+    DrawTextEx(font, score.c_str(), {511, 282}, 40, 2, WHITE);
 
     int score_number = StatsManager::getInstance().getScore();
     int number_of_coins = StatsManager::getInstance().getCoins();
@@ -45,10 +45,10 @@ void EndResult::drawStats()
         scoreStr += std::to_string(score_number);
     }
 
-    DrawTextEx(font, scoreStr.c_str(), {203, 86}, 40, 2, WHITE);
+    DrawTextEx(font, scoreStr.c_str(), {868, 282}, 40, 2, WHITE);
 
-    std::string coins = "COINS";
-    DrawTextEx(font, coins.c_str(), {572, 33}, 40, 2, WHITE);
+    std::string coins = "COINS:";
+    DrawTextEx(font, coins.c_str(), {511, 376}, 40, 2, WHITE);
 
     int maxCoinsDigits = 2;
     int coinsDigits = (int)std::to_string(number_of_coins).length();
@@ -63,10 +63,10 @@ void EndResult::drawStats()
         coinsStr += std::to_string(number_of_coins);
     }
 
-    DrawTextEx(font, coinsStr.c_str(), {630, 86}, 40, 2, WHITE);
+    DrawTextEx(font, coinsStr.c_str(), {1015, 376}, 40, 2, WHITE);
 
-    std::string w = "WORLD"; std::string title;
-    DrawTextEx(font, w.c_str(), {941, 33}, 40, 2, WHITE);
+    std::string w = "WORLD:"; std::string title;
+    DrawTextEx(font, w.c_str(), {511, 475}, 40, 2, WHITE);
 
     if (prevMapIndex == 1)
         title = "1-1";
@@ -77,16 +77,16 @@ void EndResult::drawStats()
     else if (prevMapIndex == 4)
         title = "1-4";
     
-    DrawTextEx(font, title.c_str(), {984, 86}, 40, 2, WHITE);
+    DrawTextEx(font, title.c_str(), {985, 475}, 40, 2, WHITE);
 
-    std::string time = "TIME";
-    DrawTextEx(font, time.c_str(), {1308, 33}, 40, 2, WHITE);   
+    std::string time = "TIME:";
+    DrawTextEx(font, time.c_str(), {511, 571}, 40, 2, WHITE);   
     int totalSec = StatsManager::getInstance().time_taken; // small epsilon for safety
     int mins = totalSec / 60;
     int secs = totalSec % 60;
 
     std::string timeDisplay = (mins < 10 ? "0" : "") + std::to_string(mins) + ":" + (secs < 10 ? "0" : "") + std::to_string(secs);
-    DrawTextEx(font, timeDisplay.c_str(), {1300, 86}, 40, 2, WHITE);
+    DrawTextEx(font, timeDisplay.c_str(), {904, 571}, 40, 2, WHITE);
 }
 
 void EndResult::backToMainMenu()
@@ -97,7 +97,6 @@ void EndResult::backToMainMenu()
     PlayMusicStream(SoundManager::getInstance().playMusic);
     SoundManager::getInstance().death_played = false;
     SoundManager::getInstance().game_over_played = false;
-    Timer::getInstance().finalUpdatePlayed = false;
 }
 
 void EndResult::update(float deltaTime)
@@ -109,7 +108,7 @@ void EndResult::render()
 {
     DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), { 0, 0, 0, 255 });
     
-    DrawTextEx(font, title.c_str(), {598, 311}, 50, 2, WHITE);
+    DrawTextEx(font, title.c_str(), {444, 181}, 50, 2, WHITE);
     drawStats();
 
     back_button.render();
