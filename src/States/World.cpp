@@ -195,7 +195,7 @@ void World::update(float deltaTime)
 		SoundManager::getInstance().game_over_played = true;
 	}
 
-    if (Timer::getInstance().remaining <= 0.0f && isEnd)
+    if (Timer::getInstance().remaining <= 0.0f && isEnd && !IsSoundPlaying(SoundManager::getInstance().finalscoreSound))
     {
         StateManager::getInstance().pushState(std::make_unique<EndResult>(mapIndex));
         PlaySound(SoundManager::getInstance().endSound);
