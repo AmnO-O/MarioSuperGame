@@ -13,12 +13,12 @@ class GameOverMenu: public GameState
 {
     private:
 
-    Font font;
-    NormalButton restart_button;
-    NormalButton exit_button;
-    std::string title;
-    int prevMapIndex;
-    bool isprevMario;
+        Font font;
+        NormalButton restart_button;
+        NormalButton exit_button;
+        std::string title;
+        int prevMapIndex;
+        bool isprevMario;
 
     public:
 

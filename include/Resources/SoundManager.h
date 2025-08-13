@@ -24,6 +24,8 @@ class SoundManager
         
         // Music
         Music playMusic;
+        Sound finalscoreSound;
+        Sound endSound;
         Sound deathSound;
         Sound gameOverSound;
         

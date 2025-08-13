@@ -63,6 +63,7 @@ public:
         ani->setBlockRec(block);
         velocity.x = 35.0f;
     }
+    std::string getTypeID() const override { return "MUSHROOM"; }
     void applyEffect(Player* &character) override;
     void update(float deltaTime) override;
 };
@@ -74,6 +75,7 @@ public:
         readRectAnimation("assets/animation/fireflower.txt", Images::textures["items1.png"]);
         ani->setBlockRec(block);
     }
+    std::string getTypeID() const override { return "FIREFLOWER"; }
 
     void applyEffect(Player* &character) override;
     void update(float deltaTime) override;
@@ -100,6 +102,8 @@ public:
         ani->setBlockRec(block);
     }
 
+    std::string getTypeID() const override { return "STAR"; }
+
     void adaptCollision(const Rectangle &other) override;
     void update(float deltaTime) override;
     void applyEffect(Player* &character) override;
@@ -114,6 +118,8 @@ public:
         ani->setBlockRec(block);
         velocity.x = 35.0f;
     }
+
+    std::string getTypeID() const override { return "NORMALMUSHROOM"; }
 
     bool isSpecial() const {return false;}
     void applyEffect(Player* &character) override;

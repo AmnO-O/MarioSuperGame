@@ -145,6 +145,7 @@ void HorizontalSewer::Update(float deltaTime, Player* player) {
                     hasDowned = true;
                     // animationEnterSewer.setPlayer(player); 
                     // animationEnterSewer.addAction(std::make_unique<HorizontalEnterAction>());
+                    PlaySound(SoundManager::getInstance().pipedownSound);
                 }
             }
         }
