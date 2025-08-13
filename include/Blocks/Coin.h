@@ -18,6 +18,8 @@ public:
     ContainCoin(Rectangle block);    
     Vector2 getPosition() const { return coinAni->getPosition(); }
     virtual void setGroundLevel(float groundLevel) {}
+    std::string getTypeID() const override { return "COIN"; }
+
     void update(float deltaTime) override;
     void render() override;
 };

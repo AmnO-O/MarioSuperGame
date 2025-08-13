@@ -103,7 +103,6 @@ void Map::Update(float delta) {
     // if (pm.doneAction()) {
     //     pm.resetAll();
     // }
-    pm.update(delta);
     if (!camChange.empty()) {
         camChange.front().z -= delta;
         if (camChange.front().z <= 0) {
@@ -111,6 +110,7 @@ void Map::Update(float delta) {
             camChange.pop();
         }
     }
+    pm.update(delta);
 
     CollisionManager::getInstance().Register(character->shootFireball()); 
     CollisionManager::getInstance().CheckAllCollisions();
@@ -234,4 +234,15 @@ void Map::SetUp(Player* player) {
 
 bool Map::isEnd() {
     return character->getPosition().x >= des;
+}
+
+Flag* Map::getFlag() const
+{
+    for (auto block : blocks) 
+    {
+        if (auto flag = dynamic_cast<Flag*>(block)) 
+            return flag;
+    }
+    
+    return nullptr;
 }

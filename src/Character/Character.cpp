@@ -17,7 +17,7 @@ void Player::setUp(){
 }
 
 Player::Player(CharacterType t, Vector2 pos):
-    type(t){
+    type(t), blink(0.1f, 3.5f){
 	setUp();
 
     if(type == CharacterType::MARIO){
@@ -57,7 +57,7 @@ Player::Player(CharacterType t, Vector2 pos):
 }
 
 Player::Player(CharacterType t,  float cordX, float groundLevel):
-    type(t){
+    type(t), blink(0.1f, 3.5f){
 
 	setUp();
 
@@ -118,6 +118,7 @@ void Player::updateShape(){
 
 	if(activeAnimation != animations[animationKey].get()){
 		activeAnimation = animations[animationKey].get();
+		activeAnimation->resetPeriod(); 
 	}
 
 	if(activeAnimation == nullptr)
@@ -335,6 +336,9 @@ void Player::triggerDeath(){
 	delete tmp;
 	tmp = nullptr;
 
+	delete Sstate; 
+	Sstate = new SmallState(); 
+
 	movement->setVelocityX(0.0f); 
 	movement->setVelocityY(-170.0f); 
 	movement->setGroundLevel(1000.0f); 
@@ -356,7 +360,7 @@ void Player::adapt_collision_with_enimies(ICollidable* other){
 		return; 
 	}
 
-	if(shrinkOnHit) return; 
+	if(shrinkOnHit || isRecovery()) return; 
 
 	shrinkOnHit = true; 
 	blink.reset(); 
@@ -367,6 +371,7 @@ void Player::adapt_collision_with_enimies(ICollidable* other){
 	delete tmp; 
 	tmp = nullptr; 
 	showPlayer = false; 
+	updateShape(); 
 }
 
 void Player::adaptCollision(ICollidable* other){
@@ -396,11 +401,10 @@ void Player::adaptCollision(ICollidable* other){
 	if (dynamic_cast<Fireball*>(other))
 		return;
 
-	if(dynamic_cast<Enemy*>(other)){
+	if(dynamic_cast<Enemy*>(other) && dynamic_cast<Enemy*>(other)->isSafe() == false){
 		adapt_collision_with_enimies(other); 
 		return; 
 	}
-
 
 	movement->adaptCollision(other, Mstate, this); 
 	updateShape(); 
@@ -424,7 +428,7 @@ void Player::adaptChangePosition(){
 	if(isLocked()) return; 
 	
 	if(groundLevel - hitbox.height > hitbox.y){
-		if(!Mstate->isDead()){
+		if(!Mstate->isDead() && Mstate->getMoveState() != "HIT"){
 			delete Mstate;
 			Mstate = new JumpState();
 		}
@@ -578,24 +582,111 @@ Player::~Player() {
 	Images::unloadAllTextures();
 }
 
-// Action implement. 
 
-void Player::run_from_a_to_b(float startX, float endX){
-	if(movement->isDoneLerpMoving() == false){
-		return;
+inline IMoveState* createMoveState(const std::string& stateName) {
+    if (stateName == "STANDING") {
+        return new StandState();
+    } else if (stateName == "RUNNING") {
+        return new RunState();
+    } else if (stateName == "SKIDDING") {
+        return new SkidState();
+    } else if (stateName == "CROUCHING") {
+        return new CrouchState();
+    } else if (stateName == "JUMPING") {
+        return new JumpState();
+    } else if (stateName == "CLIMBING") {
+        return new ClimbState();
+    } else if (stateName == "SHOOTING") {
+        return new ShootState();
+    } else if (stateName == "HIT") {
+        return new HitState();
+    } else if (stateName == "DEAD") {
+        return new DeadState();
+    } else if (stateName == "ENTERING") {
+        return new EnterState();
+    }
+	return nullptr;
+}
+
+void Player::loadData(std::istream &fin){
+	bool t; fin >> t; 
+	type = (t == 1 ? CharacterType::MARIO : CharacterType::LUIGI); 
+
+	if(t == 1){
+		readRectAnimation("assets/animation/mario.txt", Images::textures["mario.png"]);
+	}else{
+		readRectAnimation("assets/animation/luigi.txt", Images::textures["luigi.png"]);
 	}
 
-	if(startX > endX){
-		std::cout << "Can't go from " << startX << " to " << endX << '\n';
-		return; 
+	std::string animationKey; fin >> animationKey; 
+
+	std::string s1 = "", s2 = "", s3 = ""; 
+	int lst = -1; 
+
+	for(int i = 0; i < animationKey.size(); i ++){
+		if(animationKey[i] == '_'){
+			lst = i; 
+			break; 
+		} 
+		s1 += animationKey[i]; 
 	}
 
-	if(dynamic_cast<RunState*>(Mstate) == nullptr){
-		delete Mstate; 
-		Mstate = new RunState(); 
-		updateShape();
-		updateHitbox();
+	if(lst == -1)
+		throw GameException("Read data in player is wrong !! Maybe wrong orders"); 
+	
+	if ((int)animationKey.size() >= 15 && animationKey.substr(0, 15) == "INVINCIBLE_FIRE"){
+		s3 = s1; s1 = ""; 
+
+		for(int i = lst + 1; i < animationKey.size(); i ++){
+			if(animationKey[i] == '_'){
+				lst = i; 
+				break; 
+			} 
+			s1 += animationKey[i]; 
+		}
+	}
+		
+	if(s1 == "SMALL"){
+		changeSstate(new SmallState()); 
+	}else if(s1 == "BIG"){
+		changeSstate(new BigState()); 
+	}else if(s1 == "FIRE"){
+		changeSstate(new FireState()); 
 	}
 
-	movement->run_from_a_to_b(startX, endX);
+	s2 = ""; 
+	for(int i = lst + 1; i < animationKey.size(); i ++) 
+		s2 += animationKey[i]; 
+
+	changeMstate(createMoveState(s2)); 
+
+	if ((int)animationKey.size() >= 7 && animationKey.substr(0, 8) == "MORPHING") {
+		Sstate = new MorphDecorator(Sstate); 
+	}else if ((int)animationKey.size() >= 11 && s3.size()){
+	    Sstate = new InvincibleDecorator(Sstate);
+	}
+
+	Vector2 pos; 
+
+	fin >> pos.x >> pos.y; 
+	Vector2 velocity; 
+	fin >> velocity.x >> velocity.y; 
+
+	float groundLevel; 
+	fin >> groundLevel; 
+
+	movement->setVelocityX(velocity.x);
+	movement->setVelocityX(velocity.y);
+
+	movement->setPosition(pos); 
+	setGroundLevel(groundLevel); 
+}
+
+void Player::printData(std::ostream &fout){
+	fout << ((type == CharacterType::MARIO) ? 1 : 0) << ' '; 
+	fout << getShape_Action() << ' '; 
+
+	fout << movement->getPosition().x << ' ' << movement->getPosition().y << ' '; 
+	fout << movement->getVelocity().x << ' ' << movement->getVelocity().y << ' '; 
+	fout << groundLevel << '\n'; 
 }

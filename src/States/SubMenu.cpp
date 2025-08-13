@@ -10,7 +10,7 @@ SubMenu::SubMenu()
     luigi_button("LUIGI GAME", {570, 533, 330, 60}, WHITE, RED, [&]() { 
         StateManager::getInstance().pushState(std::make_unique<LevelMenu>(false));
     }), 
-    return_button("assets/images/turn_back.png", {25, 27, 100, 100}, [&]() {
+    return_button("assets/images/turn_back_white.png", {25, 27, 100, 100}, [&]() {
         StateManager::getInstance().pushState(std::make_unique<MainMenu>());
     }),
     title("CHOOSE YOUR CHARACTER") 

@@ -2,18 +2,23 @@
 #include "States/SubMenu.h"
 #include "States/World.h"
 #include "Resources/Timer.h"
+#include "Resources/StatsManager.h"
 
 LevelMenu::LevelMenu(bool checkMario)
   : isMario(checkMario),
     title("CHOOSE YOUR LEVEL"), 
-    high_score("TOP- 000000"),
-    return_button("assets/images/turn_back.png", {25,27,100,100}, [&]() {
+    high_score(loadHighScore()),
+    return_button("assets/images/turn_back_white.png", {25,27,100,100}, [&]() {
         StateManager::getInstance().pushState(std::make_unique<SubMenu>());
+        StatsManager::getInstance().reset();
     }),
     world1_1("assets/images/World1-1.png", {73, 277, 532, 208}, [&]() {
         StateManager::getInstance().pushState(std::make_unique<World>(isMario, 1, 60.0f));
+        StatsManager::getInstance().reset();
     }),
-    world1_2("assets/images/World1-2.png", {977, 277, 532, 208}, []() {}),
+    world1_2("assets/images/World1-2.png", {977, 277, 532, 208}, [&]() {
+        StateManager::getInstance().pushState(std::make_unique<World>(isMario, 2, 300.0f));
+    }),
     world1_3("assets/images/World1-3.png", {73, 635, 532, 208}, []() {}),
     world1_4("assets/images/World1-4.png", {977, 635, 532, 208}, []() {})
 {
@@ -27,6 +32,21 @@ LevelMenu::~LevelMenu()
     UnloadFont(font);
     UnloadTexture(level_background);
     UnloadTexture(return_button_state);
+}
+
+std::string LevelMenu::loadHighScore()
+{
+    int highScore = StatsManager::getInstance().getHighScore();
+    int maxDigits = 6;
+
+    std::string highScoreStr = std::to_string(highScore);
+    if (highScoreStr.length() < maxDigits) 
+    {
+        int remaining = maxDigits - highScoreStr.length();
+        highScoreStr.insert(0, remaining, '0');
+    }
+
+    return "TOP-" + highScoreStr;
 }
 
 void LevelMenu::drawBorder(Rectangle bounds)

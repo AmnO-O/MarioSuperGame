@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "Animation/Appearance.h"
 #include "Observer/ICollidable.h"
+#include <iostream>
 
 class GameObject : public IFallable {
 protected: 
@@ -27,6 +28,22 @@ public:
         position.x += velocity.x * deltaTime; 
         position.y += velocity.y * deltaTime; 
 
+        hitbox.x = position.x;
+        hitbox.y = position.y;
+    }
+
+    virtual std::string getTypeID() const = 0; 
+
+    virtual void printData(std::ostream &fout) const {
+        fout << position.x << " " << position.y << " "
+             << velocity.x << " " << velocity.y << " "
+             << groundLevel << " " << active << " ";
+    }
+
+    virtual void loadData(std::istream &fin) {
+        fin >> position.x >> position.y
+            >> velocity.x >> velocity.y
+            >> groundLevel >> active;
         hitbox.x = position.x;
         hitbox.y = position.y;
     }
