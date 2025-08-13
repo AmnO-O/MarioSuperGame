@@ -1,4 +1,8 @@
 #include "Blocks/Flag.h"
+#include "Resources/StatsManager.h"
+#include "Resources/SoundManager.h"
+#include "Resources/Timer.h"
+#include "Resources/StatsManager.h"
 
 Flag::Flag(Texture2D &tex, std::istream &is, float time) : Block(tex), time(time), animationClimbFlag(nullptr) {
     drawStat = DrawStat::Zero;
@@ -74,12 +78,18 @@ void Flag::adaptCollision(ICollidable* other) {
         if (top < minPen) { minPen = top; dir = TOP; }
         if (bottom < minPen) { minPen = bottom; dir = BOTTOM; }
 
+        float collision_height = hitbox.y + hitbox.height - body.y;
+        int extra_points = static_cast<int>(collision_height / 16) * 100;
+        StatsManager::getInstance().addScore(extra_points);
+
         if (dir == LEFT) { 
             hasClimb = true;
             animationClimbFlag = std::make_unique<PlayerActionManager>(player); 
             animationClimbFlag->addAction(std::make_unique<ClimbAction>(hitbox.y + hitbox.height - player->getShape().y, time + 0.5f));
             animationClimbFlag->addAction(std::make_unique<SetPositionAction>(Vector2({hitbox.x + hitbox.width, hitbox.y + hitbox.height - player->getShape().y}), false, 0.5f));
             animationClimbFlag->addAction(std::make_unique<JumpAction>(173.0f, -200.0f));
+            PlaySound(SoundManager::getInstance().flagpoleSound);
+            StatsManager::getInstance().time_taken = 60.0f - Timer::getInstance().remaining;
         }
     }
 }

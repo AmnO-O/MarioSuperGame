@@ -39,7 +39,7 @@ public:
     bool isDead() const { return dead; }
     bool IsActive() const override { return !dead; }
     bool isSafe() const { return state == State::SHELL || state == State::DIE2; }
-
+    void isHitBelow(ICollidable* block) override;
     void adaptCollision(ICollidable* other) override;
 
     ~Enemy() {}

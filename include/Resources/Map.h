@@ -13,6 +13,7 @@
 #include "Character/Koopa.h"
 #include "MyCamera2D.h"
 #include <queue>
+#include "Blocks/Flag.h"
 
 class Map {
 private:
@@ -42,6 +43,7 @@ public:
     void Draw() const;
     void Unload();
     bool isEnd();
+    Flag* getFlag() const;
 };
 
 #endif

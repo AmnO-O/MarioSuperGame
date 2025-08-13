@@ -24,7 +24,7 @@ enum class MoveState{
 }; 
 
 enum class CharacterType{
-    MARIO, LUIGI, GOOMBA, KOOPA, PIRANHA, BOWSER
+    MARIO, LUIGI, GOOMBA, KOOPA, PIRANHA, PARA_KOOPA
 }; 
 
 enum class PowerUpType {

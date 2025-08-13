@@ -336,6 +336,9 @@ void Player::triggerDeath(){
 	delete tmp;
 	tmp = nullptr;
 
+	delete Sstate; 
+	Sstate = new SmallState(); 
+
 	movement->setVelocityX(0.0f); 
 	movement->setVelocityY(-170.0f); 
 	movement->setGroundLevel(1000.0f); 
@@ -579,27 +582,6 @@ Player::~Player() {
 	Images::unloadAllTextures();
 }
 
-// Action implement. 
-
-void Player::run_from_a_to_b(float startX, float endX){
-	if(movement->isDoneLerpMoving() == false){
-		return;
-	}
-
-	if(startX > endX){
-		std::cout << "Can't go from " << startX << " to " << endX << '\n';
-		return; 
-	}
-
-	if(dynamic_cast<RunState*>(Mstate) == nullptr){
-		delete Mstate; 
-		Mstate = new RunState(); 
-		updateShape();
-		updateHitbox();
-	}
-
-	movement->run_from_a_to_b(startX, endX);
-}
 
 inline IMoveState* createMoveState(const std::string& stateName) {
     if (stateName == "STANDING") {

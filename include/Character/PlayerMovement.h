@@ -78,14 +78,6 @@ public:
     bool adapt_collision_with_enimies(ICollidable* other, Player *player); 
     void update(float deltaTime, IShapeState *&Sstate, IMoveState  *&Mstate);
 
-
-    void run_from_a_to_b(float startX, float endX){
-        if(lerpMover.isDone()){
-            lerpMover.start({startX, position.y}, {endX, position.y}, 2.0f); 
-        }
-    }
-
-
     Vector2 getPosition() const {return position;}
     Vector2 getVelocity() const {return velocity;}
     bool isFacingRight() const {return facingRight; }

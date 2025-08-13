@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Resources/ResourceManager.h"
+#include "Resources/StatsManager.h"
 #include "raylib.h"
 #include "States/MainMenu.h"
 #include <iostream>
@@ -54,6 +55,7 @@ void Game::update(float deltaTime) {
  
     UpdateMusicStream(SoundManager::getInstance().playMusic);
     StateManager::getInstance().update(deltaTime);
+    StatsManager::getInstance().update(deltaTime);
 }
 
 void Game::render() {
