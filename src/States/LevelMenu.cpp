@@ -13,11 +13,12 @@ LevelMenu::LevelMenu(bool checkMario)
         StatsManager::getInstance().reset();
     }),
     world1_1("assets/images/World1-1.png", {73, 277, 532, 208}, [&]() {
-        StateManager::getInstance().pushState(std::make_unique<World>(isMario, 1, 60.0f));
+        StateManager::getInstance().pushState(std::make_unique<World>(isMario, 1, 300.0f));
         StatsManager::getInstance().reset();
     }),
     world1_2("assets/images/World1-2.png", {977, 277, 532, 208}, [&]() {
         StateManager::getInstance().pushState(std::make_unique<World>(isMario, 2, 300.0f));
+        StatsManager::getInstance().reset();
     }),
     world1_3("assets/images/World1-3.png", {73, 635, 532, 208}, []() {}),
     world1_4("assets/images/World1-4.png", {977, 635, 532, 208}, []() {})
@@ -42,7 +43,7 @@ std::string LevelMenu::loadHighScore()
     std::string highScoreStr = std::to_string(highScore);
     if (highScoreStr.length() < maxDigits) 
     {
-        int remaining = maxDigits - highScoreStr.length();
+        int remaining = maxDigits - (int)highScoreStr.length();
         highScoreStr.insert(0, remaining, '0');
     }
 

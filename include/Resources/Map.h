@@ -17,6 +17,7 @@
 
 class Map {
 private:
+    bool ended = false;
     int space;
     int curspace = 0;
     Texture2D background;
