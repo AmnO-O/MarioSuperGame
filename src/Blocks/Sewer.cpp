@@ -88,7 +88,7 @@ void Sewer::changePlayerPos(PlayerActionManager &pm) {
     // if (hasDowned && animationEnterSewer.doneAction()) {
     if (hasDowned) {
         pm.addAction(std::make_unique<TopEnterAction>());
-        pm.addAction(std::make_unique<SetPositionAction>(tp, true, 0.0f));
+        pm.addAction(std::make_unique<SetPositionAction>(tp, true, 0.05f));
         // return tp;
     }
     // return {-1.0f, -1.0f};
@@ -161,9 +161,13 @@ void HorizontalSewer::changePlayerPos(PlayerActionManager &pm) {
     if (hasDowned) {
     // if (hasDowned && animationEnterSewer.doneAction()) {
         pm.addAction(std::make_unique<HorizontalEnterAction>());
-        pm.addAction(std::make_unique<SetPositionAction>(tp, true, 0.0f));
-        if (isDown)
+        if (isDown) {
+            pm.addAction(std::make_unique<SetPositionAction>(tp, true, 0.01f));
             pm.addAction(std::make_unique<PopupAction>());
+        }
+        else {
+            pm.addAction(std::make_unique<SetPositionAction>(tp, true, 0.05f));
+        }
         // return tp;
     }
     // return {-1.0f, -1.0f};
