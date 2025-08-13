@@ -55,6 +55,14 @@ void Koopa::adaptCollision(ICollidable* other) {
     if (player) {
         Rectangle playerHitbox = player->getHitbox();
 
+        if (player->isInvincible()) {
+            if (state != State::DIE && state != State::DIE2) {
+                state = State::DIE2;
+                PlaySound(SoundManager::getInstance().stompSound);
+                updateAnimationType();
+            }
+        }
+
         if (playerHitbox.y + playerHitbox.height <= hitbox.y + 5) {
             if (state == State::RUNNING) {
                 position.y += 10.0f;
@@ -87,44 +95,6 @@ void Koopa::adaptCollision(ICollidable* other) {
             }
         }
     }
-    
-    Enemy* enemy = dynamic_cast<Enemy*>(other);
-    if (enemy && enemy != this) {
-        if (state == State::SPINNING) {
-            enemy->setDead();
-            StatsManager::getInstance().addScore(100);
-        }
-        else if (state == State::RUNNING) {
-            velocity.x = -velocity.x;
-        }
-        else if (state == State::SHELL && velocity.x != 0) {
-            enemy->setDead();
-        }
-    }
-    
-    // Block* block = dynamic_cast<Block*>(other);
-    // if (block) {
-    //     Rectangle blockHitbox = block->getHitbox();
-        
-    //     if (velocity.x != 0) {
-    //         if (velocity.x > 0 && hitbox.x + hitbox.width > blockHitbox.x && 
-    //             hitbox.x < blockHitbox.x) {
-    //             velocity.x = -velocity.x;
-    //             position.x = blockHitbox.x - hitbox.width;
-    //         }
-    //         else if (velocity.x < 0 && hitbox.x < blockHitbox.x + blockHitbox.width && 
-    //                  hitbox.x + hitbox.width > blockHitbox.x + blockHitbox.width) {
-    //             velocity.x = -velocity.x;
-    //             position.x = blockHitbox.x + blockHitbox.width;
-    //         }
-    //     }
-        
-    //     if (velocity.y > 0 && hitbox.y + hitbox.height > blockHitbox.y && 
-    //         hitbox.y < blockHitbox.y) {
-    //         position.y = blockHitbox.y - hitbox.height;
-    //         velocity.y = 0;
-    //     }
-    // }
 }
 
 void Koopa::enterShell() {
