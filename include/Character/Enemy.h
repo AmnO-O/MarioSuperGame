@@ -6,6 +6,7 @@ enum State {
     RUNNING,
     SHELL,
     SPINNING,
+    FLYING,
     DIE,
     DIE2
 };
@@ -35,11 +36,15 @@ public:
     void setGroundLevel(float groundlevel_) override { Character::setGroundLevel(groundlevel_); }
 
     void setDead();
-    virtual void setDead2() {};
+    virtual void setDead2() {falling = true; velocity = {0.0f, 150.0f};};
     bool isDead() const { return dead; }
     bool IsActive() const override { return !dead; }
-    bool isSafe() const { return state == State::SHELL || state == State::DIE2; }
+    bool isSafe() const { return state == State::SHELL || state == State::DIE || state == State::DIE2; }
     void isHitBelow(ICollidable* block) override;
+
+    void enemyCollision(ICollidable* other);
+    void blockCollision(ICollidable* other);
+    void fireballCollision(ICollidable* other);
     void adaptCollision(ICollidable* other) override;
 
     ~Enemy() {}

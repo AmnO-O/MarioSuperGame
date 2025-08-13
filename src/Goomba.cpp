@@ -15,19 +15,20 @@ void Goomba::update(float deltaTime) {
 }
 
 void Goomba::updateAnimationType() {
-    if (state == State::DIE) {
-        position.y += hitbox.height * 0.5f;
-        hitbox.y = 0.0f;
-        activeAnimation = animations["DIE"].get();
-        StatsManager::getInstance().addScore(100);
-    } 
-    else activeAnimation = animations["RUNNING"].get();
+    switch (state) {
+        case State::RUNNING:
+            activeAnimation = animations["RUNNING"].get();
+            break;
+        case State::DIE:
+            position.y += hitbox.height * 0.5f;
+            activeAnimation = animations["DIE"].get();
+            StatsManager::getInstance().addScore(100);
+            break;
+        case State::DIE2:
+            activeAnimation = animations["DIE2"].get();
+            break;
+    }
     updateHitbox();
-}
-
-void Goomba::setDead2() {
-    falling = true;
-    velocity = {0.0f, 150.0f};
 }
 
 void Goomba::adaptCollision(ICollidable* other) {
