@@ -228,3 +228,14 @@ void Map::SetUp(Player* player) {
 bool Map::isEnd() {
     return character->getPosition().x >= des;
 }
+
+Flag* Map::getFlag() const
+{
+    for (auto block : blocks) 
+    {
+        if (auto flag = dynamic_cast<Flag*>(block)) 
+            return flag;
+    }
+    
+    return nullptr;
+}

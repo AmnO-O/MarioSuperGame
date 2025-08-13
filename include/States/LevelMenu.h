@@ -3,6 +3,7 @@
 
 #include <raylib.h>
 #include "../Resources/StateManager.h"
+#include "../Resources/StatsManager.h"
 #include "../Widgets/Button.h"
 #include <string>
 #include <vector>
@@ -30,6 +31,7 @@ class LevelMenu : public GameState
         LevelMenu(bool isMario);
         ~LevelMenu(); 
 
+        std::string loadHighScore();
         void drawBorder(Rectangle bounds);
         void processInput() override {};
         void update(float deltaTime) override;

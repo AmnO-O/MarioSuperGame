@@ -6,6 +6,7 @@
 #include "Resources/ResourceManager.h"
 #include <raylib.h>
 #include "Character/Character.h"
+#include "States/EndResult.h"
 
 World::World(bool checkMario, int index, float time)
   : popup_menu(),
@@ -14,7 +15,7 @@ World::World(bool checkMario, int index, float time)
     isMario(checkMario),
     score_number(0),
     number_of_coins(0),
-    settings_button("assets/images/setting.png", {25, 27, 100, 100}, [&]() {
+    settings_button("assets/images/setting_white.png", {25, 27, 100, 100}, [&]() {
         popup_menu.toggle();
     }),
     settings_button_state(LoadTexture("assets/images/setting_red.png")),
@@ -56,6 +57,20 @@ bool World::getIsMario() const
 int World::getMapIndex() const
 {
     return mapIndex;
+}
+
+bool World::checkClimbing()
+{
+    Flag* flag = currentMap->getFlag();
+    
+    if (flag && flag->animationClimbFlag && !flag->animationClimbFlag->isEmpty())
+    {
+        //time_taken = 60.0f - Timer::getInstance().remaining - 6.0f;
+        return true;
+    }
+
+    else
+        return false;
 }
 
 void World::drawStats()
@@ -161,16 +176,21 @@ void World::update(float deltaTime)
         return;
     }
     
+    number_of_coins = StatsManager::getInstance().getCoins();
+    score_number = StatsManager::getInstance().getScore();
+
     if (currentMap->isEnd()) {
-        StateManager::getInstance().pushState(std::make_unique<LevelMenu>(isMario));
-        ResumeMusicStream(SoundManager::getInstance().playMusic);
+        isEnd = true;
+        StopMusicStream(SoundManager::getInstance().playMusic);
+        Timer::getInstance().warning_played = true;
+        Timer::getInstance().finalUpdate(deltaTime * 15.0f);
     }
   
-    if (!SoundManager::getInstance().death_played)
+    if (!SoundManager::getInstance().death_played && !checkClimbing() && !isEnd)
         processInput();
 
     if ((SoundManager::getInstance().death_played && !IsSoundPlaying(SoundManager::getInstance().deathSound)) 
-    || (Timer::getInstance().remaining <= 0.0f))
+    || (Timer::getInstance().remaining <= 0.0f && !isEnd))
 	{
         if (IsMusicStreamPlaying(SoundManager::getInstance().playMusic))
             StopMusicStream(SoundManager::getInstance().playMusic);
@@ -179,23 +199,27 @@ void World::update(float deltaTime)
 		StateManager::getInstance().pushState(std::make_unique<GameOverMenu>(mapIndex, isMario));
 		SoundManager::getInstance().game_over_played = true;
 	}
-    
+
+    if (Timer::getInstance().remaining <= 0.0f && isEnd && !IsSoundPlaying(SoundManager::getInstance().finalscoreSound))
+    {
+        StateManager::getInstance().pushState(std::make_unique<EndResult>(mapIndex));
+        PlaySound(SoundManager::getInstance().endSound);
+    }
+
     if (!popup_menu.isVisible)
     {
         if(deltaTime < 0.2) 
             currentMap->Update(deltaTime);
 
-        Timer::getInstance().update(deltaTime);
+        if (!checkClimbing() && !isEnd)
+            Timer::getInstance().update(deltaTime);
         
-        if (!SoundManager::getInstance().death_played)
+        if (!SoundManager::getInstance().death_played && !checkClimbing() && !isEnd)
             settings_button.update(deltaTime);
     }
 
     if (popup_menu.isVisible)
         popup_menu.update(deltaTime);
-    
-    number_of_coins = StatsManager::getInstance().getCoins();
-    score_number = StatsManager::getInstance().getScore();
 }
 
 void World::render() 
@@ -207,7 +231,7 @@ void World::render()
     if (!popup_menu.isVisible)
     {
         bool isHovered = CheckCollisionPointRec(GetMousePosition(), settings_button.getBounds());
-        if (isHovered && !SoundManager::getInstance().death_played)
+        if (isHovered && !SoundManager::getInstance().death_played && !checkClimbing() && !isEnd)
             DrawTexture(settings_button_state, 25, 27, WHITE);
     }
 
