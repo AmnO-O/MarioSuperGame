@@ -98,4 +98,5 @@ public:
     void skipCurrentAction();
     void update(float deltaTime);
     void resetAll(); 
+    bool isEmpty() const { return actionQueue.empty(); }
 };

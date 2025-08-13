@@ -168,3 +168,4 @@ void PopupAction::execute(Player *player, PlayerMovement* movement, float deltaT
 bool PopupAction::isFinished(Player *player, PlayerMovement* movement) const {
     return lerpMover.isDone(); 
 }
+
