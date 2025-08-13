@@ -42,11 +42,6 @@ void Koopa::updateAnimationType() {
     updateHitbox();
 }
 
-void Koopa::setDead2() {
-    falling = true;
-    velocity = {0.0f, 150.0f};
-}
-
 void Koopa::adaptCollision(ICollidable* other) {
     if (dynamic_cast<Coin*>(other) || (dynamic_cast<GameObject*>(other) && !dynamic_cast<Fireball*>(other))) return;
     Enemy::adaptCollision(other);
@@ -83,15 +78,11 @@ void Koopa::adaptCollision(ICollidable* other) {
         } 
         else if (playerHitbox.x + playerHitbox.width <= hitbox.x + 5 || 
                  playerHitbox.x >= hitbox.x + hitbox.width - 5) {
-            if (state == State::SHELL && canBePushed) {
-                float pushDirection = (playerHitbox.x < hitbox.x) ? -1.0f : 1.0f;
-                pushShell(pushDirection);
-            }
-        }
-        else {
-            if (state == State::SHELL && canBePushed) {
-                float pushDirection = (playerHitbox.x < hitbox.x) ? -1.0f : 1.0f;
-                pushShell(pushDirection);
+            if (state == State::SHELL) {
+                velocity.x = (playerHitbox.x < hitbox.x) ? 1.0f : -1.0f;
+                startSpinning();
+                PlaySound(SoundManager::getInstance().stompSound);
+                StatsManager::getInstance().addScore(100);
             }
         }
     }
@@ -129,12 +120,4 @@ void Koopa::stopSpinning() {
     shellTimer = 0.0f;
     canBePushed = true;
     updateAnimationType();
-}
-
-void Koopa::pushShell(float direction) {
-    if (state == State::SHELL && canBePushed) {
-        velocity.x = pushSpeed * direction;
-        isSpinning = true;
-        canBePushed = false;
-    }
 }

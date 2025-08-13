@@ -13,6 +13,5 @@ public:
     }
     void update(float deltaTime) override;
     void updateAnimationType() override;
-    void setDead2() override;
     void adaptCollision(ICollidable* other) override;
 };
