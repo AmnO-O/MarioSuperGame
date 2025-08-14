@@ -11,7 +11,7 @@ enum State {
     DIE2
 };
 
-class Enemy : public Character, public ICollidable, public IFallable {
+class Enemy : public Character, public ICollidable {
 protected:
     CharacterType type;
     bool falling = false;
@@ -39,7 +39,7 @@ public:
     virtual void setDead2() {falling = true; velocity = {0.0f, 150.0f};};
     bool isDead() const { return dead; }
     bool IsActive() const override { return !dead; }
-    bool isSafe() const { return state == State::SHELL || state == State::DIE || state == State::DIE2; }
+    virtual bool isSafe() const { return state == State::SHELL || state == State::DIE || state == State::DIE2; }
     void isHitBelow(ICollidable* block) override;
 
     void enemyCollision(ICollidable* other);
