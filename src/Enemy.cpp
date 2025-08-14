@@ -126,7 +126,7 @@ void Enemy::fireballCollision(ICollidable* other) {
     if (fireball) {
         if (state != State::DIE && state != State::DIE2) {
             if (fireball->isActive()) {
-                if (state == State::RUNNING) {
+                if (state == State::RUNNING || state == State::FLYING) {
                     state = State::DIE2;
                     PlaySound(SoundManager::getInstance().stompSound);
                     updateAnimationType();

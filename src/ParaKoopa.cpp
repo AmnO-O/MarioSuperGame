@@ -6,14 +6,13 @@
 #include "Resources/StatsManager.h"
 
 void ParaKoopa::update(float deltaTime) {
+    Enemy::update(deltaTime);
     
     timer += deltaTime;
-    if (timer >= 0.5f) {
+    if (timer >= 3.5f) {
         velocity.y = -velocity.y;
         timer = 0.0f;
-    }   
-
-    Enemy::update(deltaTime);
+    }
 }
 
 void ParaKoopa::updateAnimationType() {

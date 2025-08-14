@@ -6,7 +6,8 @@ private:
     float timer = 0.0f;
 public:
     ParaKoopa(Vector2 pos) : Enemy(CharacterType::PARA_KOOPA, pos) {
-        // velocity.y = -10.0f;
+        state = FLYING;
+        velocity.y = 20.0f;
         readRectAnimation("assets/animation/parakoopa.txt", Images::textures["enemies1.png"]);
     }
 
