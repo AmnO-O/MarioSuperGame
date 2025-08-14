@@ -24,7 +24,7 @@ private:
     float des;
 
     MyCamera2D* cam;
-    std::queue<Vector3> camChange;
+    std::deque<Vector3> camChange;
 
     std::vector<Block*> blocks;
     std::deque<Enemy*> enemies;
@@ -39,6 +39,7 @@ public:
     Map(const std::string& folderPath, Texture2D &objectTex);
     Vector2 getSize() const { return {1.0f * background.width, 1.0f * background.height / space}; }
 
+    void save(std::ostream &os);
     void SetUp(Player* player);
     void Update(float delta);
     void Draw() const;

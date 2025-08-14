@@ -67,6 +67,7 @@ void CollisionManager::CheckCharObj() {
 void CollisionManager::CheckObjObj() {
     // Check object vs object
     for (int i = (int)collidables.size() - 1; i >= 0; i--) {
+        if (dynamic_cast<Block*>(collidables[i])) continue;
         ICollidable* mostOverlapObj = nullptr;
         float maxOverlap = 0.0f;
         IFallable* p = dynamic_cast<IFallable*>(collidables[i]);

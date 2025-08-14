@@ -68,8 +68,8 @@ void Lift::Update(float deltaTime, Player* player) {
     if (player) {
         Rectangle playerBox = player->getHitbox();
         bool onTop =
-            playerBox.y + playerBox.height <= hitbox.y + 3.0f && // Feet at top or slightly above
-            playerBox.y + playerBox.height >= hitbox.y - 3.0f && // Within a small tolerance
+            playerBox.y + playerBox.height <= hitbox.y + 0.1f && // Feet at top or slightly above
+            playerBox.y + playerBox.height >= hitbox.y - 0.1f && // Within a small tolerance
             playerBox.x + playerBox.width > hitbox.x &&          // Horizontal overlap
             playerBox.x < hitbox.x + hitbox.width;
 
@@ -85,4 +85,8 @@ void Lift::Update(float deltaTime, Player* player) {
             player->setOnGround();
         }
     }
+}
+
+void Lift::save(std::ostream &os) {
+    os << pos.x << " " << pos.y << " " << velocity.x << " " << velocity.y << "\n";
 }

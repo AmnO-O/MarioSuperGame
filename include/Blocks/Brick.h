@@ -29,6 +29,7 @@ public:
     void Update(float delta, Player* player) override;
     void Draw(DrawStat ds) const override;
     void adaptCollision(ICollidable* other) override;
+    void save(std::ostream &os) override;
 
     bool IsActive() const override;
     ~Brick() override {}

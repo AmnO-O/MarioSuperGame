@@ -112,7 +112,7 @@ void Map::Update(float delta) {
         camChange.front().z -= delta;
         if (camChange.front().z <= 0) {
             cam->setTarget({camChange.front().x, camChange.front().y});
-            camChange.pop();
+            camChange.pop_front();
         }
     }
     pm.update(delta);
@@ -189,10 +189,6 @@ void Map::Draw() const {
         if( character &&  character->hidePlayer()){
             character->render(); 
         }
-
-        for (int i = 0; i < blocks.size(); i++) {
-            blocks[i]->Draw(DrawStat::First);
-        }
                 
         for (int i = 0; i < curEnemies.size(); i++) {
             curEnemies[i]->render();
@@ -200,6 +196,10 @@ void Map::Draw() const {
             //                     enemies[i]->getHitbox().width, enemies[i]->getHitbox().height, GREEN);
         }
 
+        for (int i = 0; i < blocks.size(); i++) {
+            blocks[i]->Draw(DrawStat::First);
+        }
+        
         if( character &&  !character->hidePlayer()){
             character->render(); 
         }
@@ -252,4 +252,27 @@ Flag* Map::getFlag() const
     }
     
     return nullptr;
+}
+
+void Map::save(std::ostream &os) {
+    character->printData(os); 
+
+    os << cam->getCamera().target.x << " " << cam->getCamera().target.y << "\n";
+    os << camChange.size() << "\n";
+    for (int i = 0; i < camChange.size(); i++)
+        os << camChange[i].x << " " << camChange[i].y << " " << camChange[i].z << "\n";
+    
+    // os << curEnemies.size() << "\n";
+    // for (int i = 0; i < curEnemies.size(); i++)
+    //     curEnemies[i]->save(os);
+    
+    // os << enemies.size() << "\n";
+    // for (int i = 0; i < enemies.size(); i++)
+    //     enemies[i]->save(os);
+
+    // pm.save(os);
+
+    os << blocks.size() << "\n";
+    for (int i = 0; i < blocks.size(); i++)
+        blocks[i]->save(os);
 }

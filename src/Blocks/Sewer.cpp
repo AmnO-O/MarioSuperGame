@@ -2,7 +2,7 @@
 #include "Resources/SoundManager.h"
 
 Sewer::Sewer(Texture2D &tex, std::istream &is) : Block(tex) {
-    drawStat = DrawStat::Second;
+    drawStat = DrawStat::First;
     is >> head.x >> head.y >> head.width >> head.height;
     is >> body.x >> body.y >> body.width >> body.height;
     is >> pos.x >> pos.y;
@@ -77,12 +77,12 @@ void Sewer::Update(float deltaTime, Player* player) {
     }
 }
 
-void Sewer::changeCam(std::queue<Vector3> &camChange) {
+void Sewer::changeCam(std::deque<Vector3> &camChange) {
     // if (hasDowned && animationEnterSewer.doneAction())
     //     return cam;
     // return {-1.0f, -1.0f};
     if (hasDowned)
-        camChange.push({cam.x, cam.y, 2.0f});
+        camChange.push_back({cam.x, cam.y, 2.05f});
 }
 void Sewer::changePlayerPos(PlayerActionManager &pm) {
     // if (hasDowned && animationEnterSewer.doneAction()) {
@@ -152,9 +152,12 @@ void HorizontalSewer::Update(float deltaTime, Player* player) {
     }
 }
 
-void HorizontalSewer::changeCam(std::queue<Vector3> &camChange) {
+void HorizontalSewer::changeCam(std::deque<Vector3> &camChange) {
     if (hasDowned) {
-        camChange.push({cam.x, cam.y, 1.5f});
+        if (isUp)
+            camChange.push_back({cam.x, cam.y, 1.5001f});
+        else
+            camChange.push_back({cam.x, cam.y, 1.55f});
     }
 }
 
@@ -162,8 +165,8 @@ void HorizontalSewer::changePlayerPos(PlayerActionManager &pm) {
     if (hasDowned) {
     // if (hasDowned && animationEnterSewer.doneAction()) {
         pm.addAction(std::make_unique<HorizontalEnterAction>());
-        if (isDown) {
-            pm.addAction(std::make_unique<SetPositionAction>(tp, true, 0.01f));
+        if (isUp) {
+            pm.addAction(std::make_unique<SetPositionAction>(tp, true, 0.0001f));
             pm.addAction(std::make_unique<PopupAction>());
         }
         else {
@@ -172,4 +175,8 @@ void HorizontalSewer::changePlayerPos(PlayerActionManager &pm) {
         // return tp;
     }
     // return {-1.0f, -1.0f};
+}
+
+void Sewer::save(std::ostream &os) {
+    os << canDown << " " << hasDowned << "\n";
 }

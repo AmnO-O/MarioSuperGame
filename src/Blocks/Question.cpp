@@ -178,3 +178,12 @@ void Question::clearObj() {
     objects.end()
     );
 }
+
+void Question::save(std::ostream &os) {
+    bounceAni.save(os);
+    brokenAni.save(os);
+    os << (int)stat << "\n";
+    os << num << " " << objects.size() << "\n";
+    for (int i = 0; i < objects.size(); i++)
+        objects[i]->printData(os);
+}

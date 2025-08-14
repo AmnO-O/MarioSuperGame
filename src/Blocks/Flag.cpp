@@ -5,7 +5,7 @@
 #include "Resources/StatsManager.h"
 
 Flag::Flag(Texture2D &tex, std::istream &is, float time) : Block(tex), time(time), animationClimbFlag(nullptr) {
-    drawStat = DrawStat::Zero;
+    // drawStat = DrawStat::Zero;
     is >> head.x >> head.y >> head.width >> head.height;
     is >> body.x >> body.y >> body.width >> body.height;
     is >> pos.x >> pos.y;
@@ -92,4 +92,9 @@ void Flag::adaptCollision(ICollidable* other) {
             StatsManager::getInstance().time_taken = 60.0f - Timer::getInstance().remaining;
         }
     }
+}
+
+void Flag::save(std::ostream &os) {
+    os << frametime << " " << hasClimb << "\n";
+    // animationClimbFlag->save(os);
 }

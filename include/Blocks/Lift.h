@@ -17,6 +17,7 @@ private:
     
 public:
     Lift(Texture2D &tex, std::istream &is);
+    void save(std::ostream &os) override;
     Rectangle getHitbox() const override;
     void Draw(DrawStat ds) const override;
     void adaptCollision(ICollidable* other) override {}
