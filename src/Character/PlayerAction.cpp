@@ -4,12 +4,12 @@
 PlayerActionManager::PlayerActionManager(Player* player_) : player(player_) {}
 
 void PlayerActionManager::addAction(std::unique_ptr<IAction> action) {
-    actionQueue.push(std::move(action));
+    actionQueue.push_back(std::move(action));
 }
 
 void PlayerActionManager::skipCurrentAction(){
     if(!actionQueue.size()) return; 
-    actionQueue.pop(); 
+    actionQueue.pop_front(); 
 }
 
 void PlayerActionManager::update(float deltaTime) {
@@ -21,7 +21,7 @@ void PlayerActionManager::update(float deltaTime) {
     currentAction->execute(player, player->movement, deltaTime);
 
     if (currentAction->isFinished(player, player->movement)) {
-        actionQueue.pop();
+        actionQueue.pop_front();
         player->movement->unlockMovement(); 
         player->movement->unlockKeyboardInput();
     }
@@ -30,7 +30,7 @@ void PlayerActionManager::update(float deltaTime) {
 void PlayerActionManager::resetAll(){
     player->movement->unlockMovement(); 
     player->movement->unlockKeyboardInput(); 
-    while(actionQueue.size()) actionQueue.pop();
+    while(actionQueue.size()) actionQueue.pop_front();
 }
 
 

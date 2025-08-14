@@ -44,36 +44,45 @@ void Lift::Update(float deltaTime, Player* player) {
             velocity.y *= -1; 
     } 
     Vector2 distance = {velocity.x * deltaTime, velocity.y * deltaTime};   
+    
     pos.x += distance.x;
     pos.y += distance.y;
-    if(!canBack) {
+
+
+    //// if remove the !canBack, the lift move in horizontal will be more soomth
+    if(!canBack){
         if (pos.x > des.x) {
             pos.x = start.x;
             distance.x = 0;
         }
+
         if (pos.x < start.x) {
             pos.x  = des.x;
             distance.x = 0;
         }
+
         if (pos.y > des.y) {
             pos.y = start.y;
             distance.y = 0;
         }
+
         if (pos.y < start.y) {
             pos.y  = des.y;
             distance.y = 0;
         }
     }
-    // std::cout << distance.x << " " << distance.y << '\n';
+
+    // std::cout << distance.x << ' ' << distance.y << '\n'; 
+
     if (player) {
         Rectangle playerBox = player->getHitbox();
         bool onTop =
-            playerBox.y + playerBox.height <= hitbox.y + 0.1f && // Feet at top or slightly above
-            playerBox.y + playerBox.height >= hitbox.y - 0.1f && // Within a small tolerance
+            playerBox.y + playerBox.height <= hitbox.y + 2.0f && // Feet at top or slightly above
+            playerBox.y + playerBox.height >= hitbox.y && // Within a small tolerance
             playerBox.x + playerBox.width > hitbox.x &&          // Horizontal overlap
             playerBox.x < hitbox.x + hitbox.width;
 
-        if (onTop) {
+        if (onTop && player->getVelocity().x == 0.0f && player->getVelocity().y == 0.0f) {
             // Move player together with lift
             Vector2 playerPos = player->getPosition();
             playerPos.x += distance.x;
@@ -81,8 +90,8 @@ void Lift::Update(float deltaTime, Player* player) {
             player->setPosition(playerPos);
 
             // Update ground level so gravity stops pulling them
-            player->setGroundLevel(hitbox.y);
-            player->setOnGround();
+            player->setGroundLevel(pos.y);
+            player->setOnGround(); 
         }
     }
 }

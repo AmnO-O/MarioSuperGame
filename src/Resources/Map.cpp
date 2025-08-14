@@ -270,7 +270,7 @@ void Map::save(std::ostream &os) {
     // for (int i = 0; i < enemies.size(); i++)
     //     enemies[i]->save(os);
 
-    // pm.save(os);
+    pm.printData(os);
 
     os << blocks.size() << "\n";
     for (int i = 0; i < blocks.size(); i++)
