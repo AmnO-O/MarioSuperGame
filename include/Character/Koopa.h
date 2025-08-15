@@ -2,7 +2,8 @@
 #include "Enemy.h"
 
 class Koopa : public Enemy, public IFallable {
-private:
+protected:
+    int type;
     float shellTimer = 0.0f;
     float shellDuration = 3.0f;
     bool isSpinning = false;
@@ -12,9 +13,15 @@ private:
     float pushSpeed = 80.0f;
     
 public:
-    Koopa(Vector2 pos) : Enemy(CharacterType::KOOPA, pos) {
+    Koopa(Vector2 pos, int Type) : Enemy(CharacterType::KOOPA, pos) {
         velocity = {-normalSpeed, 50.0f};
-        readRectAnimation("assets/animation/koopa.txt", Images::textures["enemies1.png"]);
+        type = Type;
+        if (type == 0)
+            readRectAnimation("assets/animation/koopa.txt", Images::textures["enemies1.png"]);
+        else if (type == 1)
+            readRectAnimation("assets/animation/koopa_blue.txt", Images::textures["enemies_sprites.png"]);
+        else if (type == 2)
+            readRectAnimation("assets/animation/koopa_red.txt", Images::textures["enemies1.png"]);
     }
 
     bool IsActive() const override {

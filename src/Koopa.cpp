@@ -86,6 +86,24 @@ void Koopa::adaptCollision(ICollidable* other) {
             }
         }
     }
+    
+    if (type != 2) return ;
+
+    Block* block = dynamic_cast<Block*>(other);
+    if (block) {
+        Rectangle blockBox = other->getHitbox();
+        Rectangle enemyBox = getHitbox();
+        
+        if (CheckCollisionRecs(enemyBox, blockBox)) return;
+
+        if (enemyBox.y < blockBox.y) {
+            if (enemyBox.x < blockBox.x - 6.0f || enemyBox.x + enemyBox.width > blockBox.x + blockBox.width + 6.0f) {
+                position.x += (enemyBox.x < blockBox.x) ? 2.0f : -2.0f;
+                velocity.x = -velocity.x;
+                updateAnimationType();
+            }
+        }
+    }
 }
 
 void Koopa::enterShell() {

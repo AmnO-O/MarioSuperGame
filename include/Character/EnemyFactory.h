@@ -12,16 +12,24 @@ public:
 };
 
 class GoombaFactory : public EnemyFactory {
+private:
+    bool isBrown;
 public:
+    GoombaFactory(bool isBrown) : isBrown(isBrown) {}
+
     std::unique_ptr<Enemy> createEnemy(Vector2 pos) override {
-        return std::make_unique<Goomba>(pos);
+        return std::make_unique<Goomba>(pos, isBrown);
     }
 };
 
 class KoopaFactory : public EnemyFactory {
+private:
+    int type;
 public:
+    KoopaFactory(int type) : type(type) {}
+
     std::unique_ptr<Enemy> createEnemy(Vector2 pos) override {
-        return std::make_unique<Koopa>(pos);
+        return std::make_unique<Koopa>(pos, type);
     }
 };
 

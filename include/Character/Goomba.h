@@ -2,10 +2,15 @@
 #include "Enemy.h"
 
 class Goomba : public Enemy, public IFallable {
+private:
+    bool isBrown = true;
 public:
-    Goomba(Vector2 pos) : Enemy(CharacterType::GOOMBA, pos) {
+    Goomba(Vector2 pos, bool isBrown) : Enemy(CharacterType::GOOMBA, pos) {
         velocity = {-20.0f, 50.0f};
-        readRectAnimation("assets/animation/goomba.txt", Images::textures["enemies1.png"]);
+        if (isBrown)
+            readRectAnimation("assets/animation/goomba.txt", Images::textures["enemies1.png"]);
+        else
+            readRectAnimation("assets/animation/goomba_blue.txt", Images::textures["enemies_sprites.png"]);
     }
 
     bool IsActive() const override {
