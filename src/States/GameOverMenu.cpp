@@ -8,10 +8,10 @@ GameOverMenu::GameOverMenu(int mapIndex, bool checkMario)
   : title("GAME OVER"),
     prevMapIndex(mapIndex),
     isprevMario(checkMario),
-    restart_button("RESTART", {641, 509, 330, 50}, WHITE, RED, [&]() {
+    restart_button("RESTART", {(GetScreenWidth() * 1.f - 330.0f) / 2.0f, 509, 330, 50}, WHITE, RED, [&]() {
         restart();
     }),
-    exit_button("EXIT", {707, 620, 330, 50}, WHITE, RED, [&]() {
+    exit_button("EXIT", {(GetScreenWidth() * 1.f - 330.0f) / 2.0f, 620, 330, 50}, WHITE, RED, [&]() {
         exitGame();
     })
 {

@@ -254,6 +254,19 @@ void Player::readRectAnimation(const std::string filename, Texture2D &sheet) {
 	fin.close();
 }
 
+void Player::switchPlayer(){
+	if(type == CharacterType::MARIO){
+		type = CharacterType::LUIGI;
+		readRectAnimation("assets/animation/luigi.txt", Images::textures["luigi.png"]);
+		movement->setStats(std::make_unique<LuigiStats>());
+	}else{
+		type = CharacterType::MARIO;
+		readRectAnimation("assets/animation/mario.txt", Images::textures["mario.png"]);
+		movement->setStats(std::make_unique<MarioStats>());
+	}
+}
+
+
 void Player::powerUp(PowerUpType t){
 	IShapeState *tmp = nullptr;
 	switch (t) {
@@ -468,6 +481,10 @@ void Player::update(float deltaTime){
 		throw GameException("Movement is null in Player::update");
 
 
+	if(IsKeyPressed(KEY_L)){
+		switchPlayer(); 
+	}
+
 	if(IsKeyPressed(KEY_Q)){
 		if (Sstate -> getShapeState() == "SMALL"){
 			Sstate = new MorphDecorator(Sstate);
@@ -614,8 +631,11 @@ void Player::loadData(std::istream &fin){
 
 	if(t == 1){
 		readRectAnimation("assets/animation/mario.txt", Images::textures["mario.png"]);
+		movement->setStats(std::make_unique<MarioStats>());
+
 	}else{
 		readRectAnimation("assets/animation/luigi.txt", Images::textures["luigi.png"]);
+		movement->setStats(std::make_unique<LuigiStats>());
 	}
 
 	std::string animationKey; fin >> animationKey; 
