@@ -25,7 +25,7 @@ SubMenu::SubMenu()
     int numPlayers = 2;
     int previewWidth = 180;
     int previewHeight = 240;
-    int spacing = 50;
+    int spacing = 100;
 
     int totalWidth = (numPlayers * previewWidth) + ((numPlayers - 1) * spacing);
 
@@ -58,6 +58,10 @@ SubMenu::~SubMenu()
     UnloadFont(titleFont);
     UnloadTexture(sub_background);
     UnloadTexture(return_button_state);
+
+    for(auto & texture : playerTextures) {
+        UnloadTexture(texture);
+    }
 }
 
 void SubMenu::update(float deltaTime) 
@@ -75,9 +79,9 @@ void SubMenu::update(float deltaTime)
     }
 
     if(IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)){
-        selectedPlayer = (selectedPlayer + 1) % playerPreviews.size();
+        selectedPlayer = (selectedPlayer + 1) % (int)playerPreviews.size();
     } else if(IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)){
-        selectedPlayer = (selectedPlayer - 1 + playerPreviews.size()) % playerPreviews.size();
+        selectedPlayer = (selectedPlayer - 1 + playerPreviews.size()) % (int)playerPreviews.size();
     }
 
     for (int i = 0; i < playerPreviews.size(); i++) {
@@ -129,7 +133,7 @@ void SubMenu::render()
 
         DrawRectangleRec(preview, {50, 50, 50, 220});
         if (i == curHovered || i == selectedPlayer) {
-            DrawRectangle(preview.x + 5, preview.y + 5, preview.width, preview.height, {0, 0, 0, 50});
+            DrawRectangle((int)preview.x + 5, (int)preview.y + 5, (int)preview.width, (int)preview.height, {0, 0, 0, 50});
         }
 
         DrawRectangleLinesEx(preview, 5, playerColor);
@@ -148,8 +152,8 @@ void SubMenu::render()
         }else{
             // Vẽ vòng tròn đại diện nhân vật
             float circleScale = (i == curHovered || i == selectedPlayer) ? 1.2f : 1.0f;
-            DrawCircle(preview.x + preview.width / 2,
-                    preview.y + 90, 40 * circleScale, playerColors[i]);
+            DrawCircle((int)preview.x + preview.width / 2,
+                    (int)preview.y + 90, 40 * circleScale, playerColors[i]);
         }
 
         Vector2 textSize = MeasureTextEx(titleFont, playerNames[i].c_str(), 24, 2);
