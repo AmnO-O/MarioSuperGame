@@ -5,7 +5,7 @@ class Piranha : public Enemy {
 private:
     bool isGoing;
     float timer = 0.0f;
-    int top;
+    float top;
     bool hidden;
 public:
     Piranha(Vector2 pos, bool ig) : Enemy(CharacterType::PIRANHA, pos) {

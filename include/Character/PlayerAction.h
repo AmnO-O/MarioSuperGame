@@ -11,7 +11,7 @@ class IAction {
 public:
     virtual void execute(Player *player, PlayerMovement* movement, float deltaTime) = 0;
     virtual bool isFinished(Player *player, PlayerMovement* movement) const = 0;
-    virtual void printData(std::ostream &fout) const = 0; 
+    virtual void printData(std::ostream &fout) const {}; 
 
     virtual ~IAction() = default;
 };

@@ -35,6 +35,8 @@ World::World(bool checkMario, int index, float time)
         currentMap = new Map("assets/maps/1-1/", Images::textures["mapobject.png"]);
     if (mapIndex == 2)
         currentMap = new Map("assets/maps/1-2/", Images::textures["mapobject.png"]);
+    if (mapIndex == 3)
+        currentMap = new Map("assets/maps/1-3/", Images::textures["mapobject.png"]);
 
     currentMap->SetUp(character);
     Timer::getInstance().setup(time_level);
