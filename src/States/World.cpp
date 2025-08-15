@@ -33,6 +33,8 @@ World::World(bool checkMario, int index, float time)
 
     if (mapIndex == 1)
         currentMap = new Map("assets/maps/1-1/", Images::textures["mapobject.png"]);
+    if (mapIndex == 2)
+        currentMap = new Map("assets/maps/1-2/", Images::textures["mapobject.png"]);
 
     currentMap->SetUp(character);
     Timer::getInstance().setup(time_level);
@@ -147,20 +149,21 @@ void World::saveGame(const std::string& filename) const
 
     fout << (isMario ? "MARIO" : "LUIGI") << '\n';
     fout << mapIndex << '\n';
-    fout << character->getPosition().x << ' ' << character->getPosition().y << '\n';
+    
+    currentMap->save(fout);
+    // fout << character->getPosition().x << ' ' << character->getPosition().y << '\n';
     fout << score_number << '\n';
     fout << number_of_coins << '\n';
     fout << Timer::getInstance().remaining << '\n';
     // Add more as needed
 
-    // player_data
-    character->printData(fout); 
-
-    
-
     fout.close();
 }
 
+
+void World::loadGame(std::istream &fin){
+    character->loadData(fin); 
+}
 
 void World::processInput()
 {

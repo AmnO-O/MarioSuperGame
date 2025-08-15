@@ -13,13 +13,12 @@ private:
     
 public:
     Koopa(Vector2 pos) : Enemy(CharacterType::KOOPA, pos) {
-        velocity.x = -normalSpeed;
+        velocity = {-normalSpeed, 50.0f};
         readRectAnimation("assets/animation/koopa.txt", Images::textures["enemies1.png"]);
     }
 
     void update(float deltaTime) override;
     void updateAnimationType() override;
-    void setDead2() override;
     void adaptCollision(ICollidable* other) override;
     
     void enterShell();

@@ -16,10 +16,9 @@ Question::Question(Texture2D &tex, std::istream &is) : Block(tex), bounceAni(tex
     is >> BrokenRect.x >> BrokenRect.y >> BrokenRect.width >> BrokenRect.height;
     is >> pos.x >> pos.y;
 
-    Vector2 shape = ani.getCurrentShape();
     brokenAni.addRect(BrokenRect);
-    brokenAni.setBlockRec({pos.x, pos.y, shape.x, shape.y});
-    bounceAni.setBlockRec({pos.x, pos.y, shape.x, shape.y});
+    brokenAni.setBlockRec({pos.x, pos.y, BrokenRect.width, BrokenRect.height});
+    bounceAni.setBlockRec({pos.x, pos.y, BrokenRect.width, BrokenRect.height});
 
     std::string s;
     is >> num;
@@ -35,8 +34,11 @@ Question::Question(Texture2D &tex, std::istream &is) : Block(tex), bounceAni(tex
 }
 
 Rectangle Question::getHitbox() const {
-    Vector2 position = bounceAni.getPosition();
-    return { position.x, position.y, BrokenRect.width, BrokenRect.height };
+    Rectangle rec = bounceAni.getHitBox();
+    if (stat == BlockStat::Normal || stat == BlockStat::Bouncing)
+        return rec;
+    else
+        return { rec.x, rec.y, BrokenRect.width, BrokenRect.height };
 }
 
 void Question::Update(float delta, Player* player) {
@@ -155,8 +157,7 @@ void Question::Break(Player* player) {
     }
 
     if (creator) {
-        Vector2 shape = ani.getCurrentShape();
-        objects.push_back(creator->create({pos.x, pos.y, shape.x, shape.y}));
+        objects.push_back(creator->create({pos.x, pos.y, BrokenRect.width, BrokenRect.width}));
         ICollidable* item = dynamic_cast<ICollidable*>(objects[objects.size() - 1]);
         if (item)
             CollisionManager::getInstance().Register(item);
@@ -176,4 +177,13 @@ void Question::clearObj() {
         }),
     objects.end()
     );
+}
+
+void Question::save(std::ostream &os) {
+    bounceAni.save(os);
+    brokenAni.save(os);
+    os << (int)stat << "\n";
+    os << num << " " << objects.size() << "\n";
+    for (int i = 0; i < objects.size(); i++)
+        objects[i]->printData(os);
 }

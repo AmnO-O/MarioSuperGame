@@ -24,3 +24,7 @@ void Floor::Update(float delta, Player* player) {
     // Rectangle hitbox = getHitbox();
     // if ()
 }
+
+void Floor::save(std::ostream &os) {
+    
+}

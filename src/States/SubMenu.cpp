@@ -4,10 +4,10 @@
 #include "States/World.h"
 
 SubMenu::SubMenu()
-  : mario_button("MARIO GAME", {570, 400, 330, 60}, WHITE, RED, [&]() { 
+  : mario_button("MARIO GAME", {(GetScreenWidth() * 1.f - 350.0f) / 2.0f, 400, 350, 60}, WHITE, RED, [&]() { 
         StateManager::getInstance().pushState(std::make_unique<LevelMenu>(true));  
     }),
-    luigi_button("LUIGI GAME", {570, 533, 330, 60}, WHITE, RED, [&]() { 
+    luigi_button("LUIGI GAME", {(GetScreenWidth() * 1.f - 350.0f) / 2.0f, 533, 350, 60}, WHITE, RED, [&]() { 
         StateManager::getInstance().pushState(std::make_unique<LevelMenu>(false));
     }), 
     return_button("assets/images/turn_back_white.png", {25, 27, 100, 100}, [&]() {

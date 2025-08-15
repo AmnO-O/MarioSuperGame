@@ -52,9 +52,12 @@ public:
         if (recs.size() == 0) throw GameException("Appearance doesn't init recs!");
         int curframe = (int)std::floor(frameTime / delay);
         curframe %= recs.size();
-        return {blockRec.x + (blockRec.width - recs[curframe].width) / 2, blockRec.y - offset, recs[curframe].width, offset};
+        return {blockRec.x + (blockRec.width - recs[curframe].width) / 2, blockRec.y - offset, recs[curframe].width, recs[curframe].height};
     }
     bool ended() const { return frameTime == 0.0f; }
+    void save(std::ostream &os) {
+        os << offset << " " << frameTime << "\n";
+    }
 };
 
 class BounceAnimation : public AppearanceAnimation {

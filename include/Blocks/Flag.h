@@ -18,6 +18,7 @@ protected:
     
 public:
     Flag(Texture2D &tex, std::istream &is, float time);
+    void save(std::ostream &os) override;
     Rectangle getHitbox() const override;
     // Vector2 changeCam() override;
     // Vector2 changePlayerPos() override;

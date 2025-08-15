@@ -16,7 +16,7 @@ class PlayerMovement{
 private:
     Vector2 position; 
     Vector2 velocity; 
-    Vector2 shape; 
+    Vector2 shape;  
     bool facingRight; 
 	std::unique_ptr<CharacterStats> stats;
     LerpMover lerpMover; 
@@ -60,7 +60,7 @@ public:
     void lockKeyboardInput(){disableInput = true;}
     void unlockKeyboardInput(){disableInput = false;}
     bool isLockedKeyboardInput() const {return disableInput;}
-
+    
     bool isDoneLerpMoving() const {return lerpMover.isDone();}
 
     void setOnGround(); 
@@ -73,18 +73,13 @@ public:
 
     void setShape(const Rectangle &rect) {position.y = position.y + shape.y - rect.height; shape = {rect.width, rect.height};}
     void setShape(const Vector2 &shape_) {position.y = position.y + shape.y - shape_.y; shape = {shape_.x, shape_.y};}
+    void setStats(std::unique_ptr<CharacterStats> stats_){
+        stats = std::move(stats_);
+    }
 
     void adaptCollision(ICollidable* other, IMoveState *&Mstate, Player *player); 
     bool adapt_collision_with_enimies(ICollidable* other, Player *player); 
     void update(float deltaTime, IShapeState *&Sstate, IMoveState  *&Mstate);
-
-
-    void run_from_a_to_b(float startX, float endX){
-        if(lerpMover.isDone()){
-            lerpMover.start({startX, position.y}, {endX, position.y}, 2.0f); 
-        }
-    }
-
 
     Vector2 getPosition() const {return position;}
     Vector2 getVelocity() const {return velocity;}

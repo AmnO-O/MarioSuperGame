@@ -4,9 +4,11 @@
 #include "Blocks/Coin.h"
 #include "Blocks/Sewer.h"
 #include "Blocks/Question.h"
+#include "Blocks/Lift.h"
 #include "Character/Goomba.h"
 #include "Character/Koopa.h"
 #include "Character/Piranha.h"
+#include "Character/EnemyFactory.h"
 #include "Blocks/Flag.h"
 #include <fstream>
 
@@ -49,34 +51,44 @@ void Map::input(std::istream &is, Texture2D &objectTex) {
             for (int i = 0; i < n; i++)
                 blocks.push_back(new Flag(objectTex, is, 1.1f));
         }
+        else if (s == "LIFT") {
+            for (int i = 0; i < n; i++)
+                blocks.push_back(new Lift(objectTex, is));
+        }
     }
 
-    // int nEnemy;
-    // is >> nEnemy;
     while (is >> s) {
         int n; is >> n;
+        std::unique_ptr<EnemyFactory> factory;
+
         if (s == "GOOMBA") {
-            for (int i = 0; i < n; i++) {
-                int x, y;
-                is >> x >> y;
-                enemies.push_back(new Goomba({x * 1.0f, y * 1.0f}));
-            }
+            factory = std::make_unique<GoombaFactory>();
         }
         else if (s == "KOOPA") {
-            for (int i = 0; i < n; i++) {
-                int x, y;
-                is >> x >> y;
-                enemies.push_back(new Koopa({x * 1.0f, y * 1.0f}));
-            }
+            factory = std::make_unique<KoopaFactory>();
+        }
+        else if (s == "PARA_KOOPA") {
+            factory = std::make_unique<ParaKoopaFactory>();
+
         }
         else if (s == "PIRANHA") {
             for (int i = 0; i < n; i++) {
                 int x, y; bool ig;
                 is >> x >> y >> ig;
-                enemies.push_back(new Piranha({x * 1.0f, y * 1.0f}, ig));
+                enemies.push_back(
+                    (new PiranhaFactory(ig))->createEnemy({x * 1.0f, y * 1.0f}).release()
+                );
             }
+            continue;
+        }
+
+        for (int i = 0; i < n; i++) {
+            int x, y;
+            is >> x >> y;
+            enemies.push_back(factory->createEnemy({x * 1.0f, y * 1.0f}).release());
         }
     }
+
     std::sort(enemies.begin(), enemies.end(), [](auto a, auto b) { return a->getPosition().x < b->getPosition().x; });
 }
 
@@ -96,14 +108,14 @@ void Map::Update(float delta) {
     // if (pm.doneAction()) {
     //     pm.resetAll();
     // }
-    pm.update(delta);
     if (!camChange.empty()) {
         camChange.front().z -= delta;
         if (camChange.front().z <= 0) {
             cam->setTarget({camChange.front().x, camChange.front().y});
-            camChange.pop();
+            camChange.pop_front();
         }
     }
+    pm.update(delta);
 
     CollisionManager::getInstance().Register(character->shootFireball()); 
     CollisionManager::getInstance().CheckAllCollisions();
@@ -130,6 +142,8 @@ void Map::Update(float delta) {
     }
     
     cam -> update(character); 
+    if (character->getPosition().x >= des) 
+        ended = true;
 }
 
 void Map::spawnEnemy() {
@@ -175,10 +189,6 @@ void Map::Draw() const {
         if( character &&  character->hidePlayer()){
             character->render(); 
         }
-
-        for (int i = 0; i < blocks.size(); i++) {
-            blocks[i]->Draw(DrawStat::First);
-        }
                 
         for (int i = 0; i < curEnemies.size(); i++) {
             curEnemies[i]->render();
@@ -186,6 +196,10 @@ void Map::Draw() const {
             //                     enemies[i]->getHitbox().width, enemies[i]->getHitbox().height, GREEN);
         }
 
+        for (int i = 0; i < blocks.size(); i++) {
+            blocks[i]->Draw(DrawStat::First);
+        }
+        
         if( character &&  !character->hidePlayer()){
             character->render(); 
         }
@@ -226,7 +240,7 @@ void Map::SetUp(Player* player) {
 }
 
 bool Map::isEnd() {
-    return character->getPosition().x >= des;
+    return ended;
 }
 
 Flag* Map::getFlag() const
@@ -238,4 +252,27 @@ Flag* Map::getFlag() const
     }
     
     return nullptr;
+}
+
+void Map::save(std::ostream &os) {
+    character->printData(os); 
+
+    os << cam->getCamera().target.x << " " << cam->getCamera().target.y << "\n";
+    os << camChange.size() << "\n";
+    for (int i = 0; i < camChange.size(); i++)
+        os << camChange[i].x << " " << camChange[i].y << " " << camChange[i].z << "\n";
+    
+    // os << curEnemies.size() << "\n";
+    // for (int i = 0; i < curEnemies.size(); i++)
+    //     curEnemies[i]->save(os);
+    
+    // os << enemies.size() << "\n";
+    // for (int i = 0; i < enemies.size(); i++)
+    //     enemies[i]->save(os);
+
+    pm.printData(os);
+
+    os << blocks.size() << "\n";
+    for (int i = 0; i < blocks.size(); i++)
+        blocks[i]->save(os);
 }

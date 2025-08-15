@@ -16,6 +16,7 @@ public:
     void Draw(DrawStat ds) const override;
     void adaptCollision(ICollidable* other) override {}
     void Update(float delta, Player* player) override;
+    void save(std::ostream &os) override;
     ~Floor() override {}
 };
 

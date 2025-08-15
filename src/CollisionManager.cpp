@@ -60,13 +60,14 @@ void CollisionManager::CheckCharObj() {
     }
 
     if(isOnGround == false){
-        player->setGroundLevel(2.0f * GetScreenHeight());
+        player->setGroundLevel(INFINITY);
     }
 }
 
 void CollisionManager::CheckObjObj() {
     // Check object vs object
     for (int i = (int)collidables.size() - 1; i >= 0; i--) {
+        if (dynamic_cast<Block*>(collidables[i])) continue;
         ICollidable* mostOverlapObj = nullptr;
         float maxOverlap = 0.0f;
         IFallable* p = dynamic_cast<IFallable*>(collidables[i]);
@@ -94,7 +95,7 @@ void CollisionManager::CheckObjObj() {
         }
 
         if (p && !isOnGround) {
-            p->setGroundLevel(2.0f * GetScreenHeight());
+            p->setGroundLevel(INFINITY);
             // std::cout << "Enemy Fall\n";
         }
     }

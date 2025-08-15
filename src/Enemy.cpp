@@ -33,15 +33,17 @@ void Enemy::readRectAnimation(const std::string& filePath, Texture2D& sheet) {
 void Enemy::update(float deltaTime) {
     if (dead) return;
     if (state == State::DIE2) {
-        velocity = {0.0f, -75.0f};
+        velocity = {20.0f, -75.0f};
         delayDead += deltaTime;
         if (delayDead >= 0.2f) setDead2();
     }
 
-    if (position.y + activeAnimation->getCurrentShape().y < groundLevel)
-        velocity.y += 300 * deltaTime;
-    else
-        velocity.y = 0;
+    if (state != State::DIE2 && state != State::FLYING) {
+        if (position.y + activeAnimation->getCurrentShape().y < groundLevel)
+            velocity.y += 300 * deltaTime;
+        else velocity.y = 0;
+    }
+    
     position.x += velocity.x * deltaTime;
     position.y += velocity.y * deltaTime;
 
@@ -74,21 +76,64 @@ void Enemy::setDead() {
     dead = 1;
 }
 
-void Enemy::adaptCollision(ICollidable* other) {
+void Enemy::isHitBelow(ICollidable* block) {
+    if (state == State::DIE || state == State::DIE2) return;
+    state = State::DIE2;
+    PlaySound(SoundManager::getInstance().stompSound);
+    updateAnimationType();
+}
+
+void Enemy::enemyCollision(ICollidable* other) {
     Enemy* enemy = dynamic_cast<Enemy*>(other);
     if (enemy && enemy != this) {
         if (state == State::RUNNING) {
-            if (enemy->state == State::RUNNING)
-                velocity.x = -velocity.x;
-            else if ((enemy->state == State::SHELL && velocity.x != 0) || enemy->state == State::SPINNING) {
+            if ((enemy->state == State::SHELL && velocity.x != 0) || enemy->state == State::SPINNING) {
                 state = State::DIE2;
                 updateAnimationType();
             }
+
+            Rectangle overlap = GetCollisionRec(hitbox, enemy->hitbox);
+            if (overlap.width > 0 && overlap.height > 0) {
+                if (overlap.width < overlap.height) {
+                    float push = overlap.width / 2.0f;
+                    if (position.x < enemy->position.x) {
+                        position.x -= push;
+                        enemy->position.x += push;
+                    } else {
+                        position.x += push;
+                        enemy->position.x -= push;
+                    }
+                    velocity.x = -velocity.x;
+                    if (enemy->state == State::RUNNING) 
+                        enemy->velocity.x = -enemy->velocity.x;
+                }
+                hitbox.x = position.x;
+                hitbox.y = position.y;
+                enemy->hitbox.x = enemy->position.x;
+                enemy->hitbox.y = enemy->position.y;
+            }
+        }   
+    }
+}
+
+void Enemy::fireballCollision(ICollidable* other) {
+    Fireball* fireball = dynamic_cast<Fireball*>(other);
+    if (fireball) {
+        if (state != State::DIE && state != State::DIE2) {
+            if (fireball->isActive()) {
+                if (state == State::RUNNING) {
+                    state = State::DIE2;
+                    PlaySound(SoundManager::getInstance().stompSound);
+                    updateAnimationType();
+                } else if (state == State::SHELL) {
+                    fireball->adaptCollision(this);
+                }
+            }
         }
     }
+}
 
-    if (falling) return ;
-
+void Enemy::blockCollision(ICollidable* other) {
     Block* block = dynamic_cast<Block*>(other);
     if (block) {
         Rectangle blockBox = other->getHitbox();
@@ -116,10 +161,12 @@ void Enemy::adaptCollision(ICollidable* other) {
             case LEFT:
                 position.x -= overlapLeft;
                 velocity.x = -velocity.x;
+                updateAnimationType();
                 break;
             case RIGHT:
                 position.x += overlapRight;
                 velocity.x = -velocity.x;
+                updateAnimationType();
                 break;
             case TOP:
                 position.y -= overlapTop;
@@ -135,4 +182,11 @@ void Enemy::adaptCollision(ICollidable* other) {
 
         updateHitbox();
     }
+}
+
+void Enemy::adaptCollision(ICollidable* other) {    
+    if (falling) return ;
+    enemyCollision(other);
+    fireballCollision(other);
+    blockCollision(other);
 }

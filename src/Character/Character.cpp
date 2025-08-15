@@ -254,6 +254,19 @@ void Player::readRectAnimation(const std::string filename, Texture2D &sheet) {
 	fin.close();
 }
 
+void Player::switchPlayer(){
+	if(type == CharacterType::MARIO){
+		type = CharacterType::LUIGI;
+		readRectAnimation("assets/animation/luigi.txt", Images::textures["luigi.png"]);
+		movement->setStats(std::make_unique<LuigiStats>());
+	}else{
+		type = CharacterType::MARIO;
+		readRectAnimation("assets/animation/mario.txt", Images::textures["mario.png"]);
+		movement->setStats(std::make_unique<MarioStats>());
+	}
+}
+
+
 void Player::powerUp(PowerUpType t){
 	IShapeState *tmp = nullptr;
 	switch (t) {
@@ -335,6 +348,9 @@ void Player::triggerDeath(){
 	Mstate = new DeadState();
 	delete tmp;
 	tmp = nullptr;
+
+	delete Sstate; 
+	Sstate = new SmallState(); 
 
 	movement->setVelocityX(0.0f); 
 	movement->setVelocityY(-170.0f); 
@@ -465,6 +481,10 @@ void Player::update(float deltaTime){
 		throw GameException("Movement is null in Player::update");
 
 
+	if(IsKeyPressed(KEY_L)){
+		switchPlayer(); 
+	}
+
 	if(IsKeyPressed(KEY_Q)){
 		if (Sstate -> getShapeState() == "SMALL"){
 			Sstate = new MorphDecorator(Sstate);
@@ -579,27 +599,6 @@ Player::~Player() {
 	Images::unloadAllTextures();
 }
 
-// Action implement. 
-
-void Player::run_from_a_to_b(float startX, float endX){
-	if(movement->isDoneLerpMoving() == false){
-		return;
-	}
-
-	if(startX > endX){
-		std::cout << "Can't go from " << startX << " to " << endX << '\n';
-		return; 
-	}
-
-	if(dynamic_cast<RunState*>(Mstate) == nullptr){
-		delete Mstate; 
-		Mstate = new RunState(); 
-		updateShape();
-		updateHitbox();
-	}
-
-	movement->run_from_a_to_b(startX, endX);
-}
 
 inline IMoveState* createMoveState(const std::string& stateName) {
     if (stateName == "STANDING") {
@@ -632,8 +631,11 @@ void Player::loadData(std::istream &fin){
 
 	if(t == 1){
 		readRectAnimation("assets/animation/mario.txt", Images::textures["mario.png"]);
+		movement->setStats(std::make_unique<MarioStats>());
+
 	}else{
 		readRectAnimation("assets/animation/luigi.txt", Images::textures["luigi.png"]);
+		movement->setStats(std::make_unique<LuigiStats>());
 	}
 
 	std::string animationKey; fin >> animationKey; 

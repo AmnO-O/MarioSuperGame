@@ -33,6 +33,7 @@ private:
 public:
     Question(Texture2D &tex, std::istream &is);
 
+    void save(std::ostream &os) override;
     Rectangle getHitbox() const override;
     void Update(float delta, Player* player) override;
     void Draw(DrawStat ds) const override;

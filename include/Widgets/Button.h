@@ -23,6 +23,18 @@ class NormalButton
         NormalButton() = default;
         NormalButton(const std::string& text, Rectangle rect, 
         Color normalColor, Color hoverColor, std::function<void()> onClick);
+    
+        void setUp(const std::string& text, Rectangle rect, 
+        Color normalColor, Color hoverColor, std::function<void()> onClick){
+            this->text = text;
+            this->frame = rect;
+            this->normalColor = normalColor;
+            this->hoverColor = hoverColor;
+            this->onClick = onClick;
+
+            font = LoadFont(fontPath.c_str());
+        }
+
         ~NormalButton();
 
         void update(float deltaTime);
