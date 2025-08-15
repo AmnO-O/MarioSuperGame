@@ -9,6 +9,7 @@ private:
     bool hidden;
 public:
     Piranha(Vector2 pos, bool ig) : Enemy(CharacterType::PIRANHA, pos) {
+        ds = DrawStat::Zero;
         state = FLYING;
         isGoing = ig;
         velocity.y = (isGoing ? 10.0f : 0.0f);

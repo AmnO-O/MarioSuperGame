@@ -152,7 +152,7 @@ void SubMenu::render()
         }else{
             // Vẽ vòng tròn đại diện nhân vật
             float circleScale = (i == curHovered || i == selectedPlayer) ? 1.2f : 1.0f;
-            DrawCircle((int)preview.x + preview.width / 2,
+            DrawCircle((int)preview.x + (int)preview.width / 2,
                     (int)preview.y + 90, 40 * circleScale, playerColors[i]);
         }
 

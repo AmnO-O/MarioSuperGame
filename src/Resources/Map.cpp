@@ -185,19 +185,22 @@ void Map::Draw() const {
         for (int i = 0; i < blocks.size(); i++) {
             blocks[i]->Draw(DrawStat::Zero);
         }
+                        
+        for (int i = 0; i < curEnemies.size(); i++) {
+            curEnemies[i]->Draw(DrawStat::Zero);
+        }
     
         if( character &&  character->hidePlayer()){
             character->render(); 
         }
-                
-        for (int i = 0; i < curEnemies.size(); i++) {
-            curEnemies[i]->render();
-            // DrawRectangleLines(enemies[i]->getHitbox().x, enemies[i]->getHitbox().y, 
-            //                     enemies[i]->getHitbox().width, enemies[i]->getHitbox().height, GREEN);
-        }
+
 
         for (int i = 0; i < blocks.size(); i++) {
             blocks[i]->Draw(DrawStat::First);
+        }
+                        
+        for (int i = 0; i < curEnemies.size(); i++) {
+            curEnemies[i]->Draw(DrawStat::First);
         }
         
         if( character &&  !character->hidePlayer()){
