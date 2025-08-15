@@ -189,7 +189,7 @@ void World::update(float deltaTime)
         isEnd = true;
         StopMusicStream(SoundManager::getInstance().playMusic);
         Timer::getInstance().warning_played = true;
-        Timer::getInstance().finalUpdate(deltaTime * 15.0f);
+        Timer::getInstance().finalUpdate(deltaTime * 30.0f);
     }
   
     if (!SoundManager::getInstance().death_played && !checkClimbing() && !isEnd)
