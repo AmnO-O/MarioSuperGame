@@ -34,6 +34,10 @@ void ContainCoin::printData(std::ostream &os) const{
     coinAni->save(os);
 }
 
+void ContainCoin::loadData(std::istream &is) {
+    coinAni->load(is);
+}
+
 Coin::Coin(Texture2D &tex, std::istream &is) : Block(tex), ani(tex, false, 0.2f), coinAni(tex, {0, 0, 0, 0}, 1.0f, 40.0f, 0.1f) {
     int num = 0;
     is >> num;
@@ -143,4 +147,9 @@ bool Coin::IsActive() const {
 void Coin::save(std::ostream &os) {
     os << (int)stat << " " << (int)drawStat << "\n";
     coinAni.save(os);
+}
+
+void Coin::load(std::istream &is) {
+    is >> stat >> drawStat;
+    coinAni.load(is);
 }

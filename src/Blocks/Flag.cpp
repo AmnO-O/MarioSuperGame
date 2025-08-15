@@ -96,5 +96,10 @@ void Flag::adaptCollision(ICollidable* other) {
 
 void Flag::save(std::ostream &os) {
     os << frametime << " " << hasClimb << "\n";
-    // animationClimbFlag->save(os);
+    animationClimbFlag->printData(os);
+}
+
+void Flag::load(std::istream &is) {
+    is >> frametime >> hasClimb;
+    animationClimbFlag->loadData(is);
 }

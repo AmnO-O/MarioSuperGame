@@ -180,3 +180,6 @@ void HorizontalSewer::changePlayerPos(PlayerActionManager &pm) {
 void Sewer::save(std::ostream &os) {
     os << canDown << " " << hasDowned << "\n";
 }
+void Sewer::load(std::istream &is) {
+    is >> canDown >> hasDowned;
+}

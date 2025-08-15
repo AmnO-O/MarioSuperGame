@@ -26,5 +26,6 @@ void Floor::Update(float delta, Player* player) {
 }
 
 void Floor::save(std::ostream &os) {
-    
+}
+void Floor::load(std::istream &is) {
 }

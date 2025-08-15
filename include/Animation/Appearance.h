@@ -58,6 +58,9 @@ public:
     void save(std::ostream &os) {
         os << offset << " " << frameTime << "\n";
     }
+    void load(std::istream &is) {
+        is >> offset >> " " >> frameTime >> "\n";
+    }
 };
 
 class BounceAnimation : public AppearanceAnimation {

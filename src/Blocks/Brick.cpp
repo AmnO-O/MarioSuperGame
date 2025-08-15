@@ -158,3 +158,11 @@ void Brick::save(std::ostream &os) {
     os << (int)stat << " " << (int)drawStat << " " << frameTime << "\n";
     bounceAni.save(os);
 }
+
+void Brick::load(std::istream &is) {
+    for (int i = 0; i < 4; i++) 
+        is >> fragmentPos[i].x >> fragmentPos[i].y;
+    is >> fragmentVelocity.x >> fragmentVelocity.y;
+    is >> stat >> drawStat >> frameTime;
+    bounceAni.load(is);
+}

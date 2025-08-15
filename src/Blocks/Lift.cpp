@@ -111,3 +111,7 @@ void Lift::Update(float deltaTime, Player* player) {
 void Lift::save(std::ostream &os) {
     os << pos.x << " " << pos.y << " " << velocity.x << " " << velocity.y << "\n";
 }
+
+void Lift::load(std::istream &is) {
+    is >> pos.x >> pos.y >> velocity.x >> velocity.y;
+}
