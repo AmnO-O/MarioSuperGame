@@ -149,7 +149,7 @@ void World::saveGame(const std::string& filename) const
     if (!fout.is_open()) 
         std::throw_with_nested(std::runtime_error("Failed to open save file"));
 
-    fout << (isMario ? "MARIO" : "LUIGI") << '\n';
+    // fout << (isMario ? "MARIO" : "LUIGI") << '\n';
     fout << mapIndex << '\n';
     
     currentMap->save(fout);

@@ -185,26 +185,27 @@ void Map::Draw() const {
     BeginMode2D(camera); 
 
         DrawTexture(background, 0, 0, WHITE);
-
-        for (int i = 0; i < blocks.size(); i++) {
-            blocks[i]->Draw(DrawStat::Zero);
-        }
                         
         for (int i = 0; i < curEnemies.size(); i++) {
             curEnemies[i]->Draw(DrawStat::Zero);
         }
+
+        for (int i = 0; i < blocks.size(); i++) {
+            blocks[i]->Draw(DrawStat::Zero);
+        }
+
     
         if( character &&  character->hidePlayer()){
             character->render(); 
         }
 
-
-        for (int i = 0; i < blocks.size(); i++) {
-            blocks[i]->Draw(DrawStat::First);
-        }
                         
         for (int i = 0; i < curEnemies.size(); i++) {
             curEnemies[i]->Draw(DrawStat::First);
+        }
+
+        for (int i = 0; i < blocks.size(); i++) {
+            blocks[i]->Draw(DrawStat::First);
         }
         
         if( character &&  !character->hidePlayer()){

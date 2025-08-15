@@ -22,6 +22,8 @@ void PlayerActionManager::update(float deltaTime) {
 
     if (currentAction->isFinished(player, player->movement)) {
         actionQueue.pop_front();
+    }
+    if (doneAction()) {
         player->movement->unlockMovement(); 
         player->movement->unlockKeyboardInput();
     }
@@ -79,6 +81,7 @@ void JumpAction::execute(Player *player, PlayerMovement* movement, float deltaTi
         player->changeMstate(new JumpState()); 
         movement->setVelocityX(forceVelocity_x); 
         movement->setVelocityY(forceVelocity_y); 
+        movement->unlockMovement();
         movement->lockKeyboardInput(); 
     }
     
