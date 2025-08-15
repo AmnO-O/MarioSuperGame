@@ -20,6 +20,9 @@ Game::Game() {
     SoundManager::getInstance().loadAll();
 
     StateManager::getInstance().pushState(std::make_unique<MainMenu>());
+    Image icon = LoadImage("assets/images/GameIcon2.png");
+    SetWindowIcon(icon); 
+    UnloadImage(icon); 
 }
 
 Game::~Game() {

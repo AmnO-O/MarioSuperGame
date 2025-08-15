@@ -163,6 +163,10 @@ void World::saveGame(const std::string& filename) const
 }
 
 
+void World::loadGame(std::istream &fin){
+    character->loadData(fin); 
+}
+
 void World::processInput()
 {
     if (IsKeyPressed(KEY_P))

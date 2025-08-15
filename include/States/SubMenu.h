@@ -13,12 +13,18 @@ class SubMenu : public GameState
 
         NormalButton mario_button;
         NormalButton luigi_button;
+        NormalButton select_button; 
+
         ImageButton return_button;
         Texture2D return_button_state;
         Texture2D sub_background;
         std::string title; 
         Font titleFont; 
 
+        std::vector<Texture2D> playerTextures;
+        std::vector<Rectangle> playerPreviews;
+        int selectedPlayer = 0; 
+        int curHovered = 0; 
     public:
 
         SubMenu();

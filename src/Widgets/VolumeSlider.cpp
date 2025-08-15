@@ -21,7 +21,7 @@ void VolumeSlider::update()
         if (CheckCollisionPointRec(mousePos, slider)) 
         {
             volume = (mousePos.x - slider.x) / slider.width; 
-            volume = Clamp(volume, 0.0f, 2.0f); 
+            volume = Clamp(volume, 0.0f, 1.0f);
 
             if (isEffect)
                 SoundManager::getInstance().setEffectVolume(volume);
