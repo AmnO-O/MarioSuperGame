@@ -61,25 +61,29 @@ void Map::input(std::istream &is, Texture2D &objectTex) {
         int n; is >> n;
         std::unique_ptr<EnemyFactory> factory;
 
-        if (s == "GOOMBA") {
-            factory = std::make_unique<GoombaFactory>();
+        if (s == "GOOMBA_BROWN") {
+            factory = std::make_unique<GoombaFactory>(true);
         }
-        else if (s == "KOOPA") {
-            factory = std::make_unique<KoopaFactory>();
+        else if (s == "GOOMBA_BLUE") {
+            factory = std::make_unique<GoombaFactory>(false);
+        }
+        else if (s == "PIRANHA_A") {
+            factory = std::make_unique<PiranhaFactory>(true);
+        }
+        else if (s == "PIRANHA_S") {
+            factory = std::make_unique<PiranhaFactory>(false);
+        }
+        else if (s == "KOOPA_GREEN") {
+            factory = std::make_unique<KoopaFactory>(0);
+        }
+        else if (s == "KOOPA_BLUE") {
+            factory = std::make_unique<KoopaFactory>(1);
+        }
+        else if (s == "KOOPA_RED") {
+            factory = std::make_unique<KoopaFactory>(2);
         }
         else if (s == "PARA_KOOPA") {
             factory = std::make_unique<ParaKoopaFactory>();
-
-        }
-        else if (s == "PIRANHA") {
-            for (int i = 0; i < n; i++) {
-                int x, y; bool ig;
-                is >> x >> y >> ig;
-                enemies.push_back(
-                    (new PiranhaFactory(ig))->createEnemy({x * 1.0f, y * 1.0f}).release()
-                );
-            }
-            continue;
         }
 
         for (int i = 0; i < n; i++) {

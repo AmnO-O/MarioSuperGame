@@ -122,7 +122,13 @@ void Enemy::enemyCollision(ICollidable* other) {
                 enemy->hitbox.x = enemy->position.x;
                 enemy->hitbox.y = enemy->position.y;
             }
-        }   
+        }
+        
+        if (state == State::SHELL && enemy->state == State::SPINNING) {
+            state = State::DIE2;
+            PlaySound(SoundManager::getInstance().stompSound);
+            updateAnimationType();
+        }
     }
 }
 
