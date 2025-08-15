@@ -627,14 +627,14 @@ inline IMoveState* createMoveState(const std::string& stateName) {
 }
 
 void Player::loadData(std::istream &fin){
-	bool t; fin >> t; 
+	/*bool t; fin >> t; 
 	type = (t == 1 ? CharacterType::MARIO : CharacterType::LUIGI); 
 
 	if(t == 1){
 		readRectAnimation("assets/animation/mario.txt", Images::textures["mario.png"]);
 	}else{
 		readRectAnimation("assets/animation/luigi.txt", Images::textures["luigi.png"]);
-	}
+	}*/
 
 	std::string animationKey; fin >> animationKey; 
 
@@ -701,7 +701,7 @@ void Player::loadData(std::istream &fin){
 }
 
 void Player::printData(std::ostream &fout){
-	fout << ((type == CharacterType::MARIO) ? 1 : 0) << ' '; 
+	//fout << ((type == CharacterType::MARIO) ? 1 : 0) << ' '; 
 	fout << getShape_Action() << ' '; 
 
 	fout << movement->getPosition().x << ' ' << movement->getPosition().y << ' '; 
