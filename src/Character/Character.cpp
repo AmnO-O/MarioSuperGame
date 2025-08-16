@@ -705,7 +705,7 @@ void Player::loadData(std::istream &fin){
 		groundLevel = INFINITY;
 
 	movement->setVelocityX(velocity.x);
-	movement->setVelocityX(velocity.y);
+	movement->setVelocityY(velocity.y);
 
 	movement->setPosition(pos); 
 	setGroundLevel(groundLevel); 

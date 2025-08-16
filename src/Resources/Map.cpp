@@ -5,6 +5,7 @@
 #include "Blocks/Sewer.h"
 #include "Blocks/Question.h"
 #include "Blocks/Lift.h"
+#include "Blocks/Invisible.h"
 #include "Character/Goomba.h"
 #include "Character/Koopa.h"
 #include "Character/Piranha.h"
@@ -54,6 +55,10 @@ void Map::input(std::istream &is, Texture2D &objectTex) {
         else if (s == "LIFT") {
             for (int i = 0; i < n; i++)
                 blocks.push_back(new Lift(objectTex, is));
+        }
+        else if (s == "INVISIBLE") {
+            for (int i = 0; i < n; i++)
+                blocks.push_back(new Invisible(objectTex, is));
         }
     }
 

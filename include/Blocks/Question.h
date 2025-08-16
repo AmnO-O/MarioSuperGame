@@ -15,28 +15,29 @@ enum class QuestionType {
 };
 
 class Question : public Block {
-private:
-    BounceAnimation bounceAni;
-    BounceAnimation brokenAni;
-    AnimationManager ani;
-
+protected:
     Rectangle BrokenRect;
     BlockStat stat = BlockStat::Normal;
+    void Break(Player* player); 
+private:
+    BounceAnimation brokenAni;
+    BounceAnimation bounceAni;
+    AnimationManager ani;
+
     QuestionType type;
     Creator* creator = nullptr;
     std::vector<GameObject*> objects = {};
     int num;
 
     void clearObj();
-    void Break(Player* player); 
 
 public:
     Question(Texture2D &tex, std::istream &is);
 
     void save(std::ostream &os) override;
     void load(std::istream &is) override;
-    Rectangle getHitbox() const override;
-    void Update(float delta, Player* player) override;
+    virtual Rectangle getHitbox() const ;
+    virtual void Update(float delta, Player* player) ;
     void Draw(DrawStat ds) const override;
     void adaptCollision(ICollidable* other) override;
 

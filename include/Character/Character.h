@@ -36,7 +36,7 @@ public:
     // Getters
     Rectangle getHitbox() const {return hitbox; }
     Vector2 getPosition() const {return position;}
-    Vector2 getVelocity() const {return velocity;}
+    virtual Vector2 getVelocity() const {return velocity;}
 
     // Setters
     virtual void setPosition(const Vector2 &pos) {this->position = pos; updateHitbox();}
@@ -169,6 +169,7 @@ public:
     Vector2 getPosition() const {return movement->getPosition(); }
     Rectangle getHitbox() const override {return hitbox; }
     Vector2 getShape() const{return Vector2({hitbox.width, hitbox.height});}
+    Vector2 getVelocity() const override {return movement->getVelocity();}
 
     bool isBig() const { return Sstate->canBreakBrick();}
     bool isInvincible() const {return Sstate->isInvincible();}
