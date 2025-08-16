@@ -1,5 +1,6 @@
 #include "Blocks/Brick.h"
 #include "Character/Character.h"
+#include "Resources/StatsManager.h"
 
 Brick::Brick(Texture2D &tex, std::istream &is) : Block(tex), bounceAni(tex, {0, 0, 0, 0}, 0.25f, 6.0f, 1.0f) {
     is >> srcRect.x >> srcRect.y >> srcRect.width >> srcRect.height;
@@ -140,6 +141,7 @@ void Brick::Break() {
     frameTime = 0.0f;
 
     PlaySound(SoundManager::getInstance().brickSound);
+    StatsManager::getInstance().addScore(50);
 }
 
 void Brick::Bounce() {    
