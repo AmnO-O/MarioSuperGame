@@ -5,9 +5,6 @@
 #include "Blocks/Sewer.h"
 #include "Blocks/Question.h"
 #include "Blocks/Lift.h"
-#include "Character/Goomba.h"
-#include "Character/Koopa.h"
-#include "Character/Piranha.h"
 #include "Character/EnemyFactory.h"
 #include "Blocks/Flag.h"
 #include <fstream>
@@ -85,6 +82,15 @@ void Map::input(std::istream &is, Texture2D &objectTex) {
         else if (s == "PARA_KOOPA") {
             factory = std::make_unique<ParaKoopaFactory>();
         }
+        else if (s == "BOWSER") {
+            factory = std::make_unique<BowserFactory>();
+        }
+        else if (s == "BLAZE") {
+            factory = std::make_unique<BlazeFactory>();
+        }
+        else {
+            throw ResourceException("Unknown enemy type: " + s);
+        }
 
         for (int i = 0; i < n; i++) {
             int x, y;
@@ -142,7 +148,22 @@ void Map::Update(float delta) {
     if(character)
         character->update(delta); 
 
+    for (int i = (int)curEnemies.size() - 1; i >= 0; i --) 
+        if (curEnemies[i]->getType() == CharacterType::BOWSER) {
+            Bowser* b = dynamic_cast<Bowser*>(curEnemies[i]);
+            
+            if (!b) continue;
+
+            auto factory = std::make_unique<BlazeFactory>();
+            while (!b->isEmpty()) {
+                Vector2 pos = b->getMinion();
+                curEnemies.push_back(factory->createEnemy(pos).release());
+                CollisionManager::getInstance().Register(curEnemies.back());
+            }
+        }
+
     spawnEnemy();
+
     for (int i = (int)curEnemies.size() - 1; i >= 0; i--) {
         curEnemies[i]->update(delta);
     }
