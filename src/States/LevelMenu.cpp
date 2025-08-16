@@ -24,7 +24,10 @@ LevelMenu::LevelMenu(bool checkMario)
         StateManager::getInstance().pushState(std::make_unique<World>(isMario, 3, 300.0f));
         StatsManager::getInstance().reset();
     }),
-    world1_4("assets/images/World1-4.png", {977, 635, 532, 208}, []() {})
+    world1_4("assets/images/World1-4.png", {977, 635, 532, 208}, [&]() {
+        StateManager::getInstance().pushState(std::make_unique<World>(isMario, 4, 300.0f));
+        StatsManager::getInstance().reset();
+    })
 {
     level_background = LoadTexture("assets/images/blue_background.png");
     return_button_state = LoadTexture("assets/images/turn_back_red.png");
