@@ -6,13 +6,15 @@
 #include "../Resources/StateManager.h"
 #include <memory>
 #include <string>
-
+#include "AboutMenu.h"
 class MainMenu : public GameState
 {
     private:
 
         NormalButton new_game_button;
         NormalButton load_game_button;
+        NormalButton about_button; 
+
         ImageButton settings_button;
         Texture2D settings_button_state;
         Texture2D background;

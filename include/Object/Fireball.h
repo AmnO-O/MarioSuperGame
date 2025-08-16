@@ -27,7 +27,6 @@ public:
     std::string getTypeID() const override { return "FIREBALL"; }
 
     void printData(std::ostream &fout) const override {
-        fout << getTypeID() << " ";
         GameObject::printData(fout);
     }
 
