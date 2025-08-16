@@ -9,8 +9,6 @@
 #include "Observer/Observer.h"
 #include "Character/Character.h"
 #include "Character/Enemy.h"
-#include "Character/Goomba.h"
-#include "Character/Koopa.h"
 #include "MyCamera2D.h"
 #include <queue>
 #include "Blocks/Flag.h"

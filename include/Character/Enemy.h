@@ -7,6 +7,7 @@ enum State {
     SHELL,
     SPINNING,
     FLYING,
+    ATTACKING,
     DIE,
     DIE2
 };
@@ -28,6 +29,7 @@ public:
     void update(float deltaTime) override;
     void render() override;
 
+    CharacterType getType() const {return type;}
     Rectangle getHitbox() const override { return hitbox; }
     Vector2 getPosition() const { return position; }
 
