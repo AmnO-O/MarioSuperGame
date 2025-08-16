@@ -5,7 +5,7 @@ class Koopa : public Enemy, public IFallable {
 protected:
     int type;
     float shellTimer = 0.0f;
-    float shellDuration = 3.0f;
+    float shellDuration = 6.0f;
     bool isSpinning = false;
     float spinSpeed = 150.0f;
     float normalSpeed = 20.0f;
@@ -38,8 +38,6 @@ public:
     void exitShell();
     void startSpinning();
     void stopSpinning();
-    void pushShell(float direction);
     bool isInShell() const { return state == State::SHELL; }
     bool isSpinningState() const { return state == State::SPINNING; }
-    bool canBePushedState() const { return canBePushed && state == State::SHELL; }
 };
