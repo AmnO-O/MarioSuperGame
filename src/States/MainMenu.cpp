@@ -20,6 +20,8 @@ MainMenu::MainMenu()
         );
         if (filename)
             loadGame(std::string(filename));
+    }), about_button("ABOUT US", {(GetScreenWidth() * 1.f - 330.0f) / 2.0f, 636, 330, 60}, WHITE, RED, [&]() {
+        StateManager::getInstance().pushState(std::make_unique<AboutMenu>());
     }),
     settings_button("assets/images/setting_white.png", {25, 27, 100, 100}, [&]() {
         StateManager::getInstance().pushState(std::make_unique<SettingsMenu>());
@@ -83,7 +85,9 @@ void MainMenu::render()
 
     new_game_button.render(); 
     load_game_button.render(); 
+    about_button.render(); 
     settings_button.render();
+
 
     bool isHovered = CheckCollisionPointRec(GetMousePosition(), settings_button.getBounds());
     if (isHovered)

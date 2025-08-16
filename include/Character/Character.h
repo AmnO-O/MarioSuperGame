@@ -11,6 +11,8 @@
 #include "PlayerAction.h"
 #include "Resources/SoundManager.h"
 #include <iostream>
+
+
 class Character{
 protected:
     Vector2 position; 
@@ -111,7 +113,9 @@ private:
     IShapeState *Sstate; 
     IMoveState *Mstate; 
 	std::map<std::string, std::unique_ptr<AnimationManager>> animations; 
+    
     FireballManager fireballs;
+
 	AnimationManager *activeAnimation;
 
     BlinkCounter blink; 

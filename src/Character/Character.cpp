@@ -8,7 +8,6 @@
 #include <cassert>
 #include <algorithm>
 
-
 void Player::setUp(){
 	Sstate = new SmallState();
 	Mstate = new StandState();
@@ -482,7 +481,6 @@ void Player::update(float deltaTime){
 	if(movement == nullptr)
 		throw GameException("Movement is null in Player::update");
 
-	updateShape();
 
 	if(IsKeyPressed(KEY_L)){
 		switchPlayer(); 
@@ -575,8 +573,6 @@ void Player::update(float deltaTime){
 	if(activeAnimation)
 		activeAnimation->update(deltaTime);
 
-	
-
 	// if(Mstate->isJumping()){
 	// 	movement->setFootHeightFactor(0.2f);
 	// }else movement->setFootHeightFactor(0.1f);
@@ -587,10 +583,6 @@ void Player::update(float deltaTime){
 }
 
 void Player::render(){
-	
-	if(activeAnimation == nullptr)
-		throw GameException("Active animation is null in Player::render ");
-
 	if(activeAnimation){
 		if(showPlayer){
 			activeAnimation->render(movement->getPosition(), movement->isFacingRight() == false);
@@ -635,18 +627,6 @@ inline IMoveState* createMoveState(const std::string& stateName) {
 }
 
 void Player::loadData(std::istream &fin){
-	bool t; fin >> t; 
-	type = (t == 1 ? CharacterType::MARIO : CharacterType::LUIGI); 
-
-	if(t == 1){
-		readRectAnimation("assets/animation/mario.txt", Images::textures["mario.png"]);
-		movement->setStats(std::make_unique<MarioStats>());
-
-	}else{
-		readRectAnimation("assets/animation/luigi.txt", Images::textures["luigi.png"]);
-		movement->setStats(std::make_unique<LuigiStats>());
-	}
-
 	std::string animationKey; fin >> animationKey; 
 
 	std::string s1 = "", s2 = "", s3 = ""; 
@@ -663,7 +643,11 @@ void Player::loadData(std::istream &fin){
 	if(lst == -1)
 		throw GameException("Read data in player is wrong !! Maybe wrong orders"); 
 	
-	if ((int)animationKey.size() >= 15 && animationKey.substr(0, 15) == "INVINCIBLE_FIRE"){
+	if ((int)animationKey.size() >= 15 && 
+	(animationKey.substr(0, 15) == "INVINCIBLE_FIRE"
+	|| animationKey.substr(0, 16) == "INVINCIBLE_SMALL"
+	|| animationKey.substr(0, 14) == "INVINCIBLE_BIG" 
+	)){
 		s3 = s1; s1 = ""; 
 
 		for(int i = lst + 1; i < animationKey.size(); i ++){
@@ -674,6 +658,7 @@ void Player::loadData(std::istream &fin){
 			s1 += animationKey[i]; 
 		}
 	}
+
 		
 	if(s1 == "SMALL"){
 		changeSstate(new SmallState()); 
@@ -703,24 +688,24 @@ void Player::loadData(std::istream &fin){
 
 	float groundLevel; 
 	fin >> groundLevel; 
-	if (groundLevel == INT_MAX)
-		groundLevel = INFINITY;
 
 	movement->setVelocityX(velocity.x);
 	movement->setVelocityY(velocity.y);
 
 	movement->setPosition(pos); 
 	setGroundLevel(groundLevel); 
+
+
+	fireballs.loadData(fin);
 }
 
 void Player::printData(std::ostream &fout){
-	fout << ((type == CharacterType::MARIO) ? 1 : 0) << ' '; 
+	//fout << ((type == CharacterType::MARIO) ? 1 : 0) << ' '; 
 	fout << getShape_Action() << ' '; 
 
 	fout << movement->getPosition().x << ' ' << movement->getPosition().y << ' '; 
 	fout << movement->getVelocity().x << ' ' << movement->getVelocity().y << ' '; 
-	if (groundLevel == INFINITY)
-		fout << INT_MAX << '\n';
-	else
-		fout << groundLevel << '\n'; 
+	fout << groundLevel << '\n'; 
+
+	fireballs.printData(fout);
 }
