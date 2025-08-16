@@ -37,39 +37,51 @@ void Lift::Draw(DrawStat ds) const {
 
 void Lift::Update(float deltaTime, Player* player) { 
     Rectangle hitbox = getHitbox();
-    if (canBack) {
-        if (pos.x > des.x || pos.x < start.x)
-            velocity.x *= -1;
-        if (pos.y > des.y || pos.y < start.y)
-            velocity.y *= -1; 
-    } 
     Vector2 distance = {velocity.x * deltaTime, velocity.y * deltaTime};   
     
     pos.x += distance.x;
     pos.y += distance.y;
 
 
-    //// if remove the !canBack, the lift move in horizontal will be more soomth
-    if(!canBack){
-        if (pos.x > des.x) {
+    //// if remove the !canBack, the lift move in horizontal will be more soomt
+    if (pos.x > des.x) {    
+        if(!canBack)
             pos.x = start.x;
-            distance.x = 0;
+        else {
+            velocity.x *= -1;
+            pos.x = des.x;
         }
+        distance.x = 0;
+    }
 
-        if (pos.x < start.x) {
-            pos.x  = des.x;
-            distance.x = 0;
+    if (pos.x < start.x) {        
+        if(!canBack)
+            pos.x = des.x;
+        else {
+            velocity.x *= -1;
+            pos.x = start.x;
         }
+        distance.x = 0;
+    }
 
-        if (pos.y > des.y) {
+    if (pos.y > des.y) {
+        if(!canBack)
             pos.y = start.y;
-            distance.y = 0;
+        else {
+            velocity.y *= -1;
+            pos.y = des.y;
         }
+        distance.y = 0;
+    }
 
-        if (pos.y < start.y) {
-            pos.y  = des.y;
-            distance.y = 0;
+    if (pos.y < start.y) {
+        if(!canBack)
+            pos.y = des.y;
+        else {
+            velocity.y *= -1;
+            pos.y = start.y;
         }
+        distance.y = 0;
     }
 
     // std::cout << distance.x << ' ' << distance.y << '\n'; 
@@ -98,4 +110,8 @@ void Lift::Update(float deltaTime, Player* player) {
 
 void Lift::save(std::ostream &os) {
     os << pos.x << " " << pos.y << " " << velocity.x << " " << velocity.y << "\n";
+}
+
+void Lift::load(std::istream &is) {
+    is >> pos.x >> pos.y >> velocity.x >> velocity.y;
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "Character.h"
+#include "Blocks/Block.h"
 #include "Observer/ICollidable.h"
 
 enum State {
@@ -7,12 +8,14 @@ enum State {
     SHELL,
     SPINNING,
     FLYING,
+    ATTACKING,
     DIE,
     DIE2
 };
 
-class Enemy : public Character, public ICollidable, public IFallable {
+class Enemy : public Character, public ICollidable {
 protected:
+    DrawStat ds = DrawStat::First;
     CharacterType type;
     bool falling = false;
     float delayDead = 0.0f; 
@@ -27,7 +30,9 @@ public:
     virtual void updateAnimationType() = 0;
     void update(float deltaTime) override;
     void render() override;
+    void Draw(DrawStat stat);
 
+    CharacterType getType() const {return type;}
     Rectangle getHitbox() const override { return hitbox; }
     Vector2 getPosition() const { return position; }
 
@@ -39,7 +44,7 @@ public:
     virtual void setDead2() {falling = true; velocity = {0.0f, 150.0f};};
     bool isDead() const { return dead; }
     bool IsActive() const override { return !dead; }
-    bool isSafe() const { return state == State::SHELL || state == State::DIE || state == State::DIE2; }
+    virtual bool isSafe() const { return state == State::SHELL || state == State::DIE || state == State::DIE2; }
     void isHitBelow(ICollidable* block) override;
 
     void enemyCollision(ICollidable* other);

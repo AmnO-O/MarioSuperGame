@@ -17,6 +17,7 @@ public:
     void adaptCollision(ICollidable* other) override {}
     void Update(float delta, Player* player) override;
     void save(std::ostream &os) override;
+    void load(std::istream &is) override;
     ~Floor() override {}
 };
 

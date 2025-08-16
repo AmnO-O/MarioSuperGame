@@ -20,6 +20,7 @@ protected:
 public:
     Sewer(Texture2D &tex, std::istream &is);
     void save(std::ostream &os) override;
+    void load(std::istream &is) override;
     Rectangle getHitbox() const override;
     void changeCam(std::deque<Vector3> &camChange) override;
     void changePlayerPos(PlayerActionManager &pm) override;

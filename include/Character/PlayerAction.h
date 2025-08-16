@@ -127,7 +127,7 @@ public:
     bool isEmpty() const { return actionQueue.empty(); }
 
     void printData(std::ostream &fout) const{
-        fout << "PlayerActionManager " << actionQueue.size() << '\n'; 
+        fout << actionQueue.size() << '\n'; 
         for(const auto & action : actionQueue){
             action->printData(fout); 
         }

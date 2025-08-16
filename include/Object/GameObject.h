@@ -36,14 +36,26 @@ public:
 
     virtual void printData(std::ostream &fout) const {
         fout << position.x << " " << position.y << " "
+             << hitbox.width << " " << hitbox.height << " "
              << velocity.x << " " << velocity.y << " "
-             << groundLevel << " " << active << " ";
+             << active << " ";
+             
+        if (groundLevel == INFINITY)
+            fout << INT_MAX << '\n';
+        else
+            fout << groundLevel << '\n'; 
     }
 
     virtual void loadData(std::istream &fin) {
         fin >> position.x >> position.y
+            >> hitbox.width >> hitbox.height
             >> velocity.x >> velocity.y
-            >> groundLevel >> active;
+            >> active;
+        
+        fin >> groundLevel; 
+        if (groundLevel == INT_MAX)
+            groundLevel = INFINITY;
+
         hitbox.x = position.x;
         hitbox.y = position.y;
     }

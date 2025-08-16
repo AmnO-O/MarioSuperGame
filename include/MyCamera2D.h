@@ -16,5 +16,6 @@ public:
 	void setTarget(float x, float y);
 	void setZoom(float zoomLevel_); 
 	void setMapSize(Vector2 mapSize);
+	void save(std::ostream &os);
 }; 
 

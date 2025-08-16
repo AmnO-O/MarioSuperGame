@@ -60,6 +60,11 @@ void Enemy::render() {
         activeAnimation->render(position, false);
 }
 
+void Enemy::Draw(DrawStat stat) {
+    if (ds == stat)
+        render();
+}
+
 void Enemy::setPosition(const Vector2& pos) {
     position = pos;
     updateHitbox();
@@ -87,10 +92,12 @@ void Enemy::enemyCollision(ICollidable* other) {
     Enemy* enemy = dynamic_cast<Enemy*>(other);
     if (enemy && enemy != this) {
         if (state == State::RUNNING) {
-            if ((enemy->state == State::SHELL && velocity.x != 0) || enemy->state == State::SPINNING) {
+            if (enemy->state == State::SPINNING) {
                 state = State::DIE2;
                 updateAnimationType();
             }
+
+            if (enemy->state == State::DIE || enemy->state == State::DIE2) return;
 
             Rectangle overlap = GetCollisionRec(hitbox, enemy->hitbox);
             if (overlap.width > 0 && overlap.height > 0) {
@@ -104,15 +111,24 @@ void Enemy::enemyCollision(ICollidable* other) {
                         enemy->position.x -= push;
                     }
                     velocity.x = -velocity.x;
-                    if (enemy->state == State::RUNNING) 
+                    updateAnimationType();
+                    if (enemy->state == State::RUNNING) {
                         enemy->velocity.x = -enemy->velocity.x;
+                        enemy->updateAnimationType();
+                    }
                 }
                 hitbox.x = position.x;
                 hitbox.y = position.y;
                 enemy->hitbox.x = enemy->position.x;
                 enemy->hitbox.y = enemy->position.y;
             }
-        }   
+        }
+        
+        if (state == State::SHELL && enemy->state == State::SPINNING) {
+            state = State::DIE2;
+            PlaySound(SoundManager::getInstance().stompSound);
+            updateAnimationType();
+        }
     }
 }
 
@@ -121,7 +137,7 @@ void Enemy::fireballCollision(ICollidable* other) {
     if (fireball) {
         if (state != State::DIE && state != State::DIE2) {
             if (fireball->isActive()) {
-                if (state == State::RUNNING) {
+                if (state == State::RUNNING || state == State::FLYING) {
                     state = State::DIE2;
                     PlaySound(SoundManager::getInstance().stompSound);
                     updateAnimationType();

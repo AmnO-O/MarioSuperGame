@@ -8,7 +8,7 @@ MainMenu::MainMenu()
   : new_game_button("NEW GAME", {(GetScreenWidth() * 1.f - 330.0f) / 2.0f, 450, 330, 60}, WHITE, RED, [&]() {
         StateManager::getInstance().pushState(std::make_unique<SubMenu>());
     }),
-    load_game_button("LOAD GAME", {(GetScreenWidth() *1.f - 330.0f) / 2.0f, 533, 330, 60}, WHITE, RED, [&]() {
+    load_game_button("LOAD GAME", {(GetScreenWidth() *1.f - 330.0f) / 2.0f, 543, 330, 60}, WHITE, RED, [&]() {
         const char* filterPatterns[] = { "*.txt" };
         const char* filename = tinyfd_openFileDialog(
             "Load Game", 

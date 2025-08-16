@@ -12,6 +12,11 @@ MyCamera2D::MyCamera2D(float width, float height){
 	camera.zoom = zoomLevel;
 }
 
+void MyCamera2D::save(std::ostream &os) {
+    float halfW = GetScreenWidth() * 0.5f / camera.zoom;
+    os << camera.target.x - halfW << " " << camera.target.y - mapSize.y / 2 << "\n";
+}
+
 void MyCamera2D::setTarget(Vector2 newTarget) {
     float halfW = GetScreenWidth() * 0.5f / camera.zoom;
 	camera.target = {newTarget.x + halfW, newTarget.y + mapSize.y / 2};

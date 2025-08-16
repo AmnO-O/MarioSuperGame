@@ -5,9 +5,6 @@
 #include "Blocks/Sewer.h"
 #include "Blocks/Question.h"
 #include "Blocks/Lift.h"
-#include "Character/Goomba.h"
-#include "Character/Koopa.h"
-#include "Character/Piranha.h"
 #include "Character/EnemyFactory.h"
 #include "Blocks/Flag.h"
 #include <fstream>
@@ -61,25 +58,38 @@ void Map::input(std::istream &is, Texture2D &objectTex) {
         int n; is >> n;
         std::unique_ptr<EnemyFactory> factory;
 
-        if (s == "GOOMBA") {
-            factory = std::make_unique<GoombaFactory>();
+        if (s == "GOOMBA_BROWN") {
+            factory = std::make_unique<GoombaFactory>(true);
         }
-        else if (s == "KOOPA") {
-            factory = std::make_unique<KoopaFactory>();
+        else if (s == "GOOMBA_BLUE") {
+            factory = std::make_unique<GoombaFactory>(false);
+        }
+        else if (s == "PIRANHA_A") {
+            factory = std::make_unique<PiranhaFactory>(true);
+        }
+        else if (s == "PIRANHA_S") {
+            factory = std::make_unique<PiranhaFactory>(false);
+        }
+        else if (s == "KOOPA_GREEN") {
+            factory = std::make_unique<KoopaFactory>(0);
+        }
+        else if (s == "KOOPA_BLUE") {
+            factory = std::make_unique<KoopaFactory>(1);
+        }
+        else if (s == "KOOPA_RED") {
+            factory = std::make_unique<KoopaFactory>(2);
         }
         else if (s == "PARA_KOOPA") {
             factory = std::make_unique<ParaKoopaFactory>();
-
         }
-        else if (s == "PIRANHA") {
-            for (int i = 0; i < n; i++) {
-                int x, y; bool ig;
-                is >> x >> y >> ig;
-                enemies.push_back(
-                    (new PiranhaFactory(ig))->createEnemy({x * 1.0f, y * 1.0f}).release()
-                );
-            }
-            continue;
+        else if (s == "BOWSER") {
+            factory = std::make_unique<BowserFactory>();
+        }
+        else if (s == "BLAZE") {
+            factory = std::make_unique<BlazeFactory>();
+        }
+        else {
+            throw ResourceException("Unknown enemy type: " + s);
         }
 
         for (int i = 0; i < n; i++) {
@@ -115,10 +125,12 @@ void Map::Update(float delta) {
             camChange.pop_front();
         }
     }
+
     pm.update(delta);
 
     CollisionManager::getInstance().Register(character->shootFireball()); 
     CollisionManager::getInstance().CheckAllCollisions();
+
     for (int i = 0; i < blocks.size(); i++) {
         blocks[i]->Update(delta, character);
         // Vector2 tmpCam = blocks[i]->changeCam();
@@ -136,7 +148,22 @@ void Map::Update(float delta) {
     if(character)
         character->update(delta); 
 
+    for (int i = (int)curEnemies.size() - 1; i >= 0; i --) 
+        if (curEnemies[i]->getType() == CharacterType::BOWSER) {
+            Bowser* b = dynamic_cast<Bowser*>(curEnemies[i]);
+            
+            if (!b) continue;
+
+            auto factory = std::make_unique<BlazeFactory>();
+            while (!b->isEmpty()) {
+                Vector2 pos = b->getMinion();
+                curEnemies.push_back(factory->createEnemy(pos).release());
+                CollisionManager::getInstance().Register(curEnemies.back());
+            }
+        }
+
     spawnEnemy();
+
     for (int i = (int)curEnemies.size() - 1; i >= 0; i--) {
         curEnemies[i]->update(delta);
     }
@@ -181,19 +208,23 @@ void Map::Draw() const {
     BeginMode2D(camera); 
 
         DrawTexture(background, 0, 0, WHITE);
+                        
+        for (int i = 0; i < curEnemies.size(); i++) {
+            curEnemies[i]->Draw(DrawStat::Zero);
+        }
 
         for (int i = 0; i < blocks.size(); i++) {
             blocks[i]->Draw(DrawStat::Zero);
         }
+
     
         if( character &&  character->hidePlayer()){
             character->render(); 
         }
-                
+
+                        
         for (int i = 0; i < curEnemies.size(); i++) {
-            curEnemies[i]->render();
-            // DrawRectangleLines(enemies[i]->getHitbox().x, enemies[i]->getHitbox().y, 
-            //                     enemies[i]->getHitbox().width, enemies[i]->getHitbox().height, GREEN);
+            curEnemies[i]->Draw(DrawStat::First);
         }
 
         for (int i = 0; i < blocks.size(); i++) {
@@ -257,7 +288,7 @@ Flag* Map::getFlag() const
 void Map::save(std::ostream &os) {
     character->printData(os); 
 
-    os << cam->getCamera().target.x << " " << cam->getCamera().target.y << "\n";
+    cam->save(os);
     os << camChange.size() << "\n";
     for (int i = 0; i < camChange.size(); i++)
         os << camChange[i].x << " " << camChange[i].y << " " << camChange[i].z << "\n";
@@ -272,7 +303,36 @@ void Map::save(std::ostream &os) {
 
     pm.printData(os);
 
-    os << blocks.size() << "\n";
+    // os << blocks.size() << "\n";
     for (int i = 0; i < blocks.size(); i++)
         blocks[i]->save(os);
+    // std::cout << "SAVED";
+}
+
+void Map::load(std::istream &is) {
+    character->loadData(is); 
+
+    float x, y, z;
+    is >> x >> y;
+    cam->setTarget(x, y);
+    int n;
+    is >> n;
+    for (int i = 0; i < n; i++) {
+        is >> x >> y >> z;
+        camChange.push_back({x, y, z});
+    }
+
+    // is >> curEnemies.size();
+    // for (int i = 0; i < curEnemies.size(); i++)
+    //     curEnemies[i]->load(is);
+    
+    // is >> enemies.size();
+    // for (int i = 0; i < enemies.size(); i++)
+    //     enemies[i]->load(is);
+
+    pm.loadData(is);
+
+    // is >> blocks.size();
+    for (int i = 0; i < blocks.size(); i++)
+        blocks[i]->load(is);
 }

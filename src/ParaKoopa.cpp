@@ -6,46 +6,53 @@
 #include "Resources/StatsManager.h"
 
 void ParaKoopa::update(float deltaTime) {
-    
-    timer += deltaTime;
-    if (timer >= 2.0f) {
-        velocity.y = -velocity.y;
-        timer = 0.0f;
-    }   
+    Koopa::update(deltaTime);
 
-    Enemy::update(deltaTime);
+    if (state == State::FLYING) {
+        timer += deltaTime;
+        if (timer >= 3.5f) {
+            velocity.y = -velocity.y;
+            timer = 0.0f;
+        }
+    }
 }
 
 void ParaKoopa::updateAnimationType() {
-    if (state == State::DIE2) {
-        position.y += 10.0f;
-        activeAnimation = animations["DIE2"].get();
-    } 
-    else activeAnimation = animations["RUNNING"].get();
-    updateHitbox();
+    if (state == State::FLYING) 
+        activeAnimation = animations["FLYING"].get();
+    Koopa::updateAnimationType();
 }
 
 void ParaKoopa::adaptCollision(ICollidable* other) {
     if (dynamic_cast<Coin*>(other) || (dynamic_cast<GameObject*>(other) && !dynamic_cast<Fireball*>(other))) return;
 
-    Enemy::adaptCollision(other);
-    Player* player = dynamic_cast<Player*>(other);
-    if (player) {
-        Rectangle playerHitbox = player->getHitbox();
+    if (state == State::FLYING) {
+        enemyCollision(other);
+        fireballCollision(other);
 
-        if (player->isInvincible()) {
-            if (state != State::DIE && state != State::DIE2) {
-                state = State::DIE2;
-                PlaySound(SoundManager::getInstance().stompSound);
-                updateAnimationType();
-            }
-        }
+        Player* player = dynamic_cast<Player*>(other);
+        if (player) {
+            Rectangle playerHitbox = player->getHitbox();
 
-        if (playerHitbox.y + playerHitbox.height <= hitbox.y + 5) {
-            if (state == State::RUNNING) {
-                state = State::DIE2;
-                updateAnimationType();
+            if (player->isInvincible()) {
+                if (state != State::DIE && state != State::DIE2) {
+                    state = State::DIE2;
+                    PlaySound(SoundManager::getInstance().stompSound);
+                    updateAnimationType();
+                }
             }
-        }
+
+            if (playerHitbox.y + playerHitbox.height <= hitbox.y + 5) {
+                if (state == State::FLYING) {
+                    state = State::RUNNING;
+                    position.y += 10.0f;
+                    velocity.x = -normalSpeed;
+                    updateAnimationType();
+                }
+            }
+        }   
+    }
+    else {
+        Koopa::adaptCollision(other);
     }
 }

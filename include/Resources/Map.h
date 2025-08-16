@@ -9,8 +9,6 @@
 #include "Observer/Observer.h"
 #include "Character/Character.h"
 #include "Character/Enemy.h"
-#include "Character/Goomba.h"
-#include "Character/Koopa.h"
 #include "MyCamera2D.h"
 #include <queue>
 #include "Blocks/Flag.h"
@@ -40,6 +38,7 @@ public:
     Vector2 getSize() const { return {1.0f * background.width, 1.0f * background.height / space}; }
 
     void save(std::ostream &os);
+    void load(std::istream &is);
     void SetUp(Player* player);
     void Update(float delta);
     void Draw() const;

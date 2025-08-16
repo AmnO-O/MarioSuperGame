@@ -104,16 +104,16 @@ std::string Player::getShape_Action() const{
 void Player::updateShape(){
 	std::string animationKey = getShape_Action();
 
-	if(Mstate->getMoveState() == "CLIMBING"){
-		animations[animationKey]->setTimeSwitch(0.15f);
-	}
-
 	if ((int)animationKey.size() >= 7 && animationKey.substr(0, 8) == "MORPHING") {
 		animationKey = "SMALL_MORPHING";
 		animations[animationKey]->setTimeSwitch(0.1f);
 		
 	}else if ((int)animationKey.size() >= 15 && animationKey.substr(0, 15) == "INVINCIBLE_FIRE"){
         animationKey.replace(0, 15, "INVINCIBLE_BIG");
+	}
+	
+	if(Mstate->getMoveState() == "CLIMBING"){
+		animations[animationKey]->setTimeSwitch(0.15f);
 	}
 
 	if(activeAnimation != animations[animationKey].get()){
@@ -480,6 +480,7 @@ void Player::update(float deltaTime){
 	if(movement == nullptr)
 		throw GameException("Movement is null in Player::update");
 
+	updateShape();
 
 	if(IsKeyPressed(KEY_L)){
 		switchPlayer(); 
@@ -572,6 +573,8 @@ void Player::update(float deltaTime){
 	if(activeAnimation)
 		activeAnimation->update(deltaTime);
 
+	
+
 	// if(Mstate->isJumping()){
 	// 	movement->setFootHeightFactor(0.2f);
 	// }else movement->setFootHeightFactor(0.1f);
@@ -582,6 +585,10 @@ void Player::update(float deltaTime){
 }
 
 void Player::render(){
+	
+	if(activeAnimation == nullptr)
+		throw GameException("Active animation is null in Player::render ");
+
 	if(activeAnimation){
 		if(showPlayer){
 			activeAnimation->render(movement->getPosition(), movement->isFacingRight() == false);
@@ -687,6 +694,8 @@ void Player::loadData(std::istream &fin){
 
 	float groundLevel; 
 	fin >> groundLevel; 
+	if (groundLevel == INT_MAX)
+		groundLevel = INFINITY;
 
 	movement->setVelocityX(velocity.x);
 	movement->setVelocityX(velocity.y);
@@ -701,5 +710,8 @@ void Player::printData(std::ostream &fout){
 
 	fout << movement->getPosition().x << ' ' << movement->getPosition().y << ' '; 
 	fout << movement->getVelocity().x << ' ' << movement->getVelocity().y << ' '; 
-	fout << groundLevel << '\n'; 
+	if (groundLevel == INFINITY)
+		fout << INT_MAX << '\n';
+	else
+		fout << groundLevel << '\n'; 
 }

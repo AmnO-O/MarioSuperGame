@@ -1,6 +1,7 @@
 #include "Blocks/Question.h"
 #include "Character/Character.h"
 #include "Resources/StatsManager.h"
+#include <string>
 
 Question::Question(Texture2D &tex, std::istream &is) : Block(tex), bounceAni(tex, {0, 0, 0, 0}, 0.25f, 6.0f, 0.2f)
                                                         , ani(tex, false, 0.2f), brokenAni(tex, {0, 0, 0, 0}, 0.25f, 6.0f, 1.0f) {
@@ -184,6 +185,46 @@ void Question::save(std::ostream &os) {
     brokenAni.save(os);
     os << (int)stat << "\n";
     os << num << " " << objects.size() << "\n";
-    for (int i = 0; i < objects.size(); i++)
+    for (int i = 0; i < objects.size(); i++) {
+        if (dynamic_cast<ContainCoin*>(objects[i]))
+            os << "COIN ";
+        else if (dynamic_cast<FireFlowerPowerUp*>(objects[i]))
+            os << "FIRE ";
+        else if (dynamic_cast<MushroomPowerUp*>(objects[i]))
+            os << "MUSHROOM ";
+        else if (dynamic_cast<StarPowerUp*>(objects[i]))
+            os << "STAR ";
+        else if (dynamic_cast<NormalMushroomPowerUp*>(objects[i]))
+            os << "NORMAL ";
         objects[i]->printData(os);
+    }
+}
+
+void Question::load(std::istream &is) {
+    bounceAni.load(is);
+    brokenAni.load(is);
+    is >> stat;
+    int n;
+    is >> num >> n;
+    for (int i = 0; i < n; i++) {
+        if (creator) delete creator;
+        std::string s;
+        is >> s;
+        if (s == "COIN") 
+            creator = new CoinCreator();
+        else if (s == "FIRE") 
+            creator = new FireFlowerCreator();
+        else if (s == "MUSHROOM") 
+            creator = new MushroomCreator();
+        else if (s == "STAR") 
+            creator = new StarCreator();
+        else if (s == "NORMAL")
+            creator = new NormalMushroomCreator();
+        
+        objects.push_back(creator->create({pos.x, pos.y, BrokenRect.width, BrokenRect.width}));
+        objects[i]->loadData(is);        
+        ICollidable* item = dynamic_cast<ICollidable*>(objects[i]);
+        if (item)
+            CollisionManager::getInstance().Register(item);
+    }
 }

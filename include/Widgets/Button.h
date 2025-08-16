@@ -37,6 +37,14 @@ class NormalButton
 
         ~NormalButton();
 
+        bool isCliked() const {
+            Vector2 pos = GetMousePosition();
+            return CheckCollisionPointRec(pos, frame) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+        }
+
+        void activate() {
+            if (onClick) onClick();
+        }
         void update(float deltaTime);
         void render();
 };
