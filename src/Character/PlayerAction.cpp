@@ -18,12 +18,16 @@ void PlayerActionManager::update(float deltaTime) {
     if (actionQueue.empty() || player == nullptr) return;
 
     auto& currentAction = actionQueue.front();
+    
+    if (currentAction == nullptr) {
+        actionQueue.pop_front();
+        return;
+    }
+    
     currentAction->execute(player, player->movement, deltaTime);
 
     if (currentAction->isFinished(player, player->movement)) {
         actionQueue.pop_front();
-    }
-    if (doneAction()) {
         player->movement->unlockMovement(); 
         player->movement->unlockKeyboardInput();
     }
@@ -37,14 +41,16 @@ void PlayerActionManager::resetAll(){
 
 
 SetPositionAction::SetPositionAction(Vector2 pos, bool facingRight_, float timeShow_) : 
-    position(pos), facingRight(facingRight_), timeShow(timeShow_) {}
+    position(pos), facingRight(facingRight_), timeShow(timeShow_) {currentTime = 0.0f;}
 
 void SetPositionAction::execute(Player *player, PlayerMovement* movement, float deltaTime) {
     if(currentTime == 0){
-        player->changeMstate(new ClimbState()); 
+        player->changeMstate(new ClimbState());
+ 
         movement->lockMovement(); 
         movement->setPosition(position);
         movement->setFacingRight(facingRight);
+
     }
 
     currentTime += deltaTime; 
@@ -123,10 +129,11 @@ void TopEnterAction::execute(Player *player, PlayerMovement* movement, float del
         Vector2 endPos = {startPos.x, startPos.y + 20.0f};
         lerpMover.start(startPos, endPos, 2.0f); 
     }
-
+    
     currentTime += deltaTime; 
-    Vector2 nextPos = lerpMover.update(deltaTime); 
-    movement->setPosition(nextPos); 
+    Vector2 nextPos = lerpMover.update(deltaTime);
+    movement->setPosition(nextPos);
+
 }
 
 bool TopEnterAction::isFinished(Player *player, PlayerMovement* movement) const {

@@ -143,8 +143,10 @@ public:
         if(Mstate_ && Mstate->getMoveState() != Mstate_->getMoveState()){
             delete Mstate; 
             Mstate = Mstate_;    
+            
             updateShape(); 
             updateHitbox(); 
+
             return; 
         }
 

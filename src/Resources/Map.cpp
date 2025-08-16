@@ -119,10 +119,12 @@ void Map::Update(float delta) {
             camChange.pop_front();
         }
     }
+
     pm.update(delta);
 
     CollisionManager::getInstance().Register(character->shootFireball()); 
     CollisionManager::getInstance().CheckAllCollisions();
+
     for (int i = 0; i < blocks.size(); i++) {
         blocks[i]->Update(delta, character);
         // Vector2 tmpCam = blocks[i]->changeCam();
