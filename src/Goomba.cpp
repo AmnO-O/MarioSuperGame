@@ -22,7 +22,6 @@ void Goomba::updateAnimationType() {
         case State::DIE:
             position.y += hitbox.height * 0.5f;
             activeAnimation = animations["DIE"].get();
-            StatsManager::getInstance().addScore(100);
             break;
         case State::DIE2:
             activeAnimation = animations["DIE2"].get();
@@ -44,6 +43,7 @@ void Goomba::adaptCollision(ICollidable* other) {
                 state = State::DIE2;
                 PlaySound(SoundManager::getInstance().stompSound);
                 updateAnimationType();
+                StatsManager::getInstance().addScore(300);
             }
         }
         
@@ -52,6 +52,7 @@ void Goomba::adaptCollision(ICollidable* other) {
                 state = State::DIE;
                 PlaySound(SoundManager::getInstance().stompSound);
                 updateAnimationType();
+                StatsManager::getInstance().addScore(300);
             }
         }
     }

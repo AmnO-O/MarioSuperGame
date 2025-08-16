@@ -2,6 +2,7 @@
 #include "Character/Character.h"
 #include "Blocks/Coin.h"
 #include "Blocks/Block.h"
+#include "Resources/StatsManager.h"
 #include <iostream>
 #include <cmath>
 
@@ -102,6 +103,7 @@ void MushroomPowerUp::applyEffect(Player* &character) {
 	active = false; 
 	character->powerUp(this->type);
 	PlaySound(SoundManager::getInstance().mushroomSound); 
+	StatsManager::getInstance().addScore(1000);
 }
 
 void MushroomPowerUp::update(float deltaTime){
@@ -138,6 +140,7 @@ void FireFlowerPowerUp::applyEffect(Player* &character) {
 	active = false;
 	character->powerUp(this->type);
 	PlaySound(SoundManager::getInstance().mushroomSound);
+	StatsManager::getInstance().addScore(1000);
 }
 
 void FireFlowerPowerUp::update(float deltaTime) {

@@ -126,7 +126,7 @@ void Question::Break(Player* player) {
             creator = new CoinCreator();
             PlaySound(SoundManager::getInstance().coinSound);
             StatsManager::getInstance().addCoins();
-            StatsManager::getInstance().addScore(20);
+            StatsManager::getInstance().addScore(200);
             break;
         
         case QuestionType::POWER:

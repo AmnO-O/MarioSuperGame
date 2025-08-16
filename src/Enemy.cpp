@@ -1,5 +1,6 @@
 #include "Character/Enemy.h"
 #include "Blocks/Block.h"
+#include "Resources/StatsManager.h"
 
 Enemy::Enemy(CharacterType type, Vector2 pos) : type(type) {
     this->position = pos;
@@ -86,6 +87,7 @@ void Enemy::isHitBelow(ICollidable* block) {
     state = State::DIE2;
     PlaySound(SoundManager::getInstance().stompSound);
     updateAnimationType();
+    StatsManager::getInstance().addScore(300);
 }
 
 void Enemy::enemyCollision(ICollidable* other) {
@@ -140,6 +142,7 @@ void Enemy::fireballCollision(ICollidable* other) {
                 if (state == State::RUNNING || state == State::FLYING) {
                     state = State::DIE2;
                     PlaySound(SoundManager::getInstance().stompSound);
+                    StatsManager::getInstance().addScore(300);
                     updateAnimationType();
                 } else if (state == State::SHELL) {
                     fireball->adaptCollision(this);

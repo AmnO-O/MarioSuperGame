@@ -89,7 +89,7 @@ void Flag::adaptCollision(ICollidable* other) {
             animationClimbFlag->addAction(std::make_unique<SetPositionAction>(Vector2({hitbox.x + hitbox.width, hitbox.y + hitbox.height - player->getShape().y}), false, 0.5f));
             animationClimbFlag->addAction(std::make_unique<JumpAction>(166.0f, -200.0f));
             PlaySound(SoundManager::getInstance().flagpoleSound);
-            StatsManager::getInstance().time_taken = 60.0f - Timer::getInstance().remaining;
+            StatsManager::getInstance().time_taken = 300.0f - Timer::getInstance().remaining;
         }
     }
 }
