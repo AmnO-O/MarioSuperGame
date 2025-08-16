@@ -47,7 +47,7 @@ void Goomba::adaptCollision(ICollidable* other) {
             }
         }
         
-        if (playerHitbox.y + playerHitbox.height <= hitbox.y + 5) {
+        if (playerHitbox.y + playerHitbox.height <= hitbox.y + 4.0f && player->isRecovery() == false) {
             if (state == State::RUNNING) {
                 state = State::DIE;
                 PlaySound(SoundManager::getInstance().stompSound);
