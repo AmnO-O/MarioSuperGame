@@ -39,6 +39,7 @@ void ParaKoopa::adaptCollision(ICollidable* other) {
                     state = State::DIE2;
                     PlaySound(SoundManager::getInstance().stompSound);
                     updateAnimationType();
+                    StatsManager::getInstance().addScore(300);
                 }
             }
 
@@ -47,6 +48,7 @@ void ParaKoopa::adaptCollision(ICollidable* other) {
                     state = State::RUNNING;
                     position.y += 10.0f;
                     velocity.x = -normalSpeed;
+                    StatsManager::getInstance().addScore(400);
                     updateAnimationType();
                 }
             }

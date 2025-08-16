@@ -77,6 +77,11 @@ bool World::checkClimbing()
         return false;
 }
 
+Player* World::getCharacter() const 
+{
+    return character; 
+}
+
 void World::drawStats()
 {
     std::string charType; 
@@ -151,14 +156,13 @@ void World::saveGame(const std::string& filename) const
 
     fout << (isMario ? "MARIO" : "LUIGI") << '\n';
     fout << mapIndex << '\n';
-    
-    // fout << character->getPosition().x << ' ' << character->getPosition().y << '\n';
     fout << score_number << '\n';
     fout << number_of_coins << '\n';
     fout << Timer::getInstance().remaining << '\n';
     // Add more as needed
     currentMap->save(fout);
 
+    currentMap->save(fout);
     fout.close();
 }
 
@@ -189,7 +193,7 @@ void World::update(float deltaTime)
         isEnd = true;
         StopMusicStream(SoundManager::getInstance().playMusic);
         Timer::getInstance().warning_played = true;
-        Timer::getInstance().finalUpdate(deltaTime * 15.0f);
+        Timer::getInstance().finalUpdate(deltaTime * 30.0f);
     }
   
     if (!SoundManager::getInstance().death_played && !checkClimbing() && !isEnd)

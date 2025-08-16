@@ -55,6 +55,7 @@ void Koopa::adaptCollision(ICollidable* other) {
                 state = State::DIE2;
                 PlaySound(SoundManager::getInstance().stompSound);
                 updateAnimationType();
+                StatsManager::getInstance().addScore(300);
             }
         }
 
@@ -62,18 +63,19 @@ void Koopa::adaptCollision(ICollidable* other) {
             if (state == State::RUNNING) {
                 position.y += 10.0f;
                 PlaySound(SoundManager::getInstance().stompSound);
-                StatsManager::getInstance().addScore(50);
+                StatsManager::getInstance().addScore(200);
                 enterShell();
             } 
             else if (state == State::SHELL) {
                 velocity.x = (playerHitbox.x < hitbox.x) ? 1.0f : -1.0f;
                 startSpinning();
                 PlaySound(SoundManager::getInstance().stompSound);
-                StatsManager::getInstance().addScore(100);
+                StatsManager::getInstance().addScore(500);
             }
             else if (state == State::SPINNING) {
                 stopSpinning();
                 enterShell();
+                StatsManager::getInstance().addScore(700);
             }
         } 
         else if (playerHitbox.x + playerHitbox.width <= hitbox.x + 5 || 
@@ -82,7 +84,7 @@ void Koopa::adaptCollision(ICollidable* other) {
                 velocity.x = (playerHitbox.x < hitbox.x) ? 1.0f : -1.0f;
                 startSpinning();
                 PlaySound(SoundManager::getInstance().stompSound);
-                StatsManager::getInstance().addScore(100);
+                StatsManager::getInstance().addScore(500);
             }
         }
     }

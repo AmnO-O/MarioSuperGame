@@ -128,7 +128,7 @@ void Coin::Break() {
 
     PlaySound(SoundManager::getInstance().coinSound);
     StatsManager::getInstance().addCoins();
-    StatsManager::getInstance().addScore(20);
+    StatsManager::getInstance().addScore(200);
 }
 
 void Coin::Bounce() {
@@ -137,7 +137,7 @@ void Coin::Bounce() {
     
     PlaySound(SoundManager::getInstance().coinSound);
     StatsManager::getInstance().addCoins();
-    StatsManager::getInstance().addScore(20);
+    StatsManager::getInstance().addScore(200);
 }
 
 bool Coin::IsActive() const {
