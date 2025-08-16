@@ -94,7 +94,7 @@ void Lift::Update(float deltaTime, Player* player) {
             playerBox.x + playerBox.width > hitbox.x &&          // Horizontal overlap
             playerBox.x < hitbox.x + hitbox.width;
 
-        if (onTop && player->getVelocity().x == 0.0f && player->getVelocity().y == 0.0f) {
+        if (onTop) {
             // Move player together with lift
             Vector2 playerPos = player->getPosition();
             playerPos.x += distance.x;
