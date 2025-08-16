@@ -1,5 +1,6 @@
 #include "Character/Character.h"
 #include "Blocks/Coin.h"
+#include "Blocks/Fire.h"
 #include "Character/Enemy.h"
 #include "Resources/StateManager.h"
 #include "States/GameOverMenu.h"
@@ -414,7 +415,8 @@ void Player::adaptCollision(ICollidable* other){
 	if (dynamic_cast<Fireball*>(other))
 		return;
 
-	if(dynamic_cast<Enemy*>(other) && dynamic_cast<Enemy*>(other)->isSafe() == false){
+	if ((dynamic_cast<Enemy*>(other) && dynamic_cast<Enemy*>(other)->isSafe() == false) 
+		|| (dynamic_cast<Fire*>(other))) {
 		adapt_collision_with_enimies(other); 
 		return; 
 	}

@@ -1,4 +1,8 @@
 #include "Resources/Map.h"
+#include "Character/Goomba.h"
+#include "Character/Koopa.h"
+#include "Character/Piranha.h"
+#include "Character/EnemyFactory.h"
 #include "Blocks/Brick.h"
 #include "Blocks/Floor.h"
 #include "Blocks/Coin.h"
@@ -6,10 +10,7 @@
 #include "Blocks/Question.h"
 #include "Blocks/Lift.h"
 #include "Blocks/Invisible.h"
-#include "Character/Goomba.h"
-#include "Character/Koopa.h"
-#include "Character/Piranha.h"
-#include "Character/EnemyFactory.h"
+#include "Blocks/Fire.h"
 #include "Blocks/Flag.h"
 #include <fstream>
 
@@ -59,6 +60,10 @@ void Map::input(std::istream &is, Texture2D &objectTex) {
         else if (s == "INVISIBLE") {
             for (int i = 0; i < n; i++)
                 blocks.push_back(new Invisible(objectTex, is));
+        }
+        else if (s == "FIRE") {
+            for (int i = 0; i < n; i++)
+                blocks.push_back(new Fire(objectTex, is));
         }
     }
 
