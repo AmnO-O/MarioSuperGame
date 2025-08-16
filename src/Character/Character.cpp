@@ -626,17 +626,6 @@ inline IMoveState* createMoveState(const std::string& stateName) {
 }
 
 void Player::loadData(std::istream &fin){
-	/*bool t; fin >> t; 
-	type = (t == 1 ? CharacterType::MARIO : CharacterType::LUIGI); 
-
-	if(t == 1){
-		readRectAnimation("assets/animation/mario.txt", Images::textures["mario.png"]);
-		movement->setStats(std::make_unique<MarioStats>());
-
-	}else{
-		readRectAnimation("assets/animation/luigi.txt", Images::textures["luigi.png"]);
-	}*/
-
 	std::string animationKey; fin >> animationKey; 
 
 	std::string s1 = "", s2 = "", s3 = ""; 

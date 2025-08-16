@@ -154,23 +154,18 @@ void World::saveGame(const std::string& filename) const
 
     fout << (isMario ? "MARIO" : "LUIGI") << '\n';
     fout << mapIndex << '\n';
-    
-    currentMap->save(fout);
-    // fout << character->getPosition().x << ' ' << character->getPosition().y << '\n';
     fout << score_number << '\n';
     fout << number_of_coins << '\n';
     fout << Timer::getInstance().remaining << '\n';
     // Add more as needed
 
-    // player_data
-    character->printData(fout); 
-
-
+    currentMap->save(fout);
     fout.close();
 }
 
 
-void World::loadGame(std::istream &fin){
+void World::loadGame(std::istream &fin)
+{
     character->loadData(fin); 
 }
 

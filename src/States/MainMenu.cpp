@@ -51,7 +51,7 @@ void MainMenu::loadGame(const std::string& filename)
         StatsManager::getInstance().setStats(scores, coins);
 
         std::unique_ptr<World> world = std::make_unique<World>(isMario, mapIndex, rem);
-        world->getCharacter()->loadData(fin);
+        world->loadGame(fin);
         StateManager::getInstance().pushState(std::move(world));
 
          fin.close();
