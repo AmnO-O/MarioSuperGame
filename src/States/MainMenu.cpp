@@ -5,10 +5,10 @@
 #include "States/World.h"
 
 MainMenu::MainMenu()  
-  : new_game_button("NEW GAME", {570, 450, 330, 60}, WHITE, RED, [&]() {
+  : new_game_button("NEW GAME", {(GetScreenWidth() * 1.f - 330.0f) / 2.0f, 450, 330, 60}, WHITE, RED, [&]() {
         StateManager::getInstance().pushState(std::make_unique<SubMenu>());
     }),
-    load_game_button("LOAD GAME", {570, 533, 330, 60}, WHITE, RED, [&]() {
+    load_game_button("LOAD GAME", {(GetScreenWidth() *1.f - 330.0f) / 2.0f, 543, 330, 60}, WHITE, RED, [&]() {
         const char* filterPatterns[] = { "*.txt" };
         const char* filename = tinyfd_openFileDialog(
             "Load Game", 
@@ -39,11 +39,9 @@ void MainMenu::loadGame(const std::string& filename)
     {
         std::string playerType; fin >> playerType;
         int mapIndex; fin >> mapIndex;
-        float char_x, char_y; fin >> char_x >> char_y;
+        // float char_x, char_y; fin >> char_x >> char_y;
         int scores; int coins; fin >> scores; fin >> coins;
         float rem; fin >> rem;
-
-        fin.close();
 
         bool isMario;
         if (playerType == "MARIO")
@@ -54,6 +52,8 @@ void MainMenu::loadGame(const std::string& filename)
         StatsManager::getInstance().setStats(scores, coins);
 
         std::unique_ptr<World> world = std::make_unique<World>(isMario, mapIndex, rem);
+        world->loadGame(fin);
+        fin.close();
         StateManager::getInstance().pushState(std::move(world));
     }
 

@@ -5,7 +5,7 @@
 
 EndResult::EndResult(int mIndex)
     : title("LEVEL COMPLETED!"),
-      back_button("EXIT", { 709, 691, 330, 50 }, WHITE, RED, [&]() {
+      back_button("EXIT", { (GetScreenWidth() * 1.0f - 330.0f) / 2.0f, 691, 330, 50 }, WHITE, RED, [&]() {
           backToMainMenu();
       }),
       prevMapIndex(mIndex)
@@ -81,7 +81,7 @@ void EndResult::drawStats()
 
     std::string time = "TIME:";
     DrawTextEx(font, time.c_str(), {511, 571}, 40, 2, WHITE);   
-    int totalSec = StatsManager::getInstance().time_taken; // small epsilon for safety
+    int totalSec = (int)StatsManager::getInstance().time_taken; // small epsilon for safety
     int mins = totalSec / 60;
     int secs = totalSec % 60;
 

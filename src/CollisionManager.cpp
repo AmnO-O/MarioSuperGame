@@ -60,7 +60,7 @@ void CollisionManager::CheckCharObj() {
     }
 
     if(isOnGround == false){
-        player->setGroundLevel(2.0f * GetScreenHeight());
+        player->setGroundLevel(INFINITY);
     }
 }
 
@@ -95,7 +95,7 @@ void CollisionManager::CheckObjObj() {
         }
 
         if (p && !isOnGround) {
-            p->setGroundLevel(2.0f * GetScreenHeight());
+            p->setGroundLevel(INFINITY);
             // std::cout << "Enemy Fall\n";
         }
     }

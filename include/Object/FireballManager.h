@@ -30,7 +30,7 @@ public:
 		playerPosition.y += 5;
 
         fireball = new Fireball(playerPosition, isFacingRight); 
-		fireball->setGroundLevel(2.0f * GetScreenHeight()); 
+		fireball->setGroundLevel(INFINITY); 
         fireballs.emplace_back(fireball);
         PlaySound(SoundManager::getInstance().fireballSound);
 

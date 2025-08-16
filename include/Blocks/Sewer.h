@@ -19,8 +19,10 @@ protected:
     // PlayerActionManager animationEnterSewer; 
 public:
     Sewer(Texture2D &tex, std::istream &is);
+    void save(std::ostream &os) override;
+    void load(std::istream &is) override;
     Rectangle getHitbox() const override;
-    void changeCam(std::queue<Vector3> &camChange) override;
+    void changeCam(std::deque<Vector3> &camChange) override;
     void changePlayerPos(PlayerActionManager &pm) override;
     void Draw(DrawStat ds) const override;
     void adaptCollision(ICollidable* other) override {}
@@ -30,11 +32,12 @@ public:
 
 class HorizontalSewer : public Sewer {
 private:
-    bool isDown;
+    bool isUp;
 public:
-    HorizontalSewer(Texture2D &tex, std::istream &is) : Sewer(tex, is) { is >> isDown; }
+    HorizontalSewer(Texture2D &tex, std::istream &is) : Sewer(tex, is) { is >> isUp; }
+    // void save(std::ostream &os) override;
     Rectangle getHitbox() const override;
-    void changeCam(std::queue<Vector3> &camChange) override;
+    void changeCam(std::deque<Vector3> &camChange) override;
     void changePlayerPos(PlayerActionManager &pm) override;
     void Draw(DrawStat ds) const override;
     void Update(float delta, Player* player) override;

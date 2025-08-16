@@ -55,6 +55,12 @@ public:
         return {blockRec.x + (blockRec.width - recs[curframe].width) / 2, blockRec.y - offset, recs[curframe].width, recs[curframe].height};
     }
     bool ended() const { return frameTime == 0.0f; }
+    void save(std::ostream &os) {
+        os << offset << " " << frameTime << "\n";
+    }
+    void load(std::istream &is) {
+        is >> offset >> frameTime;
+    }
 };
 
 class BounceAnimation : public AppearanceAnimation {

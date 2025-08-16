@@ -7,16 +7,16 @@
 
 PopUpMenu::PopUpMenu()
   : isVisible(false),
-    resume_button("RESUME", {663, 296, 330, 50}, WHITE, RED, [&](){
+    resume_button("RESUME", {500 + (600 - 330) / 2.0, 296, 330, 50}, WHITE, RED, [&](){
         toggle();
     }),
-    restart_button("RESTART", {639, 392, 330, 50}, WHITE, RED, [&]() {
+    restart_button("RESTART", {500 + (600 - 330) / 2.0, 392, 330, 50}, WHITE, RED, [&]() {
         restart();
     }),
-    exit_button("EXIT", {710, 488, 330, 50}, WHITE, RED, [&]() {
+    exit_button("EXIT", {500 + (600 - 330) / 2.0, 488, 330, 50}, WHITE, RED, [&]() {
         exitGame();
     }),
-    save_button("SAVE GAME", {594, 584, 330, 50}, WHITE, RED, [&]() {
+    save_button("SAVE GAME", {500 + (600 - 330) / 2.0, 584, 330, 50}, WHITE, RED, [&]() {
         save(); 
     }),
     frame({500, 225, 600, 472})

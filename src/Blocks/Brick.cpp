@@ -150,3 +150,19 @@ void Brick::Bounce() {
 bool Brick::IsActive() const {
     return (stat != BlockStat::Broken && stat != BlockStat::Breaking);
 }
+
+void Brick::save(std::ostream &os) {
+    for (int i = 0; i < 4; i++) 
+        os << fragmentPos[i].x << " " << fragmentPos[i].y << "\n";
+    os << fragmentVelocity.x << " " << fragmentVelocity.y << "\n";
+    os << (int)stat << " " << (int)drawStat << " " << frameTime << "\n";
+    bounceAni.save(os);
+}
+
+void Brick::load(std::istream &is) {
+    for (int i = 0; i < 4; i++) 
+        is >> fragmentPos[i].x >> fragmentPos[i].y;
+    is >> fragmentVelocity.x >> fragmentVelocity.y;
+    is >> stat >> drawStat >> frameTime;
+    bounceAni.load(is);
+}

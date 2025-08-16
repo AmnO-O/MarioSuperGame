@@ -4,6 +4,7 @@
 #include "Blocks/Coin.h"
 #include "Blocks/Sewer.h"
 #include "Blocks/Question.h"
+#include "Blocks/Lift.h"
 #include "Character/EnemyFactory.h"
 #include "Blocks/Flag.h"
 #include <fstream>
@@ -46,6 +47,10 @@ void Map::input(std::istream &is, Texture2D &objectTex) {
         else if (s == "FLAG") {
             for (int i = 0; i < n; i++)
                 blocks.push_back(new Flag(objectTex, is, 1.1f));
+        }
+        else if (s == "LIFT") {
+            for (int i = 0; i < n; i++)
+                blocks.push_back(new Lift(objectTex, is));
         }
     }
 
@@ -117,13 +122,15 @@ void Map::Update(float delta) {
         camChange.front().z -= delta;
         if (camChange.front().z <= 0) {
             cam->setTarget({camChange.front().x, camChange.front().y});
-            camChange.pop();
+            camChange.pop_front();
         }
     }
+
     pm.update(delta);
 
     CollisionManager::getInstance().Register(character->shootFireball()); 
     CollisionManager::getInstance().CheckAllCollisions();
+
     for (int i = 0; i < blocks.size(); i++) {
         blocks[i]->Update(delta, character);
         // Vector2 tmpCam = blocks[i]->changeCam();
@@ -162,6 +169,8 @@ void Map::Update(float delta) {
     }
     
     cam -> update(character); 
+    if (character->getPosition().x >= des) 
+        ended = true;
 }
 
 void Map::spawnEnemy() {
@@ -199,25 +208,29 @@ void Map::Draw() const {
     BeginMode2D(camera); 
 
         DrawTexture(background, 0, 0, WHITE);
+                        
+        for (int i = 0; i < curEnemies.size(); i++) {
+            curEnemies[i]->Draw(DrawStat::Zero);
+        }
 
         for (int i = 0; i < blocks.size(); i++) {
             blocks[i]->Draw(DrawStat::Zero);
         }
+
     
         if( character &&  character->hidePlayer()){
             character->render(); 
         }
 
+                        
+        for (int i = 0; i < curEnemies.size(); i++) {
+            curEnemies[i]->Draw(DrawStat::First);
+        }
+
         for (int i = 0; i < blocks.size(); i++) {
             blocks[i]->Draw(DrawStat::First);
         }
-                
-        for (int i = 0; i < curEnemies.size(); i++) {
-            curEnemies[i]->render();
-            // DrawRectangleLines(enemies[i]->getHitbox().x, enemies[i]->getHitbox().y, 
-            //                     enemies[i]->getHitbox().width, enemies[i]->getHitbox().height, GREEN);
-        }
-
+        
         if( character &&  !character->hidePlayer()){
             character->render(); 
         }
@@ -258,7 +271,7 @@ void Map::SetUp(Player* player) {
 }
 
 bool Map::isEnd() {
-    return character->getPosition().x >= des;
+    return ended;
 }
 
 Flag* Map::getFlag() const
@@ -270,4 +283,56 @@ Flag* Map::getFlag() const
     }
     
     return nullptr;
+}
+
+void Map::save(std::ostream &os) {
+    character->printData(os); 
+
+    cam->save(os);
+    os << camChange.size() << "\n";
+    for (int i = 0; i < camChange.size(); i++)
+        os << camChange[i].x << " " << camChange[i].y << " " << camChange[i].z << "\n";
+    
+    // os << curEnemies.size() << "\n";
+    // for (int i = 0; i < curEnemies.size(); i++)
+    //     curEnemies[i]->save(os);
+    
+    // os << enemies.size() << "\n";
+    // for (int i = 0; i < enemies.size(); i++)
+    //     enemies[i]->save(os);
+
+    pm.printData(os);
+
+    // os << blocks.size() << "\n";
+    for (int i = 0; i < blocks.size(); i++)
+        blocks[i]->save(os);
+    // std::cout << "SAVED";
+}
+
+void Map::load(std::istream &is) {
+    character->loadData(is); 
+
+    float x, y, z;
+    is >> x >> y;
+    cam->setTarget(x, y);
+    int n;
+    is >> n;
+    for (int i = 0; i < n; i++) {
+        is >> x >> y >> z;
+        camChange.push_back({x, y, z});
+    }
+
+    // is >> curEnemies.size();
+    // for (int i = 0; i < curEnemies.size(); i++)
+    //     curEnemies[i]->load(is);
+    
+    // is >> enemies.size();
+    // for (int i = 0; i < enemies.size(); i++)
+    //     enemies[i]->load(is);
+
+    pm.loadData(is);
+
+    // is >> blocks.size();
+    for (int i = 0; i < blocks.size(); i++)
+        blocks[i]->load(is);
 }

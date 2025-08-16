@@ -60,6 +60,11 @@ void Enemy::render() {
         activeAnimation->render(position, false);
 }
 
+void Enemy::Draw(DrawStat stat) {
+    if (ds == stat)
+        render();
+}
+
 void Enemy::setPosition(const Vector2& pos) {
     position = pos;
     updateHitbox();

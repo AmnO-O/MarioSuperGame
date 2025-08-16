@@ -24,10 +24,26 @@ void NormalButton::update(float deltaTime)
 
 void NormalButton::render() 
 {
+
     Vector2 pos = GetMousePosition();
     Color currentColor = CheckCollisionPointRec(pos, frame) ? hoverColor : normalColor;
 
-    DrawTextEx(font, text.c_str(), {frame.x, frame.y}, 50, 2, currentColor);
+    DrawRectangleRec(frame, Fade(currentColor, 0.25f));
+
+    int fontSize = static_cast<int>(frame.height * 0.6f); 
+    if (fontSize < 8) fontSize = 8;
+
+    Vector2 textSize = MeasureTextEx(font, text.c_str(), (float)fontSize, 2.0f);
+    Vector2 textPos;
+    textPos.x = frame.x + (frame.width - textSize.x) / 2.0f;
+    textPos.y = frame.y + (frame.height - textSize.y) / 2.0f;
+
+    DrawTextEx(font, text.c_str(), textPos, (float)fontSize, 2.0f, currentColor);
+
+    // Vector2 pos = GetMousePosition();
+    // Color currentColor = CheckCollisionPointRec(pos, frame) ? hoverColor : normalColor;
+
+    // DrawTextEx(font, text.c_str(), {frame.x, frame.y}, 50, 2, currentColor);
 }
 
 ImageButton::ImageButton(const std::string& imagePath, Rectangle frame, std::function<void()> onClick)

@@ -55,6 +55,7 @@ class World: public GameState
         
         void drawStats();
         void saveGame(const std::string& filename) const;
+        void loadGame(std::istream &fin); 
         void processInput() override;
         void update(float deltaTime) override;
         void render() override;

@@ -47,6 +47,18 @@ public:
         }
     }
 
+    void printData(std::ostream &os) const override {
+        GameObject::printData(os);
+        os << hasSpawned << " ";
+        ani->save(os);
+    }
+
+    void loadData(std::istream &is) override {
+        GameObject::loadData(is);
+        is >> hasSpawned;
+        ani->load(is);
+    }
+
 
     void readRectAnimation(const std::string filePath, Texture2D &sheet);
     void adaptCollision(ICollidable* other) override;

@@ -19,6 +19,8 @@ public:
     Vector2 getPosition() const { return coinAni->getPosition(); }
     virtual void setGroundLevel(float groundLevel) {}
     std::string getTypeID() const override { return "COIN"; }
+    void printData(std::ostream &os) const override;
+    void loadData(std::istream &is) override;
 
     void update(float deltaTime) override;
     void render() override;
@@ -40,6 +42,8 @@ public:
     void Update(float delta, Player* player) override;
     bool IsActive() const override;
     void isHitBelow(ICollidable* block) override { Bounce(); }
+    void save(std::ostream &os) override;
+    void load(std::istream &is) override;
     ~Coin() override {}
 };
 
