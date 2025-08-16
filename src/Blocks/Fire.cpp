@@ -25,6 +25,7 @@ Rectangle Fire::getHitbox() const {
 }
 
 void Fire::Draw(DrawStat ds) const {
+    if (drawStat != ds) return;
     float degree = frametime / spinPeriod;
     DrawTexturePro(tex, srcRect, {pos.x + srcRect.width / 2, pos.y + srcRect.height / 2, srcRect.width, srcRect.height}, 
                     {srcRect.width / 2, srcRect.height / 2}, degree * 360, WHITE );
@@ -54,9 +55,9 @@ void Fire::Update(float delta, Player* player) {
 }
 
 void Fire::save(std::ostream &os) {
-    os << pos.x << " " << pos.y << " " << frametime << "\n";
+    os << pos.x << " " << pos.y << " " << frametime << " " << angle << "\n";
 }
 
 void Fire::load(std::istream &is) {
-    is >> pos.x >> pos.y >> frametime;
+    is >> pos.x >> pos.y >> frametime >> angle;
 }

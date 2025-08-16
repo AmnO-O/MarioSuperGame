@@ -12,6 +12,7 @@
 #include "Blocks/Invisible.h"
 #include "Blocks/Fire.h"
 #include "Blocks/Flag.h"
+#include "Blocks/Bridge.h"
 #include <fstream>
 
 void Map::input(std::istream &is, Texture2D &objectTex) {
@@ -64,6 +65,10 @@ void Map::input(std::istream &is, Texture2D &objectTex) {
         else if (s == "FIRE") {
             for (int i = 0; i < n; i++)
                 blocks.push_back(new Fire(objectTex, is));
+        }
+        else if (s == "BRIDGE") {
+            for (int i = 0; i < n; i++)
+                blocks.push_back(new Bridge(objectTex, is));
         }
     }
 
