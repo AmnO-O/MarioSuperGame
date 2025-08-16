@@ -222,6 +222,9 @@ void Question::load(std::istream &is) {
             creator = new NormalMushroomCreator();
         
         objects.push_back(creator->create({pos.x, pos.y, BrokenRect.width, BrokenRect.width}));
-        objects[i]->loadData(is);
+        objects[i]->loadData(is);        
+        ICollidable* item = dynamic_cast<ICollidable*>(objects[i]);
+        if (item)
+            CollisionManager::getInstance().Register(item);
     }
 }

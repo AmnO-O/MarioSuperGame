@@ -267,7 +267,7 @@ Flag* Map::getFlag() const
 void Map::save(std::ostream &os) {
     character->printData(os); 
 
-    os << cam->getCamera().target.x << " " << cam->getCamera().target.y << "\n";
+    cam->save(os);
     os << camChange.size() << "\n";
     for (int i = 0; i < camChange.size(); i++)
         os << camChange[i].x << " " << camChange[i].y << " " << camChange[i].z << "\n";
@@ -282,7 +282,36 @@ void Map::save(std::ostream &os) {
 
     pm.printData(os);
 
-    os << blocks.size() << "\n";
+    // os << blocks.size() << "\n";
     for (int i = 0; i < blocks.size(); i++)
         blocks[i]->save(os);
+    // std::cout << "SAVED";
+}
+
+void Map::load(std::istream &is) {
+    character->loadData(is); 
+
+    float x, y, z;
+    is >> x >> y;
+    cam->setTarget(x, y);
+    int n;
+    is >> n;
+    for (int i = 0; i < n; i++) {
+        is >> x >> y >> z;
+        camChange.push_back({x, y, z});
+    }
+
+    // is >> curEnemies.size();
+    // for (int i = 0; i < curEnemies.size(); i++)
+    //     curEnemies[i]->load(is);
+    
+    // is >> enemies.size();
+    // for (int i = 0; i < enemies.size(); i++)
+    //     enemies[i]->load(is);
+
+    pm.loadData(is);
+
+    // is >> blocks.size();
+    for (int i = 0; i < blocks.size(); i++)
+        blocks[i]->load(is);
 }

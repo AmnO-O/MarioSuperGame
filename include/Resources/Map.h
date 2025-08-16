@@ -40,6 +40,7 @@ public:
     Vector2 getSize() const { return {1.0f * background.width, 1.0f * background.height / space}; }
 
     void save(std::ostream &os);
+    void load(std::istream &is);
     void SetUp(Player* player);
     void Update(float delta);
     void Draw() const;

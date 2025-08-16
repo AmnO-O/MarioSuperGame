@@ -29,9 +29,8 @@ void PlayerActionManager::update(float deltaTime) {
     if (currentAction->isFinished(player, player->movement)) {
         actionQueue.pop_front();
     }
-
-    if(doneAction()){
-        player->movement->unlockMovement();
+    if (doneAction()) {
+        player->movement->unlockMovement(); 
         player->movement->unlockKeyboardInput();
     }
 }

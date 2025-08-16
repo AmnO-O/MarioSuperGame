@@ -149,22 +149,23 @@ void World::saveGame(const std::string& filename) const
     if (!fout.is_open()) 
         std::throw_with_nested(std::runtime_error("Failed to open save file"));
 
-    // fout << (isMario ? "MARIO" : "LUIGI") << '\n';
+    fout << (isMario ? "MARIO" : "LUIGI") << '\n';
     fout << mapIndex << '\n';
     
-    currentMap->save(fout);
     // fout << character->getPosition().x << ' ' << character->getPosition().y << '\n';
     fout << score_number << '\n';
     fout << number_of_coins << '\n';
     fout << Timer::getInstance().remaining << '\n';
     // Add more as needed
+    currentMap->save(fout);
 
     fout.close();
 }
 
 
 void World::loadGame(std::istream &fin){
-    character->loadData(fin); 
+    currentMap->load(fin);
+    // character->loadData(fin); 
 }
 
 void World::processInput()

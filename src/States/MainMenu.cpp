@@ -39,11 +39,9 @@ void MainMenu::loadGame(const std::string& filename)
     {
         std::string playerType; fin >> playerType;
         int mapIndex; fin >> mapIndex;
-        float char_x, char_y; fin >> char_x >> char_y;
+        // float char_x, char_y; fin >> char_x >> char_y;
         int scores; int coins; fin >> scores; fin >> coins;
         float rem; fin >> rem;
-
-        fin.close();
 
         bool isMario;
         if (playerType == "MARIO")
@@ -54,6 +52,8 @@ void MainMenu::loadGame(const std::string& filename)
         StatsManager::getInstance().setStats(scores, coins);
 
         std::unique_ptr<World> world = std::make_unique<World>(isMario, mapIndex, rem);
+        world->loadGame(fin);
+        fin.close();
         StateManager::getInstance().pushState(std::move(world));
     }
 
