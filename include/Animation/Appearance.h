@@ -59,7 +59,7 @@ public:
         os << offset << " " << frameTime << "\n";
     }
     void load(std::istream &is) {
-        is >> offset >> " " >> frameTime >> "\n";
+        is >> offset >> frameTime;
     }
 };
 

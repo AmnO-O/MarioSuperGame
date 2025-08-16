@@ -13,7 +13,7 @@ enum class BlockStat {
     Broken
 };
 
-std::istream& operator>>(std::istream &is, BlockStat &b) {
+inline std::istream& operator>>(std::istream &is, BlockStat &b) {
     int val;
     is >> val;
     b = static_cast<BlockStat>(val);
@@ -27,7 +27,7 @@ enum class DrawStat {
     Second
 };
 
-std::istream& operator>>(std::istream &is, DrawStat &b) {
+inline std::istream& operator>>(std::istream &is, DrawStat &b) {
     int val;
     is >> val;
     b = static_cast<DrawStat>(val);

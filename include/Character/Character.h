@@ -140,7 +140,7 @@ public:
     void printData(std::ostream &fout); 
 
     void changeMstate(IMoveState *Mstate_){
-        if(Mstate->getMoveState() != Mstate_->getMoveState()){
+        if(Mstate_ && Mstate->getMoveState() != Mstate_->getMoveState()){
             delete Mstate; 
             Mstate = Mstate_;    
             updateShape(); 
@@ -148,7 +148,8 @@ public:
             return; 
         }
 
-        delete Mstate_; 
+        if(Mstate_) 
+            delete Mstate_; 
     }
 
     void changeSstate(IShapeState *Sstate_){
