@@ -652,7 +652,11 @@ void Player::loadData(std::istream &fin){
 	if(lst == -1)
 		throw GameException("Read data in player is wrong !! Maybe wrong orders"); 
 	
-	if ((int)animationKey.size() >= 15 && animationKey.substr(0, 15) == "INVINCIBLE_FIRE"){
+	if ((int)animationKey.size() >= 15 && 
+	(animationKey.substr(0, 15) == "INVINCIBLE_FIRE"
+	|| animationKey.substr(0, 16) == "INVINCIBLE_SMALL"
+	|| animationKey.substr(0, 14) == "INVINCIBLE_BIG" 
+	)){
 		s3 = s1; s1 = ""; 
 
 		for(int i = lst + 1; i < animationKey.size(); i ++){
@@ -663,6 +667,7 @@ void Player::loadData(std::istream &fin){
 			s1 += animationKey[i]; 
 		}
 	}
+
 		
 	if(s1 == "SMALL"){
 		changeSstate(new SmallState()); 

@@ -160,9 +160,6 @@ void World::saveGame(const std::string& filename) const
     // player_data
     character->printData(fout); 
 
-    
-
-    
 
     fout.close();
 }
