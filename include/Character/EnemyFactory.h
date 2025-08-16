@@ -4,6 +4,7 @@
 #include "Character/Koopa.h"
 #include "Character/Piranha.h"
 #include "Character/ParaKoopa.h"
+#include "Character/Bowser.h"
 
 class EnemyFactory {
 public:
@@ -48,5 +49,19 @@ class ParaKoopaFactory : public EnemyFactory {
 public:
     std::unique_ptr<Enemy> createEnemy(Vector2 pos) override {
         return std::make_unique<ParaKoopa>(pos);
+    }
+};
+
+class BowserFactory : public EnemyFactory {
+public:
+    std::unique_ptr<Enemy> createEnemy(Vector2 pos) override {
+        return std::make_unique<Bowser>(pos);
+    }
+};
+
+class BlazeFactory : public EnemyFactory {
+public:
+    std::unique_ptr<Enemy> createEnemy(Vector2 pos) override {
+        return std::make_unique<Blaze>(pos);
     }
 };

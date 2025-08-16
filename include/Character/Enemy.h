@@ -8,6 +8,7 @@ enum State {
     SHELL,
     SPINNING,
     FLYING,
+    ATTACKING,
     DIE,
     DIE2
 };
@@ -31,6 +32,7 @@ public:
     void render() override;
     void Draw(DrawStat stat);
 
+    CharacterType getType() const {return type;}
     Rectangle getHitbox() const override { return hitbox; }
     Vector2 getPosition() const { return position; }
 
