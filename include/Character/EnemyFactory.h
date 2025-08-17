@@ -60,8 +60,12 @@ public:
 };
 
 class BlazeFactory : public EnemyFactory {
+private:
+    Vector2 target;
 public:
+    BlazeFactory(Vector2 targ = Vector2({0.0f, 0.0f})) : target(targ) {}
+
     std::unique_ptr<Enemy> createEnemy(Vector2 pos) override {
-        return std::make_unique<Blaze>(pos);
+        return std::make_unique<Blaze>(pos, target);
     }
 };

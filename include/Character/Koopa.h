@@ -7,7 +7,7 @@ protected:
     float shellTimer = 0.0f;
     float shellDuration = 6.0f;
     bool isSpinning = false;
-    float spinSpeed = 150.0f;
+    float spinSpeed = 120.0f;
     float normalSpeed = 20.0f;
     bool canBePushed = false;
     float pushSpeed = 80.0f;
