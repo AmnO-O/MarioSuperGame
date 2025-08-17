@@ -62,6 +62,25 @@ bool SetPositionAction::isFinished(Player *player, PlayerMovement* movement) con
     return currentTime >= timeShow; 
 }
 
+WaitAction::WaitAction(Vector2 pos, bool facingRight_, float timeShow_) : 
+    position(pos), facingRight(facingRight_), timeShow(timeShow_) {currentTime = 0.0f;}
+
+void WaitAction::execute(Player *player, PlayerMovement* movement, float deltaTime) {
+    if(currentTime == 0){
+        player->changeMstate(new StandState());
+ 
+        movement->lockMovement(); 
+        movement->setPosition(position);
+        movement->setFacingRight(facingRight);
+
+    }
+
+    currentTime += deltaTime; 
+}
+
+bool WaitAction::isFinished(Player *player, PlayerMovement* movement) const {
+    return currentTime >= timeShow; 
+}
 
 
 RunAction::RunAction(float target) : targetX(target) {}

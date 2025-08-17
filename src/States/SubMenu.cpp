@@ -34,7 +34,7 @@ SubMenu::SubMenu()
     for (int i = 0; i < numPlayers; i++) {
         Rectangle preview = {
             startX + i * (previewWidth + spacing) * 1.0f, // Vị trí x của mỗi ô
-            290.0f,
+            270.0f,
             (float)previewWidth,
             (float)previewHeight
         };
