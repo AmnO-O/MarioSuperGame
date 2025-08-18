@@ -123,6 +123,7 @@ private:
 
     bool shrinkOnHit = false; 
     bool showPlayer = false; 
+    bool isInPipe = false; 
 
 
     void updateHitbox(); 
@@ -183,10 +184,13 @@ public:
     bool IsActive() const override{return Mstate->isDead() == false;}
     bool hidePlayer() const{return movement->isLocked(); }
     bool isLocked() const{return movement->isLocked(); }
+    bool isInPipeState() const {return isInPipe; }
     
     // setter 
     void setPosition(const Vector2 &pos); 
+    void setInPipeState(bool isInPipe_) {isInPipe = isInPipe_; }
     void setOnGround(); 
+
 
     Fireball* shootFireball();
     void adaptCollision(ICollidable* other) override;

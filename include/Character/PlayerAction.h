@@ -111,6 +111,22 @@ class PopupAction : public IAction{
 };
 
 
+class WaitAction : public IAction{
+    Vector2 position; 
+    bool facingRight; 
+    float currentTime = 0; 
+    float timeShow;
+
+    void printData(std::ostream &fout) const override{
+        fout << "WaitAction " << position.x << " " << position.y << " " << facingRight << " " << timeShow << "\n";
+    } 
+public: 
+    WaitAction(Vector2 pos, bool facingRight_, float timeShow_); 
+    void execute(Player *player, PlayerMovement* movement, float deltaTime) override; 
+    bool isFinished(Player *player, PlayerMovement* movement) const override; 
+}; 
+
+
 class PlayerActionManager {
 private:
     std::deque<std::unique_ptr<IAction>> actionQueue;
@@ -166,6 +182,14 @@ public:
                 addAction(std::make_unique<HorizontalEnterAction>());
             } else if (actionType == "PopupAction") {
                 addAction(std::make_unique<PopupAction>());
+            }else if(actionType == "WaitAction") {
+                Vector2 pos;
+                bool facingRight;
+                float timeShow;
+                fin >> pos.x >> pos.y >> facingRight >> timeShow;
+                addAction(std::make_unique<WaitAction>(pos, facingRight, timeShow));
+            } else {
+                std::cerr << "Unknown action type: " << actionType << std::endl;
             }
         }
     }

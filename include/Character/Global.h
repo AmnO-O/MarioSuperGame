@@ -57,8 +57,8 @@ public:
 
 class LuigiStats : public CharacterStats {
 public: 
-	LuigiStats() : CharacterStats(200.0f, -11000.0f, -1300.0f, 0.4f) {
-		runSpeed = 200.0f;          
+	LuigiStats() : CharacterStats(150.0f, -11000.0f, -1300.0f, 0.3f) {
+		runSpeed = 150.0f;          
 		jumpInitialVelocity = -11000.0f;  
 		jumpHoldAcceleration = -1300.0f;
 		maxJumpTime = 0.3f;

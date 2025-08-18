@@ -7,6 +7,7 @@
 #include <raylib.h>
 #include "Character/Character.h"
 #include "States/EndResult.h"
+#include "States/ScoreBoard.h"
 
 World::World(bool checkMario, int index, float time)
   : popup_menu(),
@@ -214,6 +215,7 @@ void World::update(float deltaTime)
     {
         StateManager::getInstance().pushState(std::make_unique<EndResult>(mapIndex));
         PlaySound(SoundManager::getInstance().endSound);
+        ScoreBoardManager::getInstance().addScore(isMario ? "Mario" : "Luigi", mapIndex, score_number);
     }
 
     if (!popup_menu.isVisible)
