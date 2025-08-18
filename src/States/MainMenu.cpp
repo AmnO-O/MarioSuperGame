@@ -21,9 +21,9 @@ MainMenu::MainMenu()
         );
         if (filename)
             loadGame(std::string(filename));
-    }), about_button("ABOUT US", {(GetScreenWidth() * 1.f - 330.0f) / 2.0f, 636, 330, 60}, WHITE, RED, [&]() {
+    }), about_button("ABOUT US", {(GetScreenWidth() * 1.f - 330.0f) / 2.0f, 729, 330, 60}, WHITE, RED, [&]() {
         StateManager::getInstance().pushState(std::make_unique<AboutMenu>());
-    }),ScoreBoard_button("SCOREBOARD", {(GetScreenWidth() * 1.f - 330.0f) / 2.0f, 729, 330, 60}, WHITE, RED, [&]() {
+    }),ScoreBoard_button("SCOREBOARD", {(GetScreenWidth() * 1.f - 330.0f) / 2.0f, 636, 330, 60}, WHITE, RED, [&]() {
         StateManager::getInstance().pushState(std::make_unique<ScoreBoard>());
     }),
     settings_button("assets/images/setting_white.png", {25, 27, 100, 100}, [&]() {

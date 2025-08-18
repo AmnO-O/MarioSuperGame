@@ -8,7 +8,7 @@
 ScoreBoardManager::ScoreBoardManager(){
     textfont = LoadFont("assets/fonts/LilitaOne-Regular.ttf");
     headerfont = LoadFont("assets/fonts/SuperMarioBros.ttf");
-    loadScoresFromFile("assets/scores.txt");
+    loadScoresFromFile("data/scoreboard.txt");
     sortScores();
 }
 
@@ -88,7 +88,7 @@ std::string ScoreBoardManager::getCurrentDate() {
 void ScoreBoardManager::addScore(const std::string &playerName, int map, int score) {
     std::string date = getCurrentDate();
     allScores.emplace_back(playerName, date, map, score);
-    appendScoreToFile(allScores.back(), "assets/scores.txt"); 
+    appendScoreToFile(allScores.back(), "data/scoreboard.txt"); 
     sortScores();
 }
 
@@ -195,10 +195,22 @@ void ScoreBoardManager::DrawCurrentMapScoreboard() {
     float headerY = 240;
     DrawRectangle(200, headerY - 5, 1200, 35, { 255, 255, 255, 20 });
 
-    DrawTextEx(headerfont, "RANK", { 220, headerY }, 22, 1, headerColor);
-    DrawTextEx(headerfont, "PLAYER", { 350, headerY }, 22, 1, headerColor);
-    DrawTextEx(headerfont, "SCORE", { 600, headerY }, 22, 1, headerColor);
-    DrawTextEx(headerfont, "DATE", { 900, headerY }, 22, 1, headerColor);
+    float panelLeft = GetScreenWidth()  * 0.125f; 
+    float panelWidth = GetScreenWidth()  * 0.75f; 
+    
+    // Column positions - evenly distributed across panel width
+    float columnSpacing = panelWidth / 4.0f; // Divide panel into 4 equal sections
+    float rankX = panelLeft + columnSpacing * 0.1f; // 10% into first section
+    float playerX = panelLeft + columnSpacing * 1.1f; // 10% into second section  
+    float scoreX = panelLeft + columnSpacing * 2.1f; // 10% into third section
+    float dateX = panelLeft + columnSpacing * 3.1f; // 10% into fourth section
+    
+    // Headers
+    DrawRectangle(panelLeft, headerY - 5, panelWidth, 35, { 255, 255, 255, 20 });
+    DrawTextEx(headerfont, "RANK", { rankX, headerY }, 22, 1, headerColor);
+    DrawTextEx(headerfont, "PLAYER", { playerX, headerY }, 22, 1, headerColor);
+    DrawTextEx(headerfont, "SCORE", { scoreX, headerY }, 22, 1, headerColor);
+    DrawTextEx(headerfont, "DATE", { dateX, headerY }, 22, 1, headerColor);
 
     DrawRectangle(200, headerY + 30, 1200, 2, mapThemes[currentMap - 1]);
 
@@ -208,10 +220,15 @@ void ScoreBoardManager::DrawCurrentMapScoreboard() {
     int displayCount = std::min((int)mapScores.size(), 10);
 
     if (mapScores.empty()) {
-        DrawTextEx(textfont, "No scores recorded for this map yet!",
-            { 800 - 150, 350 }, 20, 1, secondaryTextColor);
-        DrawTextEx(textfont, "Be the first to set a record!",
-            { 800 - 120, 380 }, 18, 1, secondaryTextColor);
+        std::string noScoresText = "No scores recorded for this map yet!";
+        Vector2 noScoresSize = MeasureTextEx(textfont, noScoresText.c_str(), 30, 1);
+        DrawTextEx(textfont, noScoresText.c_str(),
+            { GetScreenWidth()  * 0.5f - noScoresSize.x * 0.5f, GetScreenHeight() * 0.389f }, 30, 1, secondaryTextColor);
+        
+        std::string firstRecordText = "Be the first to set a record!";
+        Vector2 firstRecordSize = MeasureTextEx(textfont, firstRecordText.c_str(), 28, 1);
+        DrawTextEx(textfont, firstRecordText.c_str(),
+            { GetScreenWidth()  * 0.5f - firstRecordSize.x * 0.5f, GetScreenHeight()  * 0.422f }, 28, 1, secondaryTextColor);
     }
 
     for (int i = 0; i < displayCount; i++) {
@@ -220,32 +237,33 @@ void ScoreBoardManager::DrawCurrentMapScoreboard() {
 
         // Row background
         if (i % 2 == 0) {
-            DrawRectangle(200, y - 5, 1200, rowHeight - 5, { 255, 255, 255, 10 });
+            DrawRectangle(panelLeft, y - 5, panelWidth, rowHeight - 5, { 255, 255, 255, 10 });
         }
 
         // Rank highlighting
         Color rankColor = secondaryTextColor;
+        float highlightX = panelLeft - GetScreenWidth() * 0.00625f; // 190/1600
         if (i == 0) {
             rankColor = { 255, 215, 0, 255 }; // Gold
-            DrawRectangle(190, y - 5, 8, rowHeight - 5, { 255, 215, 0, 255 });
+            DrawRectangle(highlightX, y - 5, 8, rowHeight - 5, { 255, 215, 0, 255 });
         }
         else if (i == 1) {
             rankColor = { 192, 192, 192, 255 }; // Silver
-            DrawRectangle(190, y - 5, 8, rowHeight - 5, { 192, 192, 192, 255 });
+            DrawRectangle(highlightX, y - 5, 8, rowHeight - 5, { 192, 192, 192, 255 });
         }
         else if (i == 2) {
             rankColor = { 205, 127, 50, 255 }; // Bronze
-            DrawRectangle(190, y - 5, 8, rowHeight - 5, { 205, 127, 50, 255 });
+            DrawRectangle(highlightX, y - 5, 8, rowHeight - 5, { 205, 127, 50, 255 });
         }
 
-        // Draw entry data
+        // Draw entry data using same column positions
         std::string rank = std::to_string(i + 1);
-        DrawTextEx(textfont, rank.c_str(), { 235, y }, 20, 1, rankColor);
-        DrawTextEx(textfont, entry.playerName.c_str(), { 350, y }, 20, 1, primaryTextColor);
+        DrawTextEx(textfont, rank.c_str(), { rankX, y }, 20, 1, rankColor);
+        DrawTextEx(textfont, entry.playerName.c_str(), { playerX, y }, 20, 1, primaryTextColor);
 
         std::string scoreStr = FormatScore(entry.score);
-        DrawTextEx(textfont, scoreStr.c_str(), { 600, y }, 20, 1, primaryTextColor);
-        DrawTextEx(textfont, entry.date.c_str(), { 900, y }, 20, 1, secondaryTextColor);
+        DrawTextEx(textfont, scoreStr.c_str(), { scoreX, y }, 20, 1, primaryTextColor);
+        DrawTextEx(textfont, entry.date.c_str(), { dateX, y }, 20, 1, secondaryTextColor);
     }
 
     // Map statistics
@@ -259,10 +277,10 @@ void ScoreBoardManager::DrawMapStats(const std::vector<ScoreRecord>& mapScores, 
 
     // Statistics
     std::string totalScores = "Total Scores: " + std::to_string(mapScores.size());
-    DrawTextEx(textfont, totalScores.c_str(), { 220, y + 15 }, 18, 1, secondaryTextColor);
+    DrawTextEx(textfont, totalScores.c_str(), { 220, y + 15 }, 23, 1, secondaryTextColor);
 
     std::string highScore = "Best Score: " + FormatScore(mapScores[0].score) + " by " + mapScores[0].playerName;
-    DrawTextEx(textfont, highScore.c_str(), { 220, y + 40 }, 18, 1, mapThemes[currentMap - 1]);
+    DrawTextEx(textfont, highScore.c_str(), { 220, y + 40 }, 23, 1, mapThemes[currentMap - 1]);
 
     // Average score
     if (mapScores.size() > 1) {
@@ -272,7 +290,7 @@ void ScoreBoardManager::DrawMapStats(const std::vector<ScoreRecord>& mapScores, 
         }
         int avgScore = totalScore / mapScores.size();
         std::string avgScoreStr = "Average: " + FormatScore(avgScore);
-        DrawTextEx(textfont, avgScoreStr.c_str(), { 220, y + 62 }, 16, 1, secondaryTextColor);
+        DrawTextEx(textfont, avgScoreStr.c_str(), { 220, y + 62 }, 21, 1, secondaryTextColor);
     }
 }
 

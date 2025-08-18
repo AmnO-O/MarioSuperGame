@@ -34,11 +34,12 @@ private:
         {178, 34, 34, 255}    // Fire Brick for Lava World
     };
 
-    Color backgroundColor = { 25, 25, 35, 240 };
-    Color headerColor = { 255, 215, 0, 255 }; // Gold
-    Color primaryTextColor = { 255, 255, 255, 255 };
-    Color secondaryTextColor = { 200, 200, 200, 255 };
+    Color backgroundColor      = { 245, 245, 245, 255 }; // Off-white (#F5F5F5), dịu hơn
+    Color headerColor          = { 218, 165, 32, 255 };  // GoldenRod (#DAA520), vàng đậm hơn
+    Color primaryTextColor     = BLACK; 
+    Color secondaryTextColor = BLACK;
     Color accentColor = { 255, 100, 100, 255 };
+
     Font textfont, headerfont; 
 private: 
     void loadScoresFromFile(std::string filePath);
