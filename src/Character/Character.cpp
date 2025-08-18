@@ -396,13 +396,17 @@ void Player::adaptCollision(ICollidable* other){
 		return; 
 	}
 
-	if (dynamic_cast<Coin*>(other))
-		return;
+	if (dynamic_cast<Coin*>(other)) return;
+	
+
 	if (dynamic_cast<MushroomPowerUp*>(other))
+		return; 
 
 	if (!isBig() && dynamic_cast<MushroomPowerUp*>(other))
 		return;
+
 	if (dynamic_cast<FireFlowerPowerUp*>(other))
+		return; 
 
 	if (!canShootFire() && dynamic_cast<FireFlowerPowerUp*>(other))
 		return;
@@ -419,6 +423,8 @@ void Player::adaptCollision(ICollidable* other){
 		adapt_collision_with_enimies(other); 
 		return; 
 	}
+
+
 
 	movement->adaptCollision(other, Mstate, this); 
 	updateShape(); 

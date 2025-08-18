@@ -5,10 +5,11 @@
 #include "Resources/StatsManager.h"
 
 void Blaze::update(float deltaTime) {
-    if (state == State::DIE) {
-        velocity = { 0, 0 };
-        delayDead += deltaTime;
-        if (delayDead >= 0.5f) setDead();
+    if (target.y != 0.0f) {
+        if (position.y != target.y) 
+            velocity.y = position.y < target.y ? targetSpeed : -targetSpeed;
+        else 
+            velocity.y = 0.0f;
     }
 
     Enemy::update(deltaTime);
@@ -17,7 +18,10 @@ void Blaze::update(float deltaTime) {
 void Blaze::updateAnimationType() {
     switch (state) {
         case State::FLYING:
-            activeAnimation = animations["FLYINGLEFT"].get();
+            if (!dir)
+                activeAnimation = animations["FLYINGLEFT"].get();
+            else
+                activeAnimation = animations["FLYINGRIGHT"].get();
             break;
     }
     updateHitbox();

@@ -5,12 +5,13 @@
 class Bowser : public Enemy, public IFallable {
 private:
     int hp = 100;
+    bool dir = true;
     float opos;
     float jumpTimer = 0.0f;
     const float jumpInterval = 3.0f;
     int jumpCount = 0;
     const int maxJumpCount = 3;
-    float jumpSpeed = -50.0f;
+    float jumpSpeed = -45.0f;
     float atkTimer = 0.0f;
     float atkSpeed = 2.0f;
     std::vector <Vector2> atk;
@@ -34,6 +35,7 @@ public:
     }
 
     void update(float deltaTime) override;
+    void update2(Vector2 ppos) override;
     void updateAnimationType() override;
     void adaptCollision(ICollidable* other) override;
 };

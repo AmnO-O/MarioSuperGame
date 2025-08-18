@@ -47,13 +47,19 @@ void Bowser::update(float deltaTime) {
     }
 }
 
+void Bowser::update2(Vector2 ppos) {
+    if (position.x < ppos.x) dir = 1;
+    else dir = 0;
+    updateAnimationType();
+}
+
 void Bowser::updateAnimationType() {
     switch (state) {
         case State::RUNNING:
-            activeAnimation = animations["WALKLEFT"].get();
-            break;
-        case State::ATTACKING:
-            activeAnimation = animations["ATKLEFT"].get();
+            if (!dir)
+                activeAnimation = animations["WALKLEFT"].get();
+            else
+                activeAnimation = animations["WALKRIGHT"].get();
             break;
         case State::DIE2:
             position.y += 15.0f;
@@ -66,7 +72,37 @@ void Bowser::updateAnimationType() {
 void Bowser::adaptCollision(ICollidable* other) {
     if (dynamic_cast<Coin*>(other) || (dynamic_cast<GameObject*>(other) && !dynamic_cast<Fireball*>(other))) return;
 
-    Enemy::blockCollision(other);
+    Block* block = dynamic_cast<Block*>(other);
+    if (block) {
+        Rectangle blockBox = other->getHitbox();
+        Rectangle enemyBox = getHitbox();
+
+        // Check if overlapping
+        if (!CheckCollisionRecs(enemyBox, blockBox)) return;
+
+        // Calculate overlaps
+        float overlapLeft   = (enemyBox.x + enemyBox.width) - blockBox.x;
+        float overlapRight  = (blockBox.x + blockBox.width) - enemyBox.x;
+        float overlapTop    = (enemyBox.y + enemyBox.height) - blockBox.y;
+        float overlapBottom = (blockBox.y + blockBox.height) - enemyBox.y;
+
+        // Find smallest overlap
+        float minOverlap = overlapLeft;
+        enum Dir { LEFT, RIGHT, TOP, BOTTOM } dir = LEFT;
+
+        if (overlapRight < minOverlap) { minOverlap = overlapRight; dir = RIGHT; }
+        if (overlapTop < minOverlap)   { minOverlap = overlapTop;   dir = TOP; }
+        if (overlapBottom < minOverlap){ minOverlap = overlapBottom;dir = BOTTOM; }
+
+        if (dir == TOP) {
+            position.y -= overlapTop;
+            velocity.y = 0;
+            setGroundLevel(blockBox.y);
+            setOnGround();
+        }
+
+        updateHitbox();
+    }
 
     Player* player = dynamic_cast<Player*>(other);
     if (player) {
@@ -84,7 +120,7 @@ void Bowser::adaptCollision(ICollidable* other) {
 
     Fireball* fireball = dynamic_cast<Fireball*>(other);
     if (fireball) {
-        hp -= state != State::DIE2 && fireball->isActive();
+        hp -= state != State::DIE2 && fireball->isDamged();
     }
 
     if (hp <= 0 && state != State::DIE2) {

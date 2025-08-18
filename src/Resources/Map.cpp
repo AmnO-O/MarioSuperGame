@@ -172,7 +172,7 @@ void Map::Update(float delta) {
             
             if (!b) continue;
 
-            auto factory = std::make_unique<BlazeFactory>();
+            auto factory = std::make_unique<BlazeFactory>(character->getPosition());
             while (!b->isEmpty()) {
                 Vector2 pos = b->getMinion();
                 curEnemies.push_back(factory->createEnemy(pos).release());
@@ -184,6 +184,7 @@ void Map::Update(float delta) {
 
     for (int i = (int)curEnemies.size() - 1; i >= 0; i--) {
         curEnemies[i]->update(delta);
+        curEnemies[i]->update2(character->getPosition());
     }
     
     cam -> update(character); 

@@ -14,6 +14,7 @@ class MainMenu : public GameState
         NormalButton new_game_button;
         NormalButton load_game_button;
         NormalButton about_button; 
+        NormalButton ScoreBoard_button; 
 
         ImageButton settings_button;
         Texture2D settings_button_state;

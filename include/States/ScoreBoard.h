@@ -39,14 +39,30 @@ private:
     Color primaryTextColor = { 255, 255, 255, 255 };
     Color secondaryTextColor = { 200, 200, 200, 255 };
     Color accentColor = { 255, 100, 100, 255 };
+    Font textfont, headerfont; 
 private: 
     void loadScoresFromFile(std::string filePath);
     void printScoresToFile(std::string filePath);
     void appendScoreToFile(const ScoreRecord &record, std::string filePath); 
     void sortScores(); 
     std::string getCurrentDate();
-    ScoreBoardManager(); 
     void renderBackground(); 
+    void renderTabs(); 
+    void DrawCurrentMapScoreboard();
+    void DrawMapStats(const std::vector<ScoreRecord>& mapScores, float y);
+
+    std::vector<ScoreRecord> GetMapScores(int map) const; 
+        std::string FormatScore(int score) {
+        std::string scoreStr = std::to_string(score);
+        int insertPos = scoreStr.length() - 3;
+        while (insertPos > 0) {
+            scoreStr.insert(insertPos, ",");
+            insertPos -= 3;
+        }
+        return scoreStr;
+    }
+
+    ScoreBoardManager(); 
 public: 
     static ScoreBoardManager& getInstance(){
         static ScoreBoardManager instance; 
@@ -68,6 +84,8 @@ class ScoreBoard : public GameState{
 private: 
     ImageButton return_button;
     Texture2D return_button_state;
+    Texture2D sub_background;
+
 public: 
     ScoreBoard(); 
     ~ScoreBoard();

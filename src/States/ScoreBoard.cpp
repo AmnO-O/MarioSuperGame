@@ -6,16 +6,23 @@
 #include "States/MainMenu.h"
 
 ScoreBoardManager::ScoreBoardManager(){
+    textfont = LoadFont("assets/fonts/LilitaOne-Regular.ttf");
+    headerfont = LoadFont("assets/fonts/SuperMarioBros.ttf");
     loadScoresFromFile("assets/scores.txt");
     sortScores();
 }
 
-ScoreBoardManager::~ScoreBoardManager() {}
+ScoreBoardManager::~ScoreBoardManager() {
+    UnloadFont(textfont);
+    UnloadFont(headerfont);
+    allScores.clear();
+}
 
 ScoreBoard::ScoreBoard() : return_button("assets/images/turn_back_white.png", {25, 27, 100, 100}, [&]() {
         StateManager::getInstance().pushState(std::make_unique<MainMenu>());
     }){
     return_button_state = LoadTexture("assets/images/turn_back_red.png");
+    sub_background = LoadTexture("assets/images/sub_menu_background.png");
 }
 
 ScoreBoard::~ScoreBoard() {
@@ -91,6 +98,16 @@ void ScoreBoardManager::sortScores() {
     });
 }
 
+std::vector<ScoreRecord> ScoreBoardManager::GetMapScores(int map) const {
+    std::vector<ScoreRecord> mapScores;
+    for (const auto& record : allScores) {
+        if (record.map == map) {
+            mapScores.push_back(record);
+        }
+    }
+    return mapScores;
+}
+
 void ScoreBoardManager::update(float deltaTime) {
     if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) {
         currentMap = (currentMap == 1) ? 4 : currentMap - 1;
@@ -111,7 +128,7 @@ void ScoreBoardManager::renderBackground(){
     Color bgTop = { (unsigned char)(theme.r * 0.1f), (unsigned char)(theme.g * 0.1f), (unsigned char)(theme.b * 0.1f), 255 };
     Color bgBottom = { (unsigned char)(theme.r * 0.2f), (unsigned char)(theme.g * 0.2f), (unsigned char)(theme.b * 0.2f), 255 };
 
-    DrawRectangleGradientV(0, 0, 1600, 900, bgTop, bgBottom);
+  //  DrawRectangleGradientV(0, 0, 1600, 900, bgTop, bgBottom);
 
     for (int i = 0; i < 15; i++) {
         float x = (i * 107) % 1600;
@@ -124,9 +141,146 @@ void ScoreBoardManager::renderBackground(){
     DrawRectangleRoundedLines(panel, 0.02f, 20, 3, mapThemes[currentMap - 1]);
 }
 
+void ScoreBoardManager::renderTabs() {
+    float tabWidth = 280;
+    float tabHeight = 60;
+    float startX = 200;
+    float tabY = 90;
+
+    for (int i = 0; i < 4; i++) {
+        float tabX = startX + i * (tabWidth + 20);
+
+        // Tab background
+        Color tabColor = (i + 1 == currentMap) ? mapThemes[i] : Color{ 60, 60, 70, 255 };
+        DrawRectangleRounded({ tabX, tabY, tabWidth, tabHeight }, 0.15f, 10, tabColor);
+
+        if (i + 1 == currentMap) {
+            DrawRectangleRoundedLines({ tabX, tabY, tabWidth, tabHeight }, 0.15f, 10, 2, headerColor);
+        }
+
+        // Map number
+        std::string mapNum = std::to_string(i + 1);
+        Vector2 numSize = MeasureTextEx(textfont, mapNum.c_str(), 24, 1);
+        DrawTextEx(textfont, mapNum.c_str(),
+            { tabX + 20, tabY + 10 }, 24, 1,
+            (i + 1 == currentMap) ? primaryTextColor : secondaryTextColor);
+
+        // Map name
+        Vector2 nameSize = MeasureTextEx(headerfont, mapNames[i].c_str(), 16, 1);
+        DrawTextEx(textfont, mapNames[i].c_str(),
+            { tabX + 20, tabY + 35 }, 16, 1,
+            (i + 1 == currentMap) ? primaryTextColor : secondaryTextColor);
+
+        // Score count for this map
+        std::vector<ScoreRecord> mapScores = GetMapScores(i + 1);
+        std::string countStr = "(" + std::to_string(mapScores.size()) + " scores)";
+        DrawTextEx(textfont, countStr.c_str(),
+            { tabX + tabWidth - 90, tabY + 35 }, 14, 1, secondaryTextColor);
+    }
+}
+
+void ScoreBoardManager::DrawCurrentMapScoreboard() {
+    std::vector<ScoreRecord> mapScores = GetMapScores(currentMap);
+
+    // Title
+    std::string title = "MAP " + std::to_string(currentMap) + " - " + mapNames[currentMap - 1];
+    Vector2 titleSize = MeasureTextEx(headerfont, title.c_str(), 36, 2);
+    Vector2 titlePos = { 800 - titleSize.x / 2, 180 };
+
+    // Title shadow
+    DrawTextEx(headerfont, title.c_str(), { titlePos.x + 2, titlePos.y + 2 }, 36, 2, { 0, 0, 0, 100 });
+    DrawTextEx(headerfont, title.c_str(), titlePos, 36, 2, mapThemes[currentMap - 1]);
+
+    // Headers
+    float headerY = 240;
+    DrawRectangle(200, headerY - 5, 1200, 35, { 255, 255, 255, 20 });
+
+    DrawTextEx(headerfont, "RANK", { 220, headerY }, 22, 1, headerColor);
+    DrawTextEx(headerfont, "PLAYER", { 350, headerY }, 22, 1, headerColor);
+    DrawTextEx(headerfont, "SCORE", { 600, headerY }, 22, 1, headerColor);
+    DrawTextEx(headerfont, "DATE", { 900, headerY }, 22, 1, headerColor);
+
+    DrawRectangle(200, headerY + 30, 1200, 2, mapThemes[currentMap - 1]);
+
+    // Scores for current map
+    float startY = 290;
+    float rowHeight = 40;
+    int displayCount = std::min((int)mapScores.size(), 10);
+
+    if (mapScores.empty()) {
+        DrawTextEx(textfont, "No scores recorded for this map yet!",
+            { 800 - 150, 350 }, 20, 1, secondaryTextColor);
+        DrawTextEx(textfont, "Be the first to set a record!",
+            { 800 - 120, 380 }, 18, 1, secondaryTextColor);
+    }
+
+    for (int i = 0; i < displayCount; i++) {
+        float y = startY + i * rowHeight;
+        const ScoreRecord& entry = mapScores[i];
+
+        // Row background
+        if (i % 2 == 0) {
+            DrawRectangle(200, y - 5, 1200, rowHeight - 5, { 255, 255, 255, 10 });
+        }
+
+        // Rank highlighting
+        Color rankColor = secondaryTextColor;
+        if (i == 0) {
+            rankColor = { 255, 215, 0, 255 }; // Gold
+            DrawRectangle(190, y - 5, 8, rowHeight - 5, { 255, 215, 0, 255 });
+        }
+        else if (i == 1) {
+            rankColor = { 192, 192, 192, 255 }; // Silver
+            DrawRectangle(190, y - 5, 8, rowHeight - 5, { 192, 192, 192, 255 });
+        }
+        else if (i == 2) {
+            rankColor = { 205, 127, 50, 255 }; // Bronze
+            DrawRectangle(190, y - 5, 8, rowHeight - 5, { 205, 127, 50, 255 });
+        }
+
+        // Draw entry data
+        std::string rank = std::to_string(i + 1);
+        DrawTextEx(textfont, rank.c_str(), { 235, y }, 20, 1, rankColor);
+        DrawTextEx(textfont, entry.playerName.c_str(), { 350, y }, 20, 1, primaryTextColor);
+
+        std::string scoreStr = FormatScore(entry.score);
+        DrawTextEx(textfont, scoreStr.c_str(), { 600, y }, 20, 1, primaryTextColor);
+        DrawTextEx(textfont, entry.date.c_str(), { 900, y }, 20, 1, secondaryTextColor);
+    }
+
+    // Map statistics
+    DrawMapStats(mapScores, startY + displayCount * rowHeight + 40);
+}
+
+void ScoreBoardManager::DrawMapStats(const std::vector<ScoreRecord>& mapScores, float y) {
+    if (mapScores.empty()) return;
+
+    DrawRectangle(200, y, 1200, 80, { 255, 255, 255, 15 });
+
+    // Statistics
+    std::string totalScores = "Total Scores: " + std::to_string(mapScores.size());
+    DrawTextEx(textfont, totalScores.c_str(), { 220, y + 15 }, 18, 1, secondaryTextColor);
+
+    std::string highScore = "Best Score: " + FormatScore(mapScores[0].score) + " by " + mapScores[0].playerName;
+    DrawTextEx(textfont, highScore.c_str(), { 220, y + 40 }, 18, 1, mapThemes[currentMap - 1]);
+
+    // Average score
+    if (mapScores.size() > 1) {
+        int totalScore = 0;
+        for (const auto& entry : mapScores) {
+            totalScore += entry.score;
+        }
+        int avgScore = totalScore / mapScores.size();
+        std::string avgScoreStr = "Average: " + FormatScore(avgScore);
+        DrawTextEx(textfont, avgScoreStr.c_str(), { 220, y + 62 }, 16, 1, secondaryTextColor);
+    }
+}
+
+
 void ScoreBoardManager::render(){
     renderBackground(); 
-
+    renderTabs(); 
+    DrawCurrentMapScoreboard();
 }
 
 
@@ -141,7 +295,11 @@ void ScoreBoard::update(float deltaTime) {
 
 
 void ScoreBoard::render(){
+    DrawTexture(sub_background, 0, 0, WHITE);
     return_button.render();
     ScoreBoardManager::getInstance().render();
+    bool isHovered = CheckCollisionPointRec(GetMousePosition(), return_button.getBounds());
     
+    if (isHovered)
+        DrawTexture(return_button_state, 25, 27, WHITE);
 }

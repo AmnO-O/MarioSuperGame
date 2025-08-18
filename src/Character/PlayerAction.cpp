@@ -28,10 +28,13 @@ void PlayerActionManager::update(float deltaTime) {
 
     if (currentAction->isFinished(player, player->movement)) {
         actionQueue.pop_front();
+        
     }
+
     if (doneAction()) {
         player->movement->unlockMovement(); 
         player->movement->unlockKeyboardInput();
+        player->setInPipeState(false);
     }
 }
 
@@ -146,6 +149,7 @@ void TopEnterAction::execute(Player *player, PlayerMovement* movement, float del
     if(currentTime == 0){
         player->changeMstate(new EnterState()); 
         movement->lockMovement(); 
+        player->setInPipeState(true);
         Vector2 startPos = movement->getPosition(); 
         Vector2 endPos = {startPos.x, startPos.y + 20.0f};
         lerpMover.start(startPos, endPos, 2.0f); 
@@ -167,6 +171,7 @@ void HorizontalEnterAction::execute(Player *player, PlayerMovement* movement, fl
     if(currentTime == 0){
         player->changeMstate(new StandState()); 
         movement->lockMovement(); 
+        player->setInPipeState(true);
         Vector2 startPos = movement->getPosition(); 
         Vector2 endPos = {startPos.x + 14.0f, startPos.y};
         lerpMover.start(startPos, endPos, 1.5f); 
@@ -186,9 +191,11 @@ void PopupAction::execute(Player *player, PlayerMovement* movement, float deltaT
     if(currentTime == 0){
         player->changeMstate(new StandState()); 
         movement->lockMovement(); 
+        player->setInPipeState(true); 
         Vector2 startPos = movement->getPosition(); 
         Vector2 endPos = {startPos.x, startPos.y - player->getShape().y};
         lerpMover.start(startPos, endPos, 1.0f); 
+        
     }
 
     currentTime += deltaTime; 

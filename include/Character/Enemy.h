@@ -8,7 +8,6 @@ enum State {
     SHELL,
     SPINNING,
     FLYING,
-    ATTACKING,
     DIE,
     DIE2
 };
@@ -29,6 +28,7 @@ public:
 
     virtual void updateAnimationType() = 0;
     void update(float deltaTime) override;
+    virtual void update2(Vector2 ppos) {};
     void render() override;
     void Draw(DrawStat stat);
 
