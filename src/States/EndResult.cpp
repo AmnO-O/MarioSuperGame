@@ -20,18 +20,7 @@ void EndResult::drawStats()
 
     int score_number = StatsManager::getInstance().getScore();
     int number_of_coins = StatsManager::getInstance().getCoins();
-
-    if (score_number > StatsManager::getInstance().getHighScore())
-    {
-        std::string filename = StatsManager::getInstance().getPath();
-        std::ofstream fout(filename);
-        if (fout.is_open())
-        {
-            fout << score_number;
-            fout.close();
-        }
-    }
-
+    
     int maxDigit = 6;
     int scoreDigits = (int)std::to_string(score_number).length();
     std::string scoreStr;

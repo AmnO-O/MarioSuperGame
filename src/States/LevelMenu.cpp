@@ -7,7 +7,6 @@
 LevelMenu::LevelMenu(bool checkMario)
   : isMario(checkMario),
     title("CHOOSE YOUR LEVEL"), 
-    high_score(loadHighScore()),
     return_button("assets/images/turn_back_white.png", {25,27,100,100}, [&]() {
         StateManager::getInstance().pushState(std::make_unique<SubMenu>());
         StatsManager::getInstance().reset();
@@ -39,21 +38,6 @@ LevelMenu::~LevelMenu()
     UnloadFont(font);
     UnloadTexture(level_background);
     UnloadTexture(return_button_state);
-}
-
-std::string LevelMenu::loadHighScore()
-{
-    int highScore = StatsManager::getInstance().getHighScore();
-    int maxDigits = 6;
-
-    std::string highScoreStr = std::to_string(highScore);
-    if (highScoreStr.length() < maxDigits) 
-    {
-        int remaining = maxDigits - (int)highScoreStr.length();
-        highScoreStr.insert(0, remaining, '0');
-    }
-
-    return "TOP-" + highScoreStr;
 }
 
 void LevelMenu::drawBorder(Rectangle bounds)
@@ -95,6 +79,5 @@ void LevelMenu::render()
         DrawTexture(return_button_state, 25, 27, WHITE);
 
     DrawTextEx(font, title.c_str(), {410, 104}, 50, 2, BLACK);
-    DrawTextEx(font, high_score.c_str(), {1088, 20}, 50, 2, BLACK);
 }
 
