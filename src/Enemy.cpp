@@ -97,6 +97,7 @@ void Enemy::enemyCollision(ICollidable* other) {
             if (enemy->state == State::SPINNING) {
                 state = State::DIE2;
                 updateAnimationType();
+                StatsManager::getInstance().addScore(300);
             }
 
             if (enemy->state == State::DIE || enemy->state == State::DIE2) return;
@@ -130,6 +131,7 @@ void Enemy::enemyCollision(ICollidable* other) {
             state = State::DIE2;
             PlaySound(SoundManager::getInstance().stompSound);
             updateAnimationType();
+            StatsManager::getInstance().addScore(300);
         }
     }
 }

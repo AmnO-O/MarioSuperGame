@@ -20,8 +20,7 @@ class LevelMenu : public GameState
         ImageButton world1_4;
         ImageButton return_button;
         Texture2D return_button_state;
-
-        std::string high_score;
+        
         std::string title;
         Font font;
         bool isMario; 

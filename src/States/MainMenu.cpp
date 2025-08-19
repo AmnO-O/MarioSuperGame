@@ -6,10 +6,10 @@
 #include "States/World.h"
 
 MainMenu::MainMenu()  
-  : new_game_button("NEW GAME", {(GetScreenWidth() * 1.f - 330.0f) / 2.0f, 450, 330, 60}, WHITE, RED, [&]() {
+  : new_game_button("NEW GAME", {387, 448, 330, 60}, WHITE, RED, [&]() {
         StateManager::getInstance().pushState(std::make_unique<SubMenu>());
     }),
-    load_game_button("LOAD GAME", {(GetScreenWidth() *1.f - 330.0f) / 2.0f, 543, 330, 60}, WHITE, RED, [&]() {
+    load_game_button("LOAD GAME", {885, 448, 330, 60}, WHITE, RED, [&]() {
         const char* filterPatterns[] = { "*.txt" };
         const char* filename = tinyfd_openFileDialog(
             "Load Game", 
@@ -21,9 +21,11 @@ MainMenu::MainMenu()
         );
         if (filename)
             loadGame(std::string(filename));
-    }), about_button("ABOUT US", {(GetScreenWidth() * 1.f - 330.0f) / 2.0f, 729, 330, 60}, WHITE, RED, [&]() {
+    }), 
+    about_button("ABOUT US", {885, 565, 330, 60}, WHITE, RED, [&]() {
         StateManager::getInstance().pushState(std::make_unique<AboutMenu>());
-    }),ScoreBoard_button("SCOREBOARD", {(GetScreenWidth() * 1.f - 330.0f) / 2.0f, 636, 330, 60}, WHITE, RED, [&]() {
+    }),
+    ScoreBoard_button("SCOREBOARD", {387, 565, 330, 60}, WHITE, RED, [&]() {
         StateManager::getInstance().pushState(std::make_unique<ScoreBoard>());
     }),
     settings_button("assets/images/setting_white.png", {25, 27, 100, 100}, [&]() {
@@ -67,8 +69,6 @@ void MainMenu::loadGame(const std::string& filename)
         std::cerr << "Error loading game : " << e.what() << std::endl;
         fin.close();
     }
-
-
 }
 
 MainMenu::~MainMenu() 

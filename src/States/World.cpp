@@ -149,6 +149,13 @@ void World::drawStats()
 
     std::string timeDisplay = (mins < 10 ? "0" : "") + std::to_string(mins) + ":" + (secs < 10 ? "0" : "") + std::to_string(secs);
     DrawTextEx(font, timeDisplay.c_str(), {1300, 86}, 40, 2, Timer::getInstance().time_color);
+
+    if (StatsManager::getInstance().scoreTimer > 0.0f) 
+    {
+        int popupScore = StatsManager::getInstance().lastScore;
+        std::string popupText = "+" + std::to_string(popupScore);
+        DrawTextEx(font, popupText.c_str(), {430, 86}, 40, 2, YELLOW);
+    }
 }
 
 void World::saveGame(const std::string& filename) const
@@ -237,6 +244,7 @@ void World::update(float deltaTime)
 void World::render() 
 {
     currentMap->Draw();
+    drawStats();
 
     settings_button.render();
 
@@ -250,5 +258,4 @@ void World::render()
     if (popup_menu.isVisible)
         popup_menu.render();
 
-    drawStats();
 }
