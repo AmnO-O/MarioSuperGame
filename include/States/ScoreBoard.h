@@ -55,7 +55,7 @@ private:
     std::vector<ScoreRecord> GetMapScores(int map) const; 
         std::string FormatScore(int score) {
         std::string scoreStr = std::to_string(score);
-        int insertPos = scoreStr.length() - 3;
+        int insertPos = (int)scoreStr.length() - 3;
         while (insertPos > 0) {
             scoreStr.insert(insertPos, ",");
             insertPos -= 3;

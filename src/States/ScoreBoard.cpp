@@ -131,9 +131,9 @@ void ScoreBoardManager::renderBackground(){
   //  DrawRectangleGradientV(0, 0, 1600, 900, bgTop, bgBottom);
 
     for (int i = 0; i < 15; i++) {
-        float x = (i * 107) % 1600;
-        float y = 50 + (i * 37) % 800;
-        DrawCircleV({ x, y }, 4, { theme.r, theme.g, theme.b, 40 });
+        int x = (i * 107) % 1600;
+        int y = 50 + (i * 37) % 800;
+        DrawCircleV({ 1.0f * x, 1.0f * y }, 4, { theme.r, theme.g, theme.b, 40 });
     }
 
     Rectangle panel = { 150, 80, 1300, 740 };
@@ -193,7 +193,7 @@ void ScoreBoardManager::DrawCurrentMapScoreboard() {
 
     // Headers
     float headerY = 240;
-    DrawRectangle(200, headerY - 5, 1200, 35, { 255, 255, 255, 20 });
+    DrawRectangle(200, (int)headerY - 5, 1200, 35, { 255, 255, 255, 20 });
 
     float panelLeft = GetScreenWidth()  * 0.125f; 
     float panelWidth = GetScreenWidth()  * 0.75f; 
@@ -206,13 +206,13 @@ void ScoreBoardManager::DrawCurrentMapScoreboard() {
     float dateX = panelLeft + columnSpacing * 3.1f; // 10% into fourth section
     
     // Headers
-    DrawRectangle(panelLeft, headerY - 5, panelWidth, 35, { 255, 255, 255, 20 });
+    DrawRectangle((int)panelLeft, (int)headerY - 5, (int)panelWidth, 35, { 255, 255, 255, 20 });
     DrawTextEx(headerfont, "RANK", { rankX, headerY }, 22, 1, headerColor);
     DrawTextEx(headerfont, "PLAYER", { playerX, headerY }, 22, 1, headerColor);
     DrawTextEx(headerfont, "SCORE", { scoreX, headerY }, 22, 1, headerColor);
     DrawTextEx(headerfont, "DATE", { dateX, headerY }, 22, 1, headerColor);
 
-    DrawRectangle(200, headerY + 30, 1200, 2, mapThemes[currentMap - 1]);
+    DrawRectangle(200, (int)headerY + 30, 1200, 2, mapThemes[currentMap - 1]);
 
     // Scores for current map
     float startY = 290;
@@ -237,7 +237,7 @@ void ScoreBoardManager::DrawCurrentMapScoreboard() {
 
         // Row background
         if (i % 2 == 0) {
-            DrawRectangle(panelLeft, y - 5, panelWidth, rowHeight - 5, { 255, 255, 255, 10 });
+            DrawRectangle((int)panelLeft, (int)y - 5, (int)panelWidth, (int)rowHeight - 5, { 255, 255, 255, 10 });
         }
 
         // Rank highlighting
@@ -245,15 +245,15 @@ void ScoreBoardManager::DrawCurrentMapScoreboard() {
         float highlightX = panelLeft - GetScreenWidth() * 0.00625f; // 190/1600
         if (i == 0) {
             rankColor = { 255, 215, 0, 255 }; // Gold
-            DrawRectangle(highlightX, y - 5, 8, rowHeight - 5, { 255, 215, 0, 255 });
+            DrawRectangle((int)highlightX, (int)y - 5, 8, (int)rowHeight - 5, { 255, 215, 0, 255 });
         }
         else if (i == 1) {
             rankColor = { 192, 192, 192, 255 }; // Silver
-            DrawRectangle(highlightX, y - 5, 8, rowHeight - 5, { 192, 192, 192, 255 });
+            DrawRectangle((int)highlightX, (int)y - 5, 8, (int)rowHeight - 5, { 192, 192, 192, 255 });
         }
         else if (i == 2) {
             rankColor = { 205, 127, 50, 255 }; // Bronze
-            DrawRectangle(highlightX, y - 5, 8, rowHeight - 5, { 205, 127, 50, 255 });
+            DrawRectangle((int)highlightX, (int)y - 5, 8, (int)rowHeight - 5, { 205, 127, 50, 255 });
         }
 
         // Draw entry data using same column positions
@@ -273,7 +273,7 @@ void ScoreBoardManager::DrawCurrentMapScoreboard() {
 void ScoreBoardManager::DrawMapStats(const std::vector<ScoreRecord>& mapScores, float y) {
     if (mapScores.empty()) return;
 
-    DrawRectangle(200, y, 1200, 80, { 255, 255, 255, 15 });
+    DrawRectangle(200, (int)y, 1200, 80, { 255, 255, 255, 15 });
 
     // Statistics
     std::string totalScores = "Total Scores: " + std::to_string(mapScores.size());
@@ -288,7 +288,7 @@ void ScoreBoardManager::DrawMapStats(const std::vector<ScoreRecord>& mapScores, 
         for (const auto& entry : mapScores) {
             totalScore += entry.score;
         }
-        int avgScore = totalScore / mapScores.size();
+        int avgScore = totalScore / (int)mapScores.size();
         std::string avgScoreStr = "Average: " + FormatScore(avgScore);
         DrawTextEx(textfont, avgScoreStr.c_str(), { 220, y + 62 }, 21, 1, secondaryTextColor);
     }
