@@ -7,22 +7,6 @@ StatsManager& StatsManager::getInstance()
     return instance;
 }
 
-int StatsManager::getHighScore()
-{
-    return high_score;
-}
-
-void StatsManager::setHighScore(int newHigh)
-{
-    if (newHigh > high_score) 
-        high_score = newHigh;
-}
-
-std::string StatsManager::getPath()
-{
-    return high_score_path;
-}
-
 void StatsManager::reset() 
 {
     score = 0;
@@ -38,6 +22,8 @@ void StatsManager::setStats(int newScore, int newCoins)
 void StatsManager::addScore(int amount)
 {
     score += amount;
+    lastScore = amount;
+    scoreTimer = duration; 
 }
 
 void StatsManager::addCoins()
@@ -57,21 +43,7 @@ int StatsManager::getCoins() const
 
 void StatsManager::update(float deltaTime)
 {
-    std::ifstream fin(high_score_path);
-    if (fin.is_open()) 
-    {
-        int h;
-        fin >> h;
-
-        if (h > 999999)
-            high_score = 999999;
-        else
-            high_score = h;
-
-        fin.close();
-    }
-
-    else
-        high_score = 0; 
+    if (scoreTimer > 0.0f)
+        scoreTimer -= deltaTime;
 }
 

@@ -43,14 +43,15 @@ public:
     }
 
     bool isActive() const {return (active || activeAnimation->isOnePeriodPassed() == false);}
-    
+    bool isDamged() const {return active;}
+
     Rectangle getHitbox() const override {
         return GameObject::getHitbox();
     }
 
     void setGroundLevel(float groundLevel) override {
         this->groundLevel = groundLevel;
-    
+
         if(position.y >= groundLevel - 16){
             position.y = groundLevel - 16;    
         }

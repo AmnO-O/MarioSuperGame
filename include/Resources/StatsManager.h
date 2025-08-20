@@ -13,13 +13,15 @@ class StatsManager
 
         int score;
         int coins;
-        int high_score;
-        std::string high_score_path = "data/highscore.txt";
 
     public:
 
         float time_taken; 
         static StatsManager& getInstance();
+
+        int lastScore = 0;
+        float scoreTimer = 0.0f;
+        float duration = 1.0f;
         
         int getHighScore();
         void setHighScore(int newHigh);

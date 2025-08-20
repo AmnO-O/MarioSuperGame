@@ -122,7 +122,7 @@ void Bowser::adaptCollision(ICollidable* other) {
 
     Fireball* fireball = dynamic_cast<Fireball*>(other);
     if (fireball) {
-        hp -= state != State::DIE2 && fireball->isActive();
+        hp -= state != State::DIE2 && fireball->isDamged();
     }
 
     if (hp <= 0 && state != State::DIE2) {

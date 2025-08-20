@@ -61,12 +61,15 @@ void Bridge::Update(float deltaTime, Player* player) {
 void Bridge::changePlayerPos(PlayerActionManager &pm) {
     // if (hasBroken && animationEnterBridge.doneAction()) {
     if (hasBroken) {
+        pm.addAction(std::make_unique<WaitAction>(Vector2{pos.x + body.width / 2, pos.y - 10}, true, 2.0f));
+        pm.addAction(std::make_unique<JumpAction>(150.0f, -200.0f));
     }
 }
 
 void Bridge::save(std::ostream &os) {
     os << (int)stat << " " << width << " " << hasBroken << "\n";
 }
+
 void Bridge::load(std::istream &is) {
     is >> stat >> width >> hasBroken;
 }
