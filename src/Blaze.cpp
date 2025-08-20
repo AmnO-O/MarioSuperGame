@@ -6,7 +6,7 @@
 
 void Blaze::update(float deltaTime) {
     if (target.y != 0.0f) {
-        if (position.y != target.y) 
+        if (abs(position.y - target.y) > 2.0f) 
             velocity.y = position.y < target.y ? targetSpeed : -targetSpeed;
         else 
             velocity.y = 0.0f;

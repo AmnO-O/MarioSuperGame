@@ -16,7 +16,7 @@ void Bowser::update(float deltaTime) {
             velocity.y += 300 * deltaTime;
         else velocity.y = 0;
     }
-    
+
     position.x += velocity.x * deltaTime;
     position.y += velocity.y * deltaTime;
 
@@ -24,6 +24,8 @@ void Bowser::update(float deltaTime) {
         activeAnimation->update(deltaTime);
         updateHitbox();
     }
+
+    if (position.y > 140.0f) return ;
 
     if (jumpTimer < jumpInterval) {
         jumpTimer += deltaTime;

@@ -12,9 +12,11 @@ void Piranha::update(float deltaTime) {
         setDead();
     }
 
+    if (stop) return ;
+
     if (isGoing) {
         timer += deltaTime;
-        if (timer >= 3.5f) velocity.y = -velocity.y, timer = 0.0f;   
+        if (timer >= 3.4f) velocity.y = -velocity.y, timer -= 3.4f;   
     }
     
     Enemy::update(deltaTime);
@@ -22,9 +24,25 @@ void Piranha::update(float deltaTime) {
     hidden = (position.y > top - 2.0f);
 }
 
+void Piranha::update2(Vector2 ppos) {
+    if (position.x - 5.0f < ppos.x && ppos.x < position.x + hitbox.width + 5.0f) {
+        if (ppos.y + 32.0f > top) {
+            setHidden();
+            stop = true;
+        }
+    }
+    else stop = false;
+}
+
 void Piranha::updateAnimationType() {
     activeAnimation = animations["FLYING"].get();
     updateHitbox();
+}
+
+void Piranha::setHidden() {
+    if (hidden) return ;
+    while (!hidden) update(0.2);
+    update(0.2);
 }
 
 void Piranha::adaptCollision(ICollidable* other) {
@@ -45,7 +63,7 @@ void Piranha::adaptCollision(ICollidable* other) {
         }
 
         if (playerHitbox.y + playerHitbox.height <= hitbox.y + 5 && hidden) {
-            update(-1.5f);
+            setHidden();
         }
     }
 }
