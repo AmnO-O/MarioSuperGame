@@ -312,7 +312,7 @@ void Map::save(std::ostream &os) {
     for (int i = 0; i < camChange.size(); i++)
         os << camChange[i].x << " " << camChange[i].y << " " << camChange[i].z << "\n";
     
-    // os << curEnemies.size() << "\n";
+    os << curEnemies.size() << "\n";
     for (int i = 0; i < curEnemies.size(); i++)
         curEnemies[i]->save(os);
     
@@ -341,32 +341,15 @@ void Map::load(std::istream &is) {
         camChange.push_back({x, y, z});
     }
 
-    // is >> curEnemies.size();
-    for (int i = 0; i < curEnemies.size(); i++)
-        curEnemies[i]->load(is);
-    
-    // is >> enemies.size();
+    is >> n;
     for (int i = 0; i < enemies.size(); i++)
         enemies[i]->load(is);
-
-    // do not load dead enemies
-    /*for (int i = 0; i < curEnemies.size(); i++)
-    {
-        if (curEnemies[i]->state == State::DIE || curEnemies[i]->state == State::DIE2)
-        {
-            delete curEnemies[i];
-            curEnemies.erase(curEnemies.begin() + i);
-        }
+        
+    for (int i = 0; i < n; i++) {
+        curEnemies.push_back(enemies[0]);
+        CollisionManager::getInstance().Register(curEnemies[i]);
+        enemies.pop_front();
     }
-
-    for (int i = 0; i < enemies.size(); i++)
-    {
-        if (enemies[i]->state == State::DIE || enemies[i]->state == State::DIE2)
-        {
-            delete enemies[i];
-            enemies.erase(enemies.begin() + i);
-        }
-    }*/
 
     pm.loadData(is);
 

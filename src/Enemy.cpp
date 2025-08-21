@@ -34,8 +34,8 @@ void Enemy::readRectAnimation(const std::string& filePath, Texture2D& sheet) {
 void Enemy::update(float deltaTime) 
 {
     if (dead) return; 
-    if (position.y > 480.0f) 
-        setDead(); 
+    // if (position.y > 480.0f) 
+    //     setDead(); 
 
     if (state == State::DIE2) {
         velocity = {20.0f, -75.0f};
@@ -229,11 +229,11 @@ void Enemy::save(std::ostream& os)
 
     os<<static_cast<int>(type)<<' '<<static_cast<int>(state)<<' ';
     
-    if (state == State::DIE2 || state == State::DIE)
-    {
-        os<<1<<' '<<1<<' '<<1<<' '<<1<<std::endl;
-        return;
-    }
+    // if (state == State::DIE2 || state == State::DIE)
+    // {
+    //     os<<1<<' '<<1<<' '<<1<<' '<<1<<std::endl;
+    //     return;
+    // }
     
     os<<position.x<<' '<<position.y<<' '<<velocity.x<<' '<<velocity.y<<std::endl;
 }
