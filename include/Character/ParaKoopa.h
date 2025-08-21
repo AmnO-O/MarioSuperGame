@@ -14,6 +14,6 @@ public:
     void update(float deltaTime) override;
     void updateAnimationType() override;
     void adaptCollision(ICollidable* other) override;
-    void save(std::ostream& os) { Enemy::save(os); }
-    void load(std::istream& is) { Enemy::load(is); }
+    void save(std::ostream& os) { os << timer << " "; Koopa::save(os); }
+    void load(std::istream& is) { is >> timer; Koopa::load(is); }
 };

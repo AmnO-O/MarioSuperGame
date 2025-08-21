@@ -224,8 +224,8 @@ void Enemy::adaptCollision(ICollidable* other) {
 
 void Enemy::save(std::ostream& os) 
 {
-    if (dead)
-        state = State::DIE2;
+    // if (dead)
+    //     state = State::DIE2;
 
     os<<static_cast<int>(type)<<' '<<static_cast<int>(state)<<' ';
     
@@ -248,8 +248,8 @@ void Enemy::load(std::istream& is)
     position = {x, y};
     velocity = {v_x, v_y};
 
-    if (state == State::DIE || state == State::DIE2)
-        return;
+    // if (state == State::DIE || state == State::DIE2)
+    //     return;
     
     updateAnimationType();
 }
