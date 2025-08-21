@@ -31,7 +31,8 @@ void Enemy::readRectAnimation(const std::string& filePath, Texture2D& sheet) {
     fin.close();
 }
 
-void Enemy::update(float deltaTime) {
+void Enemy::update(float deltaTime) 
+{
     if (dead) return; 
     if (position.y > 480.0f) 
         setDead(); 
