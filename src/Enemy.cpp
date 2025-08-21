@@ -32,7 +32,10 @@ void Enemy::readRectAnimation(const std::string& filePath, Texture2D& sheet) {
 }
 
 void Enemy::update(float deltaTime) {
-    if (dead) return;
+    if (dead) return; 
+    if (position.y > 480.0f) 
+        setDead(); 
+
     if (state == State::DIE2) {
         velocity = {20.0f, -75.0f};
         delayDead += deltaTime;
@@ -41,12 +44,18 @@ void Enemy::update(float deltaTime) {
 
     if (state != State::DIE2 && state != State::FLYING) {
         if (position.y + activeAnimation->getCurrentShape().y < groundLevel)
+        {
             velocity.y += 300 * deltaTime;
+        }
+
         else velocity.y = 0;
     }
     
     position.x += velocity.x * deltaTime;
     position.y += velocity.y * deltaTime;
+
+    
+
 
     if (activeAnimation) {
         activeAnimation->update(deltaTime);
@@ -210,4 +219,36 @@ void Enemy::adaptCollision(ICollidable* other) {
     enemyCollision(other);
     fireballCollision(other);
     blockCollision(other);
+}
+
+void Enemy::save(std::ostream& os) 
+{
+    if (dead)
+        state = State::DIE2;
+
+    os<<static_cast<int>(type)<<' '<<static_cast<int>(state)<<' ';
+    
+    if (state == State::DIE2 || state == State::DIE)
+    {
+        os<<1<<' '<<1<<' '<<1<<' '<<1<<std::endl;
+        return;
+    }
+    
+    os<<position.x<<' '<<position.y<<' '<<velocity.x<<' '<<velocity.y<<std::endl;
+}
+
+void Enemy::load(std::istream& is)
+{
+    int typeInt, stateInt;
+    float x, y, v_x, v_y;
+    is >> typeInt >> stateInt >> x >> y >> v_x >> v_y; 
+    type = static_cast<CharacterType>(typeInt);
+    state = static_cast<State>(stateInt);
+    position = {x, y};
+    velocity = {v_x, v_y};
+
+    if (state == State::DIE || state == State::DIE2)
+        return;
+    
+    updateAnimationType();
 }

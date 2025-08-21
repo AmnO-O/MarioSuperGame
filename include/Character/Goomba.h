@@ -22,4 +22,6 @@ public:
     void update(float deltaTime) override;
     void updateAnimationType() override;
     void adaptCollision(ICollidable* other) override;
+    void save(std::ostream& os) { Enemy::save(os); }
+    void load(std::istream& is) { Enemy::load(is); }
 };

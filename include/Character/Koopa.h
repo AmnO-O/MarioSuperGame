@@ -40,4 +40,6 @@ public:
     void stopSpinning();
     bool isInShell() const { return state == State::SHELL; }
     bool isSpinningState() const { return state == State::SPINNING; }
+    void save(std::ostream& os) { Enemy::save(os); }
+    void load(std::istream& is) { Enemy::load(is); }
 };

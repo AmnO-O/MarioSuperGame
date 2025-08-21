@@ -313,12 +313,12 @@ void Map::save(std::ostream &os) {
         os << camChange[i].x << " " << camChange[i].y << " " << camChange[i].z << "\n";
     
     // os << curEnemies.size() << "\n";
-    // for (int i = 0; i < curEnemies.size(); i++)
-    //     curEnemies[i]->save(os);
+    for (int i = 0; i < curEnemies.size(); i++)
+        curEnemies[i]->save(os);
     
     // os << enemies.size() << "\n";
-    // for (int i = 0; i < enemies.size(); i++)
-    //     enemies[i]->save(os);
+    for (int i = 0; i < enemies.size(); i++)
+        enemies[i]->save(os);
 
     pm.printData(os);
 
@@ -342,12 +342,31 @@ void Map::load(std::istream &is) {
     }
 
     // is >> curEnemies.size();
-    // for (int i = 0; i < curEnemies.size(); i++)
-    //     curEnemies[i]->load(is);
+    for (int i = 0; i < curEnemies.size(); i++)
+        curEnemies[i]->load(is);
     
     // is >> enemies.size();
-    // for (int i = 0; i < enemies.size(); i++)
-    //     enemies[i]->load(is);
+    for (int i = 0; i < enemies.size(); i++)
+        enemies[i]->load(is);
+
+    // do not load dead enemies
+    /*for (int i = 0; i < curEnemies.size(); i++)
+    {
+        if (curEnemies[i]->state == State::DIE || curEnemies[i]->state == State::DIE2)
+        {
+            delete curEnemies[i];
+            curEnemies.erase(curEnemies.begin() + i);
+        }
+    }
+
+    for (int i = 0; i < enemies.size(); i++)
+    {
+        if (enemies[i]->state == State::DIE || enemies[i]->state == State::DIE2)
+        {
+            delete enemies[i];
+            enemies.erase(enemies.begin() + i);
+        }
+    }*/
 
     pm.loadData(is);
 
