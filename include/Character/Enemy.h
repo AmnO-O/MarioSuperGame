@@ -52,5 +52,8 @@ public:
     void fireballCollision(ICollidable* other);
     void adaptCollision(ICollidable* other) override;
 
+    virtual void save(std::ostream& os);
+    virtual void load(std::istream& is);
+
     ~Enemy() {}
 };

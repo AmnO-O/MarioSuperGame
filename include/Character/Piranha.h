@@ -27,4 +27,6 @@ public:
     void update2(Vector2 ppos) override;
     void updateAnimationType() override;
     void adaptCollision(ICollidable* other);
+    void save(std::ostream& os) { os << timer << " "; Enemy::save(os); }
+    void load(std::istream& is) { is >> timer; Enemy::load(is); }
 };

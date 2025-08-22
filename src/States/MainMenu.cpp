@@ -13,7 +13,7 @@ MainMenu::MainMenu()
         const char* filterPatterns[] = { "*.txt" };
         const char* filename = tinyfd_openFileDialog(
             "Load Game", 
-            "", 
+            "progress/", 
             1, 
             filterPatterns, 
             "Text Files", 

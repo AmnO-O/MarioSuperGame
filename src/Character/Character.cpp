@@ -699,6 +699,8 @@ void Player::loadData(std::istream &fin){
 	movement->setVelocityY(velocity.y);
 
 	movement->setPosition(pos); 
+	if (groundLevel == INT_MAX)
+		groundLevel = INFINITY;
 	setGroundLevel(groundLevel); 
 
 
@@ -711,7 +713,10 @@ void Player::printData(std::ostream &fout){
 
 	fout << movement->getPosition().x << ' ' << movement->getPosition().y << ' '; 
 	fout << movement->getVelocity().x << ' ' << movement->getVelocity().y << ' '; 
-	fout << groundLevel << '\n'; 
+	if (groundLevel == INFINITY)
+		fout << INT_MAX << '\n';
+	else
+		fout << groundLevel << '\n'; 
 
 	fireballs.printData(fout);
 }
