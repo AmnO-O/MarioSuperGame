@@ -1,22 +1,29 @@
 #include "States/EndResult.h"
 #include "States/MainMenu.h"
+#include "States/World.h"
 #include "Resources/Timer.h"
 #include <fstream>
 
-EndResult::EndResult(int mIndex)
+EndResult::EndResult(int mIndex, bool checkMario)
     : title("LEVEL COMPLETED!"),
-      back_button("EXIT", { (GetScreenWidth() * 1.0f - 330.0f) / 2.0f, 691, 330, 50 }, WHITE, RED, [&]() {
-          backToMainMenu();
+      continue_button("CONTINUE", { (GetScreenWidth() * 1.0f - 330.f) / 2.0f, 580, 330, 50}, WHITE, RED, [&]() {
+        toNextLevel(); 
       }),
-      prevMapIndex(mIndex)
+      prevMapIndex(mIndex),
+      isMario(checkMario)
 {
     font = LoadFont("assets/fonts/SuperMarioBros.ttf");
+
+    if (prevMapIndex != 4)
+        back_button.setUp("EXIT", { (GetScreenWidth() * 1.0f - 330.0f) / 2.0f, 691, 330, 50 }, WHITE, RED, [&]() {backToMainMenu();});
+    else
+        back_button.setUp("EXIT", { (GetScreenWidth() * 1.0f - 330.0f) / 2.0f, 580, 330, 50 }, WHITE, RED, [&]() {backToMainMenu();});
 }
 
 void EndResult::drawStats()
 {
     std::string score = "SCORE:";
-    DrawTextEx(font, score.c_str(), {511, 282}, 40, 2, WHITE);
+    DrawTextEx(font, score.c_str(), {511, 182}, 40, 2, WHITE);
 
     int score_number = StatsManager::getInstance().getScore();
     int number_of_coins = StatsManager::getInstance().getCoins();
@@ -34,10 +41,10 @@ void EndResult::drawStats()
         scoreStr += std::to_string(score_number);
     }
 
-    DrawTextEx(font, scoreStr.c_str(), {868, 282}, 40, 2, WHITE);
+    DrawTextEx(font, scoreStr.c_str(), {868, 182}, 40, 2, WHITE);
 
     std::string coins = "COINS:";
-    DrawTextEx(font, coins.c_str(), {511, 376}, 40, 2, WHITE);
+    DrawTextEx(font, coins.c_str(), {511, 276}, 40, 2, WHITE);
 
     int maxCoinsDigits = 2;
     int coinsDigits = (int)std::to_string(number_of_coins).length();
@@ -52,10 +59,10 @@ void EndResult::drawStats()
         coinsStr += std::to_string(number_of_coins);
     }
 
-    DrawTextEx(font, coinsStr.c_str(), {1015, 376}, 40, 2, WHITE);
+    DrawTextEx(font, coinsStr.c_str(), {1015, 276}, 40, 2, WHITE);
 
     std::string w = "WORLD:"; std::string title;
-    DrawTextEx(font, w.c_str(), {511, 475}, 40, 2, WHITE);
+    DrawTextEx(font, w.c_str(), {511, 375}, 40, 2, WHITE);
 
     if (prevMapIndex == 1)
         title = "1-1";
@@ -66,16 +73,16 @@ void EndResult::drawStats()
     else if (prevMapIndex == 4)
         title = "1-4";
     
-    DrawTextEx(font, title.c_str(), {985, 475}, 40, 2, WHITE);
+    DrawTextEx(font, title.c_str(), {985, 375}, 40, 2, WHITE);
 
     std::string time = "TIME:";
-    DrawTextEx(font, time.c_str(), {511, 571}, 40, 2, WHITE);   
+    DrawTextEx(font, time.c_str(), {511, 471}, 40, 2, WHITE);   
     int totalSec = (int)StatsManager::getInstance().time_taken; // small epsilon for safety
     int mins = totalSec / 60;
     int secs = totalSec % 60;
 
     std::string timeDisplay = (mins < 10 ? "0" : "") + std::to_string(mins) + ":" + (secs < 10 ? "0" : "") + std::to_string(secs);
-    DrawTextEx(font, timeDisplay.c_str(), {904, 571}, 40, 2, WHITE);
+    DrawTextEx(font, timeDisplay.c_str(), {904, 471}, 40, 2, WHITE);
 }
 
 void EndResult::backToMainMenu()
@@ -88,18 +95,29 @@ void EndResult::backToMainMenu()
     SoundManager::getInstance().game_over_played = false;
 }
 
+void EndResult::toNextLevel()
+{
+    StatsManager::getInstance().reset(); 
+    if (prevMapIndex != 4)
+        StateManager::getInstance().pushState(std::make_unique<World>(isMario, prevMapIndex + 1, 300.0f));
+}
+
 void EndResult::update(float deltaTime)
 {
     back_button.update(deltaTime);
+    if (prevMapIndex != 4)
+        continue_button.update(deltaTime);
 }
 
 void EndResult::render()
 {
     DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), { 0, 0, 0, 255 });
     
-    DrawTextEx(font, title.c_str(), {444, 181}, 50, 2, WHITE);
+    DrawTextEx(font, title.c_str(), {444, 81}, 50, 2, WHITE);
     drawStats();
 
     back_button.render();
+    if (prevMapIndex != 4)
+        continue_button.render();
 }
 

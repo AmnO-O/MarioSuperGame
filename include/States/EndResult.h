@@ -16,16 +16,19 @@ class EndResult : public GameState
         Font font;
         std::string title;
         NormalButton back_button;
+        NormalButton continue_button;
         int prevMapIndex;
+        bool isMario;
 
 
     public:
 
-        EndResult(int mIndex);
+        EndResult(int mIndex, bool checkMario);
         ~EndResult() = default;
 
         void drawStats();
         void backToMainMenu();
+        void toNextLevel(); 
         void processInput() override {};
         void update(float deltaTime) override;
         void render() override;    

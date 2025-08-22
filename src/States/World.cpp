@@ -43,6 +43,7 @@ World::World(bool checkMario, int index, float time)
 
     currentMap->SetUp(character);
     Timer::getInstance().setup(time_level);
+    StatsManager::getInstance().reset(); 
 }
 
 World::~World() 
@@ -220,7 +221,7 @@ void World::update(float deltaTime)
 
     if (Timer::getInstance().remaining <= 0.0f && isEnd && !IsSoundPlaying(SoundManager::getInstance().finalscoreSound))
     {
-        StateManager::getInstance().pushState(std::make_unique<EndResult>(mapIndex));
+        StateManager::getInstance().pushState(std::make_unique<EndResult>(mapIndex, isMario));
         PlaySound(SoundManager::getInstance().endSound);
         ScoreBoardManager::getInstance().addScore(isMario ? "Mario" : "Luigi", mapIndex, score_number);
     }
