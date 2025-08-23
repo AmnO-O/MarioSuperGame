@@ -4,6 +4,7 @@
 #include "States/ScoreBoard.h"
 #include "tinyfiledialogs.h"
 #include "States/World.h"
+#include "States/AboutMenu.h"
 
 MainMenu::MainMenu()  
   : new_game_button("NEW GAME", {387, 448, 330, 60}, WHITE, RED, [&]() {
@@ -81,8 +82,9 @@ void MainMenu::update(float deltaTime)
 {
     new_game_button.update(deltaTime);
     load_game_button.update(deltaTime);
-    settings_button.update(deltaTime);
     ScoreBoard_button.update(deltaTime); 
+    about_button.update(deltaTime);
+    settings_button.update(deltaTime);
 }
 
 void MainMenu::render() 
@@ -90,11 +92,10 @@ void MainMenu::render()
     DrawTexture(background, 0, 0, WHITE);
 
     new_game_button.render(); 
-    load_game_button.render(); 
-    about_button.render(); 
-    ScoreBoard_button.render(); 
+    load_game_button.render();  
+    ScoreBoard_button.render();
+    about_button.render();
     settings_button.render();
-
 
     bool isHovered = CheckCollisionPointRec(GetMousePosition(), settings_button.getBounds());
     if (isHovered)
