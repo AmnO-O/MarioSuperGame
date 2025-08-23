@@ -4,11 +4,8 @@
 #include "States/ScoreBoard.h"
 #include "tinyfiledialogs.h"
 #include "States/World.h"
-<<<<<<< HEAD
 #include "States/NameInputPopUp.h"
-=======
 #include "States/AboutMenu.h"
->>>>>>> e286dfaa5f13b363b9879b87c3a97a186a9d8585
 
 MainMenu::MainMenu()  
   : new_game_button("NEW GAME", {387, 448, 330, 60}, WHITE, RED, [&]() {
