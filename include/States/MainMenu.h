@@ -6,7 +6,7 @@
 #include "../Resources/StateManager.h"
 #include <memory>
 #include <string>
-#include "AboutMenu.h"
+
 class MainMenu : public GameState
 {
     private:
