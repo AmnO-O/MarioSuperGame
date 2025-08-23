@@ -27,6 +27,7 @@ private:
     std::vector<Block*> blocks;
     std::deque<Enemy*> enemies;
     std::vector<Enemy*> curEnemies;
+    std::vector<Enemy*> blazes;
     Player *character;
     PlayerActionManager pm;
 

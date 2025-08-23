@@ -41,8 +41,8 @@ void Piranha::updateAnimationType() {
 
 void Piranha::setHidden() {
     if (hidden) return ;
-    while (!hidden) update(0.2);
-    update(0.2);
+    while (!hidden) update(0.2f);
+    update(0.2f);
 }
 
 void Piranha::adaptCollision(ICollidable* other) {

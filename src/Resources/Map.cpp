@@ -175,8 +175,8 @@ void Map::Update(float delta) {
             auto factory = std::make_unique<BlazeFactory>(character->getPosition());
             while (!b->isEmpty()) {
                 Vector2 pos = b->getMinion();
-                curEnemies.push_back(factory->createEnemy(pos).release());
-                CollisionManager::getInstance().Register(curEnemies.back());
+                blazes.push_back(factory->createEnemy(pos).release());
+                CollisionManager::getInstance().Register(blazes.back());
             }
         }
 
@@ -186,6 +186,9 @@ void Map::Update(float delta) {
         curEnemies[i]->update(delta);
         curEnemies[i]->update2(character->getPosition());
     }
+
+    for (int i = (int)blazes.size() - 1; i >= 0; i--) 
+        blazes[i]->update(delta);
     
     cam -> update(character); 
     if (character->getPosition().x >= des) 
@@ -245,6 +248,10 @@ void Map::Draw() const {
         for (int i = 0; i < curEnemies.size(); i++) {
             curEnemies[i]->Draw(DrawStat::First);
         }
+                        
+        for (int i = 0; i < blazes.size(); i++) {
+            blazes[i]->Draw(DrawStat::First);
+        }
 
         for (int i = 0; i < blocks.size(); i++) {
             blocks[i]->Draw(DrawStat::First);
@@ -272,6 +279,10 @@ void Map::Unload() {
 
     for (int i = 0; i < enemies.size(); i++) {
         delete enemies[i];
+    }
+    
+    for (int i = 0; i < blazes.size(); i++) {
+        delete blazes[i];
     }
     
     delete cam;
@@ -320,6 +331,10 @@ void Map::save(std::ostream &os) {
     for (int i = 0; i < enemies.size(); i++)
         enemies[i]->save(os);
 
+    os << blazes.size() << '\n';
+    for (int i = 0; i < blazes.size(); i++)
+        blazes[i]->save(os);
+
     pm.printData(os);
 
     // os << blocks.size() << "\n";
@@ -349,6 +364,13 @@ void Map::load(std::istream &is) {
         curEnemies.push_back(enemies[0]);
         CollisionManager::getInstance().Register(curEnemies[i]);
         enemies.pop_front();
+    }
+
+    is >> n;
+    for (int i = 0; i < n; i++) {
+        blazes.push_back(new Blaze({0, 0}, {0, 0}));
+        blazes[i]->load(is);
+        CollisionManager::getInstance().Register(blazes[i]);
     }
 
     pm.loadData(is);

@@ -17,4 +17,12 @@ public:
     void update(float deltaTime) override;
     void updateAnimationType() override;
     void adaptCollision(ICollidable* other) override {};
+    void save(std::ostream &os) override {
+        Enemy::save(os);
+        os << dir << " " << target.x << " " << target.y << '\n';
+    }
+    void load(std::istream &is) override {
+        Enemy::load(is);
+        is >> dir >> target.x >> target.y;
+    }
 };

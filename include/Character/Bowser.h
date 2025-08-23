@@ -38,4 +38,32 @@ public:
     void update2(Vector2 ppos) override;
     void updateAnimationType() override;
     void adaptCollision(ICollidable* other) override;
+    void save(std::ostream &os) override {
+        Enemy::save(os);
+        os << hp << " ";
+        os << dir << " ";
+        os << opos << " ";
+        os << jumpTimer << " ";
+        os << jumpCount << " ";
+        os << atkTimer << " ";
+        os << atk.size() << '\n';
+        for (int i = 0; i < atk.size(); i++)
+            os << atk[i].x << " " << atk[i].y << "\n";
+    }
+    void load(std::istream &is) override {
+        Enemy::load(is);
+        is >> hp;
+        is >> dir;
+        is >> opos;
+        is >> jumpTimer;
+        is >> jumpCount;
+        is >> atkTimer;
+        int n;
+        is >> n;
+        for (int i = 0; i < n; i++) {
+            float x, y;
+            is >> x >> y;
+            atk.push_back({x, y});
+        }
+    }
 };
