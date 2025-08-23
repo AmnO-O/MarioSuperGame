@@ -1,6 +1,7 @@
 #include "States/NameInputPopUp.h"
 #include "States/SubMenu.h"
 #include <string>
+#include <cmath>
 
 std::string NameInputPopUp::playerName = "";
 

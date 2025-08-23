@@ -4,7 +4,7 @@
 #include "Exceptions.h"
 #include "Blocks/Block.h"
 #include "Blocks/Coin.h"
-#include "Character/Enemy.h"
+#include "Enemy/Enemy.h"
 #include <iostream>
 #include <cmath>
 

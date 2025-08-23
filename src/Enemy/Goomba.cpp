@@ -1,4 +1,4 @@
-#include "Character/Goomba.h"
+#include "Enemy/Goomba.h"
 #include "Blocks/Coin.h"
 #include "Character/Character.h"
 #include "Resources/SoundManager.h"

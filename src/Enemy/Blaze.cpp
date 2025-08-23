@@ -1,4 +1,4 @@
-#include "Character/Blaze.h"
+#include "Enemy/Blaze.h"
 #include "Blocks/Coin.h"
 #include "Character/Character.h"
 #include "Resources/SoundManager.h"

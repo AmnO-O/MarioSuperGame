@@ -1,6 +1,5 @@
-#include "Character/Piranha.h"
+#include "Enemy/Piranha.h"
 #include "Character/Character.h"
-#include "Resources/Map.h"
 #include "Blocks/Block.h"
 #include "Blocks/Coin.h"
 #include "Resources/SoundManager.h"

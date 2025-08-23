@@ -5,7 +5,7 @@
 #include "Exceptions.h"
 #include <cassert>
 #include <cmath>
-#include "Character/Piranha.h"
+#include "Enemy/Piranha.h"
 
 void PlayerMovement::setOnGround(){
 	position.y = groundLevel - shape.y; 

@@ -1,7 +1,7 @@
 #include "Character/Character.h"
 #include "Blocks/Coin.h"
 #include "Blocks/Fire.h"
-#include "Character/Enemy.h"
+#include "Enemy/Enemy.h"
 #include "Resources/StateManager.h"
 #include "States/GameOverMenu.h"
 #include <iostream>

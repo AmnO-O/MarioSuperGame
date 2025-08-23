@@ -19,3 +19,6 @@ Mario 2025-8-22 4 31150
 nothing(Mario) 2025-8-23 4 26450
 nothing(Mario) 2025-8-23 1 30350
 nothing(Mario) 2025-8-23 2 34000
+Dr.Phong(Mario) 2025-8-23 1 32600
+Dr.Phong(Mario) 2025-8-23 2 34750
+Dr.Phong(Mario) 2025-8-23 4 27900

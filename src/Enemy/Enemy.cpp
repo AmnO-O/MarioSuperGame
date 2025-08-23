@@ -1,4 +1,4 @@
-#include "Character/Enemy.h"
+#include "Enemy/Enemy.h"
 #include "Blocks/Block.h"
 #include "Resources/StatsManager.h"
 
