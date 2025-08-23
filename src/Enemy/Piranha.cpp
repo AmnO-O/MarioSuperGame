@@ -24,6 +24,7 @@ void Piranha::update(float deltaTime) {
 }
 
 void Piranha::update2(Vector2 ppos) {
+    if (state == State::DIE2) return ;
     if (position.x - 5.0f < ppos.x && ppos.x < position.x + hitbox.width + 5.0f) {
         if (ppos.y + 32.0f > top) {
             setHidden();
