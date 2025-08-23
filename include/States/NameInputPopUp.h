@@ -41,6 +41,7 @@ public:
     void hide();
     bool getIsActive() const { return isActive; }
     static const  std::string getPlayerName() { return playerName; }
+    static const void setPlayerName(const std::string& name) { playerName = name; }
     int getMapNumber() const { return mapNumber; }
     void processInput() override;
     void update(float deltaTime) override;
