@@ -4,10 +4,11 @@
 #include "States/ScoreBoard.h"
 #include "tinyfiledialogs.h"
 #include "States/World.h"
+#include "States/NameInputPopUp.h"
 
 MainMenu::MainMenu()  
   : new_game_button("NEW GAME", {387, 448, 330, 60}, WHITE, RED, [&]() {
-        StateManager::getInstance().pushState(std::make_unique<SubMenu>());
+        StateManager::getInstance().pushState(std::make_unique<NameInputPopUp>());
     }),
     load_game_button("LOAD GAME", {885, 448, 330, 60}, WHITE, RED, [&]() {
         const char* filterPatterns[] = { "*.txt" };
