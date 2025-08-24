@@ -516,30 +516,29 @@ void Player::update(float deltaTime){
 	// 			Sstate = new InvincibleDecorator(Sstate);
 	// 		}	
 	// 	}
-
-
-	// 	if (auto morph = dynamic_cast<MorphDecorator*>(Sstate)) {
-	// 		IShapeState* next = morph->update(deltaTime);
-
-	// 		if (next) {
-	// 			delete Sstate;
-	// 			Sstate = next;
-	// 		}else{
-	// 			if(activeAnimation)
-	// 				activeAnimation->update(deltaTime);
-
-	// 			adaptChangePosition();
-	// 			return;
-	// 		}
-	// 	}
-	// 	else if (auto inv = dynamic_cast<InvincibleDecorator*>(Sstate)) {
-	// 		IShapeState* next = inv->update(deltaTime);
-	// 		if (next) {
-	// 			delete Sstate;
-	// 			Sstate = next;
-	// 		}
-	// 	}
 	// }
+
+	if (auto morph = dynamic_cast<MorphDecorator*>(Sstate)) {
+		IShapeState* next = morph->update(deltaTime);
+
+		if (next) {
+			delete Sstate;
+			Sstate = next;
+		}else{
+			if(activeAnimation)
+				activeAnimation->update(deltaTime);
+
+			adaptChangePosition();
+			return;
+		}
+	}
+	else if (auto inv = dynamic_cast<InvincibleDecorator*>(Sstate)) {
+		IShapeState* next = inv->update(deltaTime);
+		if (next) {
+			delete Sstate;
+			Sstate = next;
+		}
+	}
 	
 	showPlayer = blink.update(deltaTime); 
 	Mstate->update(deltaTime);
