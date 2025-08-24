@@ -13,6 +13,8 @@ IMoveState *StandState::update(MoveContext *player){
         return new RunState(); 
     }
 
+    player->velocity.y = 0; 
+
     return this; 
 }
 
@@ -30,6 +32,8 @@ IMoveState *RunState::update(MoveContext *player){
 
     if(player->velocity.x == 0 && player->force.x == 0)
         return new StandState(); 
+    
+    player->velocity.y = 0; 
 
     return this; 
 }
@@ -60,12 +64,12 @@ IMoveState *SkidState::update(MoveContext *player){
         return new StandState();
     } 
 
-    
+    player->velocity.y = 0; 
     return this; 
 }
 
 IMoveState *JumpState::update(MoveContext *player){
-    if(player->position.y >= player->groundLevel - player->shape.y){
+    if(player->position.y + 1 >= player->groundLevel - player->shape.y){
         player->velocity.y = 0; 
         player->position.y = player->groundLevel - player->shape.y; 
         return new StandState(); 
@@ -78,7 +82,7 @@ IMoveState *CrouchState::update(MoveContext *player){
     if(player -> isBig == 0) 
         return new StandState();
 
-    if(player->isCrouch == 0){
+    if(player->isCrouch == 0){        
         if(player->velocity.y != 0){
             return new JumpState(); 
         }
@@ -91,7 +95,7 @@ IMoveState *CrouchState::update(MoveContext *player){
         return new StandState(); 
     }
 
-    if(this->isJumping() && player->position.y >= player->groundLevel - player->shape.y){
+    if(this->isJumping() && player->position.y + 1 >= player->groundLevel - player->shape.y && player->velocity.y >= 0){
         player->velocity.y = 0; 
         player->position.y = player->groundLevel - player->shape.y; 
         this->changeIsJump();
@@ -117,7 +121,7 @@ IMoveState *ShootState::update(MoveContext *player){
 
     if(this->isJumping() == false && player->position.y < player->groundLevel - player->shape.y){
         this->changeIsJump(); 
-    }else if(player->position.y >= player->groundLevel - player->shape.y){
+    }else if(player->position.y + 1 >= player->groundLevel - player->shape.y){
         player->position.y = player->groundLevel - player->shape.y; 
         player->velocity.y = 0.f; 
         isJump = false; 

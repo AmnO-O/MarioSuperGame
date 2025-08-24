@@ -57,6 +57,7 @@ void PlayerMovement::adaptCollision(ICollidable* other,
 
 		if (penY < 0) {
             if (Mstate->isJumping()) {
+				velocity.y = 0;
 				delete Mstate;
                 if(velocity.x != 0) 
 					Mstate = new RunState();
@@ -139,7 +140,6 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 			delete Mstate; 
 			Mstate = new JumpState(); 
 		}
-		
 		else{
 			Mstate->changeIsJump(); 
 		}

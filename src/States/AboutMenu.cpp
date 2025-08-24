@@ -35,8 +35,8 @@ void AboutMenu::render()
     DrawTextEx(font, info6.c_str(), {200, 300}, 50, 2, BLACK);
 
     DrawTextEx(font, con.c_str(), {240, 370}, 50, 2, BLACK);
-    DrawTextEx(font, Nam.c_str(), {550, 370}, 50, 2, BLACK);
-    DrawTextEx(font, Phong.c_str(), {550, 420}, 50, 2, BLACK);
+    DrawTextEx(font, Nam.c_str(), {550, 420}, 50, 2, BLACK);
+    DrawTextEx(font, Phong.c_str(), {550, 370}, 50, 2, BLACK);
     DrawTextEx(font, Vi.c_str(), {550, 470}, 50, 2, BLACK);
     DrawTextEx(font, Vinh.c_str(), {550, 520}, 50, 2, BLACK);
 

@@ -448,7 +448,7 @@ void Player::adaptChangePosition(){
 	if(isLocked()) return; 
 	
 	if(groundLevel - hitbox.height > hitbox.y){
-		if(!Mstate->isDead() && Mstate->getMoveState() != "HIT"){
+		if(!Mstate->isDead() && Mstate->getMoveState() != "HIT" && Mstate->isJumping() == false){
 			delete Mstate;
 			Mstate = new JumpState();
 		}
@@ -633,6 +633,10 @@ inline IMoveState* createMoveState(const std::string& stateName) {
 }
 
 void Player::loadData(std::istream &fin){
+	fin >> shrinkOnHit >> showPlayer;
+	if(shrinkOnHit)
+		blink.reset();
+
 	std::string animationKey; fin >> animationKey; 
 
 	std::string s1 = "", s2 = "", s3 = ""; 
@@ -709,6 +713,9 @@ void Player::loadData(std::istream &fin){
 
 void Player::printData(std::ostream &fout){
 	//fout << ((type == CharacterType::MARIO) ? 1 : 0) << ' '; 
+
+	fout << shrinkOnHit << ' ' << showPlayer << ' ';
+
 	fout << getShape_Action() << ' '; 
 
 	fout << movement->getPosition().x << ' ' << movement->getPosition().y << ' '; 
