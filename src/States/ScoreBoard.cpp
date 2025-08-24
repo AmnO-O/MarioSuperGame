@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <ctime>
 #include <sstream>
+#include <limits>
 #include "States/MainMenu.h"
 
 ScoreBoardManager::ScoreBoardManager(){
