@@ -98,6 +98,10 @@ void EndResult::backToMainMenu()
 void EndResult::toNextLevel()
 {
     StatsManager::getInstance().reset(); 
+    StopSound(SoundManager::getInstance().endSound);
+    PlayMusicStream(SoundManager::getInstance().playMusic);
+    SoundManager::getInstance().death_played = false;
+    SoundManager::getInstance().game_over_played = false;
     if (prevMapIndex != 4)
         StateManager::getInstance().pushState(std::make_unique<World>(isMario, prevMapIndex + 1, 300.0f));
 }
