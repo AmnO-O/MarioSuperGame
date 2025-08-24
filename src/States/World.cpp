@@ -171,6 +171,8 @@ void World::saveGame(const std::string& filename) const
     fout << score_number << '\n';
     fout << number_of_coins << '\n';
     fout << Timer::getInstance().remaining << '\n';
+    fout << NameInputPopUp::getPlayerName() << '\n'; 
+
     // Add more as needed
     currentMap->save(fout);
     fout.close();
@@ -178,6 +180,11 @@ void World::saveGame(const std::string& filename) const
 
 
 void World::loadGame(std::istream &fin){
+    fin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    std::string charType;
+    getline(fin, charType); 
+    NameInputPopUp::setPlayerName(charType);
     currentMap->load(fin);
     // character->loadData(fin); 
 }

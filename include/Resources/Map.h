@@ -8,7 +8,7 @@
 #include "Exceptions.h"
 #include "Observer/Observer.h"
 #include "Character/Character.h"
-#include "Character/Enemy.h"
+#include "Enemy/Enemy.h"
 #include "MyCamera2D.h"
 #include <queue>
 #include "Blocks/Flag.h"

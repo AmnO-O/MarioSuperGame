@@ -1,6 +1,6 @@
 #include "Observer/Observer.h"
 #include "Blocks/Block.h"
-#include "Character/Enemy.h"
+#include "Enemy/Enemy.h"
 #include "Blocks/Coin.h"
 #include <algorithm>
 

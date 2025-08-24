@@ -5,7 +5,7 @@
 #include "Exceptions.h"
 #include <cassert>
 #include <cmath>
-#include "Character/Piranha.h"
+#include "Enemy/Piranha.h"
 
 void PlayerMovement::setOnGround(){
 	position.y = groundLevel - shape.y; 
@@ -24,7 +24,7 @@ void PlayerMovement::setGroundLevel(float groundLevel_){
 bool PlayerMovement::adapt_collision_with_enimies(ICollidable* other, Player* player){
 	Rectangle rect = other->getHitbox();
 
-	if((dynamic_cast<Piranha*>(other) || velocity.y <= 0) && position.y + shape.y >= rect.y){
+	if((dynamic_cast<Piranha*>(other) || velocity.y <= 0) && position.y + shape.y + 1 >= rect.y){
 		return false; 
 	}
 
@@ -57,6 +57,7 @@ void PlayerMovement::adaptCollision(ICollidable* other,
 
 		if (penY < 0) {
             if (Mstate->isJumping()) {
+				velocity.y = 0;
 				delete Mstate;
                 if(velocity.x != 0) 
 					Mstate = new RunState();
@@ -139,7 +140,6 @@ void PlayerMovement::update(float deltaTime, IShapeState *&Sstate, IMoveState  *
 			delete Mstate; 
 			Mstate = new JumpState(); 
 		}
-		
 		else{
 			Mstate->changeIsJump(); 
 		}

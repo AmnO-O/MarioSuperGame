@@ -38,15 +38,25 @@ void ScoreBoardManager::loadScoresFromFile(std::string filePath) {
     }
 
     std::string line;
-    
-    while (std::getline(file, line)) {
-        std::istringstream iss(line);
+
+    while(file){
         std::string playerName, date;
         int map, score;
-        if (iss >> playerName >> date >> map >> score) {
+
+        std::getline(file, playerName); 
+
+        file >> date >> map >> score; 
+        
+        if(playerName.size()) 
             allScores.emplace_back(playerName, date, map, score);
-        }
+
+        file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        if (line.empty()) continue;
+        
+        break;
     }
+    
     file.close();
 }
 
@@ -58,7 +68,7 @@ void ScoreBoardManager::printScoresToFile(std::string filePath) {
     }
 
     for (const auto& record : allScores) {
-        file << record.playerName << " " << record.date << " "
+        file << record.playerName << "\n" << record.date << " "
              << record.map << " " << record.score << "\n";
     }
     file.close();
@@ -170,7 +180,7 @@ void ScoreBoardManager::renderTabs() {
         DrawTextEx(textfont, mapNames[i].c_str(),
             { tabX + 20, tabY + 35 }, 16, 1,
             (i + 1 == currentMap) ? primaryTextColor : secondaryTextColor);
-
+        
         // Score count for this map
         std::vector<ScoreRecord> mapScores = GetMapScores(i + 1);
         std::string countStr = "(" + std::to_string(mapScores.size()) + " scores)";

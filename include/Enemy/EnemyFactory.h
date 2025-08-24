@@ -1,10 +1,11 @@
 #pragma once
-#include "Character/Enemy.h"
-#include "Character/Goomba.h"
-#include "Character/Koopa.h"
-#include "Character/Piranha.h"
-#include "Character/ParaKoopa.h"
-#include "Character/Bowser.h"
+#include "Enemy/Enemy.h"
+#include "Enemy/Goomba.h"
+#include "Enemy/Koopa.h"
+#include "Enemy/Piranha.h"
+#include "Enemy/ParaKoopa.h"
+#include "Enemy/Blaze.h"
+#include "Enemy/Bowser.h"
 
 class EnemyFactory {
 public:

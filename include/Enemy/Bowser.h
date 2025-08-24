@@ -1,6 +1,5 @@
 #pragma once
 #include "Enemy.h"
-#include "Blaze.h"
 
 class Bowser : public Enemy, public IFallable {
 private:
