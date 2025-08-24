@@ -6,6 +6,7 @@
 #include <cassert>
 #include <cmath>
 #include "Enemy/Piranha.h"
+#include "Blocks/Fire.h"
 
 void PlayerMovement::setOnGround(){
 	position.y = groundLevel - shape.y; 
@@ -24,7 +25,7 @@ void PlayerMovement::setGroundLevel(float groundLevel_){
 bool PlayerMovement::adapt_collision_with_enimies(ICollidable* other, Player* player){
 	Rectangle rect = other->getHitbox();
 
-	if((dynamic_cast<Piranha*>(other) || velocity.y <= 0) && position.y + shape.y + 1 >= rect.y){
+	if((dynamic_cast<Piranha*>(other) || velocity.y <= 0  || dynamic_cast<Fire*>(other)) && position.y + shape.y + 1 >= rect.y){
 		return false; 
 	}
 

@@ -487,58 +487,59 @@ void Player::update(float deltaTime){
 	if(movement == nullptr)
 		throw GameException("Movement is null in Player::update");
 
-
 	if(IsKeyPressed(KEY_L)){
 		switchPlayer(); 
 	}
 
-	if(IsKeyPressed(KEY_Q)){
-		if (Sstate -> getShapeState() == "SMALL"){
-			Sstate = new MorphDecorator(Sstate);
-		}
-	}
+	// if(isDead() == false){
+	// 	if(IsKeyPressed(KEY_Q)){
+	// 		if (Sstate -> getShapeState() == "SMALL"){
+	// 			Sstate = new MorphDecorator(Sstate);
+	// 		}
+	// 	}
 
-	if(IsKeyPressed(KEY_W)){
-		if (Sstate -> getShapeState() == "SMALL"){
-			IShapeState *tmp = Sstate;
-			Sstate = new FireState();
-			delete tmp;
-		}
-		else if(Sstate->canShootFire() == false){
-			IShapeState *tmp = Sstate;
-			Sstate = new FireState();
-			delete tmp;
-		}
-	}
+	// 	if(IsKeyPressed(KEY_W)){
+	// 		if (Sstate -> getShapeState() == "SMALL"){
+	// 			IShapeState *tmp = Sstate;
+	// 			Sstate = new FireState();
+	// 			delete tmp;
+	// 		}
+	// 		else if(Sstate->canShootFire() == false){
+	// 			IShapeState *tmp = Sstate;
+	// 			Sstate = new FireState();
+	// 			delete tmp;
+	// 		}
+	// 	}
 
-	if(IsKeyPressed(KEY_E)){
-		if(Sstate->isInvincible() == false){
-	    	Sstate = new InvincibleDecorator(Sstate);
-		}	
-	}
+	// 	if(IsKeyPressed(KEY_E)){
+	// 		if(Sstate->isInvincible() == false){
+	// 			Sstate = new InvincibleDecorator(Sstate);
+	// 		}	
+	// 	}
 
 
-	if (auto morph = dynamic_cast<MorphDecorator*>(Sstate)) {
-		IShapeState* next = morph->update(deltaTime);
+	// 	if (auto morph = dynamic_cast<MorphDecorator*>(Sstate)) {
+	// 		IShapeState* next = morph->update(deltaTime);
 
-		if (next) {
-			delete Sstate;
-			Sstate = next;
-		}else{
-			if(activeAnimation)
-				activeAnimation->update(deltaTime);
+	// 		if (next) {
+	// 			delete Sstate;
+	// 			Sstate = next;
+	// 		}else{
+	// 			if(activeAnimation)
+	// 				activeAnimation->update(deltaTime);
 
-			adaptChangePosition();
-			return;
-		}
-	}
-	else if (auto inv = dynamic_cast<InvincibleDecorator*>(Sstate)) {
-		IShapeState* next = inv->update(deltaTime);
-		if (next) {
-			delete Sstate;
-			Sstate = next;
-		}
-	}
+	// 			adaptChangePosition();
+	// 			return;
+	// 		}
+	// 	}
+	// 	else if (auto inv = dynamic_cast<InvincibleDecorator*>(Sstate)) {
+	// 		IShapeState* next = inv->update(deltaTime);
+	// 		if (next) {
+	// 			delete Sstate;
+	// 			Sstate = next;
+	// 		}
+	// 	}
+	// }
 	
 	showPlayer = blink.update(deltaTime); 
 	Mstate->update(deltaTime);
