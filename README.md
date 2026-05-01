@@ -4,6 +4,9 @@
 
 MarioSuperGame is a 2D platformer inspired by classic Super Mario titles. Implemented in **C++** using the **raylib** library, the game demonstrates core platformer mechanics: side-scrolling, jumping, coin collection, enemies, and level interaction through blocks, power-ups, and hazards. It is designed as an educational project and a starting point for hobbyist game development, emphasizing clean object-oriented design and modularity.
 
+Here is our demo video: [link]{https://www.youtube.com/watch?v=LbuX6IFkD8g}
+
+
 ## Features
 
 * **Classic Platformer Mechanics** — running, jumping, crouch (if implemented), collisions with blocks and enemies.
@@ -275,6 +278,7 @@ This project is open for learning and personal use — add a license file (e.g.,
 ## Contributing
 
 PRs and issues are welcome. Try to keep changes modular and document any new assets or third-party tools added.
+
 
 ---
 
